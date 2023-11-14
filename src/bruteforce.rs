@@ -55,7 +55,7 @@ fn _prune_by_pivot(
 }
 
 pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
-    if cell_no >= matrix::MATRIX_SIZE * matrix::MATRIX_SIZE {
+    if cell_no >= matrix::MATRIX_SIZE.pow(2) {
         return *x;
     }
 
