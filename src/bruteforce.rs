@@ -6,8 +6,8 @@ fn _done(x: &matrix::Matrix) -> bool {
             let area = matrix::block_range(&block_type, block_no);
 
             let mut bmp = 0;
-            for row_no in area.row_range.from..area.row_range.to {
-                for col_no in area.col_range.from..area.col_range.to {
+            for row_no in (area.row_range.from)..(area.row_range.to) {
+                for col_no in (area.col_range.from)..(area.col_range.to) {
                     bmp |= x[row_no][col_no];
 
                     if matrix::bitmap::popcount(x[row_no][col_no]) > 1 {
@@ -36,8 +36,8 @@ fn _prune_by_pivot(
 
         let area = matrix::block_range(&block_type, block_no);
 
-        for row_no in area.row_range.from..area.row_range.to {
-            for col_no in area.col_range.from..area.col_range.to {
+        for row_no in (area.row_range.from)..(area.row_range.to) {
+            for col_no in (area.col_range.from)..(area.col_range.to) {
                 if row_no == pivot.row && col_no == pivot.col {
                     y[row_no][col_no] = bit;
                     continue;
