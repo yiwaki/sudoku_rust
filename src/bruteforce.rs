@@ -1,6 +1,6 @@
 pub mod matrix;
 
-pub fn _done(x: &matrix::Matrix) -> bool {
+pub fn done(x: &matrix::Matrix) -> bool {
     for block_type in matrix::BLOCK_TYPES {
         for block_no in 0..matrix::MATRIX_SIZE {
             let area = matrix::block_range(&block_type, block_no);
@@ -74,7 +74,7 @@ pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
 
         y = bruteforce(&y, cell_no + 1);
 
-        if _done(&y) {
+        if done(&y) {
             return y;
         };
     }
@@ -103,6 +103,6 @@ mod tests {
         let y = bruteforce(&x, 0);
 
         matrix::disp(&y);
-        assert!(_done(&y));
+        assert!(done(&y));
     }
 }
