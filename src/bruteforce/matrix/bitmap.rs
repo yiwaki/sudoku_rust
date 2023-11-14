@@ -3,7 +3,7 @@ pub type Bitmap = u16;
 pub const BITMAP_DIGIT: usize = 9;
 pub const FULL_BIT: Bitmap = 0b111111111;
 
-pub fn split_single_bit(bit: Bitmap) -> Vec<Bitmap> {
+pub fn split_to_single_bits(bit: Bitmap) -> Vec<Bitmap> {
     let mut bits = Vec::new();
 
     for i in 0..BITMAP_DIGIT {
@@ -46,13 +46,13 @@ mod tests {
 
     #[test]
     fn split_single_bit_test() {
-        let bits = split_single_bit(0b000000000);
+        let bits = split_to_single_bits(0b000000000);
         assert_eq!(bits, []);
 
-        let bits = split_single_bit(0b100100101);
+        let bits = split_to_single_bits(0b100100101);
         assert_eq!(bits, [1, 4, 32, 256]);
 
-        let bits = split_single_bit(0b111111111);
+        let bits = split_to_single_bits(0b111111111);
         assert_eq!(bits, [1, 2, 4, 8, 16, 32, 64, 128, 256]);
     }
 
