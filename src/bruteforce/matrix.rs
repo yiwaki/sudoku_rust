@@ -21,8 +21,8 @@ pub struct Address {
 }
 
 pub struct Area {
-    pub row_range: [usize; 2],
-    pub col_range: [usize; 2],
+    pub row_range: (usize, usize),
+    pub col_range: (usize, usize),
 }
 
 pub fn cell_no_to_addr(cell_no: usize) -> Address {
@@ -42,30 +42,30 @@ pub fn addr_to_block_no(block_type: &Block, addr: &Address) -> usize {
 
 pub fn block_range(block_type: &Block, block_no: usize) -> Area {
     let mut area = Area {
-        row_range: [0; 2],
-        col_range: [0; 2],
+        row_range: (0, 0),
+        col_range: (0, 0),
     };
 
     match block_type {
         Block::Row => {
-            area.row_range[0] = block_no;
-            area.row_range[1] = area.row_range[0] + 1;
-            area.col_range[0] = 0;
-            area.col_range[1] = MATRIX_SIZE;
+            area.row_range.0 = block_no;
+            area.row_range.1 = area.row_range.0 + 1;
+            area.col_range.0 = 0;
+            area.col_range.1 = MATRIX_SIZE;
         }
 
         Block::Column => {
-            area.row_range[0] = 0;
-            area.row_range[1] = MATRIX_SIZE;
-            area.col_range[0] = block_no;
-            area.col_range[1] = area.col_range[0] + 1;
+            area.row_range.0 = 0;
+            area.row_range.1 = MATRIX_SIZE;
+            area.col_range.0 = block_no;
+            area.col_range.1 = area.col_range.0 + 1;
         }
 
         Block::Square => {
-            area.row_range[0] = block_no / SQUARE_SIZE * SQUARE_SIZE;
-            area.row_range[1] = area.row_range[0] + SQUARE_SIZE;
-            area.col_range[0] = block_no % SQUARE_SIZE * SQUARE_SIZE;
-            area.col_range[1] = area.col_range[0] + SQUARE_SIZE;
+            area.row_range.0 = block_no / SQUARE_SIZE * SQUARE_SIZE;
+            area.row_range.1 = area.row_range.0 + SQUARE_SIZE;
+            area.col_range.0 = block_no % SQUARE_SIZE * SQUARE_SIZE;
+            area.col_range.1 = area.col_range.0 + SQUARE_SIZE;
         }
     }
     area
@@ -110,21 +110,21 @@ mod tests {
     #[test]
     fn block_range_test() {
         let area = block_range(&Block::Row, 4);
-        assert_eq!(area.row_range[0], 4);
-        assert_eq!(area.row_range[1], 5);
-        assert_eq!(area.col_range[0], 0);
-        assert_eq!(area.col_range[1], MATRIX_SIZE);
+        assert_eq!(area.row_range.0, 4);
+        assert_eq!(area.row_range.1, 5);
+        assert_eq!(area.col_range.0, 0);
+        assert_eq!(area.col_range.1, MATRIX_SIZE);
 
         let area = block_range(&Block::Column, 4);
-        assert_eq!(area.row_range[0], 0);
-        assert_eq!(area.row_range[1], MATRIX_SIZE);
-        assert_eq!(area.col_range[0], 4);
-        assert_eq!(area.col_range[1], 5);
+        assert_eq!(area.row_range.0, 0);
+        assert_eq!(area.row_range.1, MATRIX_SIZE);
+        assert_eq!(area.col_range.0, 4);
+        assert_eq!(area.col_range.1, 5);
 
         let area = block_range(&Block::Square, 4);
-        assert_eq!(area.row_range[0], 3);
-        assert_eq!(area.row_range[1], 6);
-        assert_eq!(area.col_range[0], 3);
-        assert_eq!(area.col_range[1], 6);
+        assert_eq!(area.row_range.0, 3);
+        assert_eq!(area.row_range.1, 6);
+        assert_eq!(area.col_range.0, 3);
+        assert_eq!(area.col_range.1, 6);
     }
 }
