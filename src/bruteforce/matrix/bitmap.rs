@@ -28,7 +28,7 @@ pub fn popcount(bit: Bitmap) -> i32 {
 }
 
 pub fn to_binary(bmp: Bitmap) -> String {
-    let mut bin_str: String = String::new();
+    let mut bin_str = String::new();
 
     for i in 0..BITMAP_DIGIT {
         if bmp & (0b100000000 >> i) == 0 {
