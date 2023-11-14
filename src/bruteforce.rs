@@ -1,5 +1,3 @@
-use self::matrix::CELL_COUNT;
-
 pub mod matrix;
 
 fn _done(x: &matrix::Matrix) -> bool {
@@ -57,7 +55,7 @@ fn _prune_by_pivot(
 }
 
 pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
-    if cell_no >= CELL_COUNT {
+    if cell_no >= matrix::CELL_COUNT {
         return *x;
     }
 
