@@ -20,8 +20,8 @@ fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
 
         let y = bruteforce::bruteforce(&arr, 0);
 
+        // convert Rust Array to NDArray
         let y = ndarray::arr2(&y);
-
         y.into_pyarray(py)
     }
 
