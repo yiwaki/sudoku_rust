@@ -13,14 +13,14 @@ fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
     ) -> &'py PyArray2<bruteforce::matrix::bitmap::Bitmap> {
         let x = x.as_array();
 
-        // convert NDArray to Rust Array
+        // convert NDArray (Python) to Array (Rust)
         let mut iter = x.iter();
         let arr = [(); bruteforce::matrix::MATRIX_SIZE]
             .map(|()| [(); bruteforce::matrix::MATRIX_SIZE].map(|()| *iter.next().unwrap()));
 
         let y = bruteforce::bruteforce(&arr, 0);
 
-        // convert Rust Array to NDArray
+        // convert Array (Rust) to NDArray (Python)
         let y = ndarray::arr2(&y);
         y.into_pyarray(py)
     }
