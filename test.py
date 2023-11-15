@@ -2,7 +2,7 @@
 # pip install .
 
 import numpy as np
-from sudoku_rust_2 import bruteforce
+from sudoku_rust import bruteforce
 
 full_bits = 2**9 - 1
 
