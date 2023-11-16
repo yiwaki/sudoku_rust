@@ -78,6 +78,32 @@ pub fn block_range(block_type: &Block, block_no: usize) -> Area {
 }
 
 #[allow(dead_code)]
+pub fn to_bmp(x: &Matrix) -> Matrix {
+    let mut y = [[0; MATRIX_SIZE]; MATRIX_SIZE];
+    for row in 0..MATRIX_SIZE {
+        for col in 0..MATRIX_SIZE {
+            if x[row][col] == 0 {
+                y[row][col] = bitmap::FULL_BIT;
+            } else {
+                y[row][col] = 1 << x[row][col];
+            }
+        }
+    }
+    y
+}
+
+#[allow(dead_code)]
+pub fn to_dec(x: &Matrix) -> Matrix {
+    let mut y = [[0; MATRIX_SIZE]; MATRIX_SIZE];
+    for row in 0..MATRIX_SIZE {
+        for col in 0..MATRIX_SIZE {
+            y[row][col] = x[row][col].ilog2() as bitmap::Bitmap;
+        }
+    }
+    y
+}
+
+#[allow(dead_code)]
 pub fn disp(x: &Matrix) {
     println!("");
     for row in 0..MATRIX_SIZE {
