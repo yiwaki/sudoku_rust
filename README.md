@@ -20,7 +20,7 @@ cd sudoku_rust
 make develop
 ```
 
-## Run
+## Run sample program
 ```
 python test.py
 ```
