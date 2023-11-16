@@ -6,6 +6,7 @@ For more information on Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki/Su
 
 ## Install Rust
 - for Windows
+
 Download the installation kit for your Windows from [here](https://forge.rust-lang.org/infra/other-installation-methods.eichithi-emueru) and run it.
 
 - for macOs, linux, or another Unix-like OS
