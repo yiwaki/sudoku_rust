@@ -1,6 +1,6 @@
 # sudoku_rust
 
-A program to solve Sudoku made with Rust (python module).
+Python module to solve Sudoku puzzle written in Rust.
 
 For more information on Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki/Sudoku).
 
