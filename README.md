@@ -1,6 +1,7 @@
 # sudoku_rust
 
-Python module to solve Sudoku puzzle. 
+A program to solve Sudoku made with Rust (python module).
+
 For more information on Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki/Sudoku).
 
 ## Install Maturin
