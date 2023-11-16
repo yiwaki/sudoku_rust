@@ -1,11 +1,9 @@
 # sudoku_rust
-===
 
 Python module to solve Sudoku puzzle. 
 For more information on Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki/Sudoku).
 
 ## Install Maturin
----
 ```
 pip install maturin
 ```
