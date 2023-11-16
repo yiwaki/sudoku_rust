@@ -9,7 +9,7 @@ For more information on Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki/Su
 pip install maturin
 ```
 
-## Download
+## Download this kit
 ```
 git clone https://github.com/yiwaki/sudoku_rust.git
 ```
