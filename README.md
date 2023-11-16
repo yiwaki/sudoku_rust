@@ -11,7 +11,7 @@ For more information on Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki/Su
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-## Install python
+## Install Python
 omitted
 
 ## Install Maturin
