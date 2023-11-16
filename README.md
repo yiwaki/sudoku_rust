@@ -25,4 +25,4 @@ python test.py
 
 5. how to make Sudoku puzzle
 
-see sample data, data/easy.csv
+see sample data -> data/easy.csv
