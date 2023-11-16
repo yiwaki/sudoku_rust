@@ -19,11 +19,11 @@ cd sudoku_rust
 make develop
 ```
 
-## run
+## Run
 ```
 python test.py
 ```
 
-## how to make Sudoku puzzle
+## How to make Sudoku puzzle
 
 see sample data -> data/easy.csv
