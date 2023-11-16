@@ -6,7 +6,7 @@ For more information on Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki/Su
 
 ## Install Rust
 - For Windows, download the installation kit for your Windows from [here](https://forge.rust-lang.org/infra/other-installation-methods.eichithi-emueru) and run it.
-- For macOs, linux, or another Unix-like OS, run the following shell command.
+- For macOS, linux, or another Unix-like OS, run the following shell command.
 ```
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
