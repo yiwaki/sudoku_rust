@@ -1,10 +1,7 @@
-# maturin build -i python --release
-# pip install .
-
 import numpy as np
 from sudoku_rust import bruteforce
 
-full_bits = 2**9 - 1
+FULL_BITS = 2**9 - 1
 
 
 def load_csv(filepath):
@@ -12,7 +9,7 @@ def load_csv(filepath):
     print("Puzzle:")
     print(problem)
     working = (lambda x: 1 << (x - 1))(problem)
-    working = np.where(working == 0, full_bits, working)
+    working = np.where(working == 0, FULL_BITS, working)
     return working
 
 
