@@ -2,7 +2,7 @@ import numpy as np
 from sudoku_rust import bruteforce
 
 
-def load_csv(filepath: str) -> None:
+def load_csv(filepath: str) -> np.ndarray:
     problem = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
     print("Puzzle:")
     print(problem)
