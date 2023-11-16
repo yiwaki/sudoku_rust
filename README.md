@@ -28,4 +28,5 @@ python test.py
 ```
 
 7. how to make Sudoku puzzle
-see data/easy.csv
+
+see sample data, data/easy.csv
