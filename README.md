@@ -1,6 +1,6 @@
 # sudoku_rust
 
-Program to solve Sudoku puzzle <https://en.wikipedia.org/wiki/Sudoku>
+Python module to solve Sudoku puzzle. <https://en.wikipedia.org/wiki/Sudoku>
 
 ## Install Maturin
 ```
@@ -23,6 +23,6 @@ make develop
 python test.py
 ```
 
-##how to make Sudoku puzzle
+## how to make Sudoku puzzle
 
 see sample data -> data/easy.csv
