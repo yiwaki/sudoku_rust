@@ -1,5 +1,3 @@
-use std::io::{stdout, Write};
-
 pub mod bitmap;
 
 pub const MATRIX_SIZE: usize = 9;
@@ -116,7 +114,6 @@ pub fn disp(x: &Matrix) {
         }
         println!("");
     }
-    stdout().flush().unwrap();
 }
 
 #[cfg(test)]
