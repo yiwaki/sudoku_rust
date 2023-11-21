@@ -15,12 +15,11 @@ pub fn split_to_single_bits(bit: Bitmap) -> Vec<Bitmap> {
     bits
 }
 
-pub fn popcount(bit: Bitmap) -> i32 {
-    let mut cnt: i32 = 0;
+pub fn popcount(bit: Bitmap) -> usize {
+    let mut cnt = 0;
 
     for i in 0..BITMAP_DIGIT {
-        let target_bit: Bitmap = 1 << i;
-        if bit & target_bit != 0 {
+        if bit & (1 << i) != 0 {
             cnt += 1;
         }
     }

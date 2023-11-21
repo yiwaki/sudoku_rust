@@ -32,7 +32,7 @@ fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
         ));
         for i in 0..bruteforce::matrix::MATRIX_SIZE {
             for j in 0..bruteforce::matrix::MATRIX_SIZE {
-                ret[(i, j)] = y[i][j].ilog2() as u16 + 1;
+                ret[(i, j)] = y[i][j].ilog2() as bruteforce::matrix::bitmap::Bitmap + 1;
             }
         }
         ret.into_pyarray(py)
