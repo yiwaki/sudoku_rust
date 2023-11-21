@@ -4,12 +4,12 @@ pub mod bitmap;
 
 pub const MATRIX_SIZE: usize = 9;
 pub const SQUARE_SIZE: usize = 3;
+pub const CELL_COUNT: usize = MATRIX_SIZE * MATRIX_SIZE;
 
-pub type Matrix = Vec<Vec<bitmap::Bitmap>>;
-pub const CELL_COUNT: usize = MATRIX_SIZE.pow(2);
+pub type Matrix = Box<[[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE]>;
 
 pub fn alloc_matrix() -> Matrix {
-    vec![vec![0; MATRIX_SIZE]; MATRIX_SIZE]
+    Box::new([[0; MATRIX_SIZE]; MATRIX_SIZE])
 }
 
 pub enum Block {
@@ -83,7 +83,7 @@ pub fn block_range(block_type: &Block, block_no: usize) -> Area {
 
 #[allow(dead_code)]
 pub fn to_bmp(x: &Matrix) -> Matrix {
-    let mut y = vec![vec![0; MATRIX_SIZE]; MATRIX_SIZE];
+    let mut y = alloc_matrix();
     for row in 0..MATRIX_SIZE {
         for col in 0..MATRIX_SIZE {
             if x[row][col] == 0 {
@@ -98,7 +98,7 @@ pub fn to_bmp(x: &Matrix) -> Matrix {
 
 #[allow(dead_code)]
 pub fn to_dec(x: &Matrix) -> Matrix {
-    let mut y = vec![vec![0; MATRIX_SIZE]; MATRIX_SIZE];
+    let mut y = alloc_matrix();
     for row in 0..MATRIX_SIZE {
         for col in 0..MATRIX_SIZE {
             y[row][col] = (*x)[row][col].ilog2() as bitmap::Bitmap;
