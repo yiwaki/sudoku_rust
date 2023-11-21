@@ -18,7 +18,7 @@ fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
         let arr = [(); bruteforce::matrix::MATRIX_SIZE]
             .map(|()| [(); bruteforce::matrix::MATRIX_SIZE].map(|()| *iter.next().unwrap()));
 
-        let y = bruteforce::bruteforce(&arr, 0);
+        let y = bruteforce::bruteforce(&arr);
 
         // convert Array (Rust) to NDArray (Python)
         let y = ndarray::arr2(&y);
