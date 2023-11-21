@@ -7,7 +7,7 @@ pub fn split_to_single_bits(bit: Bitmap) -> Vec<Bitmap> {
     let mut bits = Vec::new();
 
     for i in 0..BITMAP_DIGIT {
-        let target_bit: Bitmap = 1 << i;
+        let target_bit = 1 << i;
         if bit & target_bit != 0 {
             bits.push(target_bit);
         }
