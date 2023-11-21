@@ -12,11 +12,11 @@ fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
         py: Python<'py>,
         x: PyReadonlyArray2<'py, bruteforce::matrix::bitmap::Bitmap>,
     ) -> &'py PyArray2<bruteforce::matrix::bitmap::Bitmap> {
-        // convert NDArray (Python) to Vector (Rust)
         let x = x.as_array();
         let mut iter = x.iter();
         // let arr = [(); bruteforce::matrix::MATRIX_SIZE]
         //     .map(|()| [(); bruteforce::matrix::MATRIX_SIZE].map(|()| *iter.next().unwrap()));
+
         let mut v = vec![vec![0; bruteforce::matrix::MATRIX_SIZE]; bruteforce::matrix::MATRIX_SIZE];
         for i in 0..bruteforce::matrix::MATRIX_SIZE {
             for j in 0..bruteforce::matrix::MATRIX_SIZE {
@@ -31,7 +31,6 @@ fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
 
         let y = bruteforce::bruteforce(&v, 0);
 
-        // convert Vector (Rust) to NDArray (Python)
         let mut ret = Array::zeros((
             bruteforce::matrix::MATRIX_SIZE,
             bruteforce::matrix::MATRIX_SIZE,
