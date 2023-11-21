@@ -8,6 +8,10 @@ pub const SQUARE_SIZE: usize = 3;
 pub type Matrix = Vec<Vec<bitmap::Bitmap>>;
 pub const CELL_COUNT: usize = MATRIX_SIZE.pow(2);
 
+pub fn alloc_matrix() -> Matrix {
+    vec![vec![0; MATRIX_SIZE]; MATRIX_SIZE]
+}
+
 pub enum Block {
     Row,
     Column,

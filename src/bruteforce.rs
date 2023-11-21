@@ -62,7 +62,7 @@ pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
     let addr = matrix::cell_no_to_addr(cell_no);
     let bits = matrix::bitmap::split_to_single_bits(x[addr.row][addr.col]);
 
-    let mut y = vec![vec![0; matrix::MATRIX_SIZE]; matrix::MATRIX_SIZE];
+    let mut y = matrix::alloc_matrix();
 
     for bit in bits {
         y = match _prune_by_pivot(x, &addr, bit) {

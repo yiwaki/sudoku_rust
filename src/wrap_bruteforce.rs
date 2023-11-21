@@ -17,19 +17,19 @@ fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
         // let arr = [(); bruteforce::matrix::MATRIX_SIZE]
         //     .map(|()| [(); bruteforce::matrix::MATRIX_SIZE].map(|()| *iter.next().unwrap()));
 
-        let mut v = vec![vec![0; bruteforce::matrix::MATRIX_SIZE]; bruteforce::matrix::MATRIX_SIZE];
+        let mut x = bruteforce::matrix::alloc_matrix();
         for i in 0..bruteforce::matrix::MATRIX_SIZE {
             for j in 0..bruteforce::matrix::MATRIX_SIZE {
                 let tmp = *iter.next().unwrap();
                 if tmp == 0 {
-                    v[i][j] = bruteforce::matrix::bitmap::FULL_BIT;
+                    x[i][j] = bruteforce::matrix::bitmap::FULL_BIT;
                 } else {
-                    v[i][j] = 1 << (tmp - 1);
+                    x[i][j] = 1 << (tmp - 1);
                 }
             }
         }
 
-        let y = bruteforce::bruteforce(&v, 0);
+        let y = bruteforce::bruteforce(&x, 0);
 
         let mut ret = Array::zeros((
             bruteforce::matrix::MATRIX_SIZE,
