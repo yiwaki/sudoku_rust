@@ -5,7 +5,6 @@ pub mod bitmap;
 pub const MATRIX_SIZE: usize = 9;
 pub const SQUARE_SIZE: usize = 3;
 
-pub type MatrixArray = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
 pub type Matrix = Vec<Vec<bitmap::Bitmap>>;
 pub const CELL_COUNT: usize = MATRIX_SIZE.pow(2);
 
