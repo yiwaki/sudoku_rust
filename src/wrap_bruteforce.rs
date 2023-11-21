@@ -12,19 +12,14 @@ fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
         py: Python<'py>,
         x: PyReadonlyArray2<'py, bruteforce::matrix::bitmap::Bitmap>,
     ) -> &'py PyArray2<bruteforce::matrix::bitmap::Bitmap> {
-        let x = x.as_array();
-        let mut iter = x.iter();
-        // let arr = [(); bruteforce::matrix::MATRIX_SIZE]
-        //     .map(|()| [(); bruteforce::matrix::MATRIX_SIZE].map(|()| *iter.next().unwrap()));
-
+        let arr = x.as_array();
         let mut x = bruteforce::matrix::alloc_matrix();
         for i in 0..bruteforce::matrix::MATRIX_SIZE {
             for j in 0..bruteforce::matrix::MATRIX_SIZE {
-                let tmp = *iter.next().unwrap();
-                if tmp == 0 {
+                if arr[(i, j)] == 0 {
                     x[i][j] = bruteforce::matrix::bitmap::FULL_BIT;
                 } else {
-                    x[i][j] = 1 << (tmp - 1);
+                    x[i][j] = 1 << (arr[(i, j)] - 1);
                 }
             }
         }
