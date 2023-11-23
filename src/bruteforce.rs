@@ -27,7 +27,7 @@ fn _done(x: &matrix::Matrix) -> bool {
 fn _prune_by_pivot(
     x: &matrix::Matrix,
     pivot: &matrix::Address,
-    bit: matrix::bitmap::Bitmap,
+    target_bit: matrix::bitmap::Bitmap,
 ) -> Option<matrix::Matrix> {
     let mut y = x.clone();
 
@@ -39,11 +39,11 @@ fn _prune_by_pivot(
         for row_no in (area.row_range.from)..(area.row_range.to) {
             for col_no in (area.col_range.from)..(area.col_range.to) {
                 if row_no == pivot.row && col_no == pivot.col {
-                    y[row_no][col_no] = bit;
+                    y[row_no][col_no] = target_bit;
                     continue;
                 }
 
-                y[row_no][col_no] &= !bit;
+                y[row_no][col_no] &= !target_bit;
 
                 if y[row_no][col_no] == 0 {
                     return None;
