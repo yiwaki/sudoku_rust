@@ -18,26 +18,28 @@ pub fn split_to_single_bits(bit: Bitmap) -> Vec<Bitmap> {
 
 pub fn popcount(bit: Bitmap) -> usize {
     let mut cnt = 0;
-    let mut tar_bit: Bitmap = 1;
+    let mut target_bit: Bitmap = 1;
 
     for _ in 0..BITMAP_DIGIT {
-        if bit & tar_bit != 0 {
+        if bit & target_bit != 0 {
             cnt += 1;
         }
-        tar_bit <<= 1;
+        target_bit <<= 1;
     }
     cnt
 }
 
 pub fn to_binary(bmp: Bitmap) -> String {
     let mut bin_str = String::new();
+    let mut target_bit = 0b1_0000_0000;
 
-    for i in 0..BITMAP_DIGIT {
-        if bmp & (0b1_0000_0000 >> i) == 0 {
+    for _ in 0..BITMAP_DIGIT {
+        if bmp & target_bit == 0 {
             bin_str.push('0');
         } else {
             bin_str.push('1');
         }
+        target_bit >>= 1;
     }
     bin_str
 }
