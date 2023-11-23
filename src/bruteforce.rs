@@ -98,10 +98,12 @@ mod tests {
             [128, 16, 511, 511, 1, 511, 511, 2, 511],
             [511, 511, 511, 32, 511, 511, 1, 511, 511],
         ]);
+        println!("Puzzle:");
         matrix::disp(&x);
 
         let y = bruteforce(&x, 0);
 
+        println!("Solution:");
         matrix::disp(&y);
         assert!(_done(&y));
     }

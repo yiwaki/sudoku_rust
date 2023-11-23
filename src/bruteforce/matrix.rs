@@ -107,12 +107,11 @@ pub fn to_dec(x: &Matrix) -> Matrix {
 
 #[allow(dead_code)]
 pub fn disp(x: &Matrix) {
-    println!("");
     for row in 0..MATRIX_SIZE {
         for col in 0..MATRIX_SIZE {
             print!("{} ", bitmap::to_binary(x[row][col]));
         }
-        println!("");
+        println!();
     }
 }
 
