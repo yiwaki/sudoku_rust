@@ -4,7 +4,7 @@ pub const BITMAP_DIGIT: usize = 9;
 pub const FULL_BIT: Bitmap = 0b111111111;
 
 pub fn split_to_single_bits(bit: Bitmap) -> Vec<Bitmap> {
-    let mut bits = Vec::new();
+    let mut bits = Vec::with_capacity(BITMAP_DIGIT);
 
     for i in 0..BITMAP_DIGIT {
         let target_bit = 1 << i;
