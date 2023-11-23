@@ -1,5 +1,4 @@
-use numpy::ndarray::Array;
-use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2};
+use numpy::{ndarray::Array, IntoPyArray, PyArray2, PyReadonlyArray2};
 use pyo3::{pymodule, types::PyModule, PyResult, Python};
 
 mod bruteforce;
