@@ -4,24 +4,27 @@ pub const BITMAP_DIGIT: usize = 9;
 pub const FULL_BIT: Bitmap = 0b111111111;
 
 pub fn split_to_single_bits(bit: Bitmap) -> Vec<Bitmap> {
-    let mut bits = Vec::with_capacity(BITMAP_DIGIT);
+    let mut bits: Vec<Bitmap> = Vec::new();
+    let mut target_bit: Bitmap = 1;
 
-    for i in 0..BITMAP_DIGIT {
-        let target_bit = 1 << i;
+    for _ in 0..BITMAP_DIGIT {
         if bit & target_bit != 0 {
             bits.push(target_bit);
         }
+        target_bit <<= 1;
     }
     bits
 }
 
 pub fn popcount(bit: Bitmap) -> usize {
     let mut cnt = 0;
+    let mut tar_bit: Bitmap = 1;
 
-    for i in 0..BITMAP_DIGIT {
-        if bit & (1 << i) != 0 {
+    for _ in 0..BITMAP_DIGIT {
+        if bit & tar_bit != 0 {
             cnt += 1;
         }
+        tar_bit <<= 1;
     }
     cnt
 }
