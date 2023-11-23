@@ -10,32 +10,33 @@ fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
     #[pyo3(name = "bruteforce")]
     fn bruteforce_py<'py>(
         py: Python<'py>,
-        x: PyReadonlyArray2<'py, bruteforce::matrix::bitmap::Bitmap>,
+        arr: PyReadonlyArray2<'py, bruteforce::matrix::bitmap::Bitmap>,
     ) -> &'py PyArray2<bruteforce::matrix::bitmap::Bitmap> {
-        let x = x.as_array();
-        let mut arr = bruteforce::matrix::alloc_matrix();
+        let arr = arr.as_array();
+
+        let mut x = bruteforce::matrix::alloc_matrix();
         for i in 0..bruteforce::matrix::MATRIX_SIZE {
             for j in 0..bruteforce::matrix::MATRIX_SIZE {
-                if x[(i, j)] == 0 {
-                    arr[i][j] = bruteforce::matrix::bitmap::FULL_BIT;
+                if arr[(i, j)] == 0 {
+                    x[i][j] = bruteforce::matrix::bitmap::FULL_BIT;
                 } else {
-                    arr[i][j] = 1 << (x[(i, j)] - 1);
+                    x[i][j] = 1 << (arr[(i, j)] - 1);
                 }
             }
         }
 
-        let y = bruteforce::bruteforce(&arr, 0);
+        let y = bruteforce::bruteforce(&x, 0);
 
-        let mut ret = Array::zeros((
+        let mut arr = Array::zeros((
             bruteforce::matrix::MATRIX_SIZE,
             bruteforce::matrix::MATRIX_SIZE,
         ));
         for i in 0..bruteforce::matrix::MATRIX_SIZE {
             for j in 0..bruteforce::matrix::MATRIX_SIZE {
-                ret[(i, j)] = y[i][j].ilog2() as bruteforce::matrix::bitmap::Bitmap + 1;
+                arr[(i, j)] = y[i][j].ilog2() as bruteforce::matrix::bitmap::Bitmap + 1;
             }
         }
-        ret.into_pyarray(py)
+        arr.into_pyarray(py)
     }
 
     Ok(())
