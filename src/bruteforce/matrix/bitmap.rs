@@ -31,7 +31,7 @@ pub fn popcount(bit: Bitmap) -> usize {
 
 pub fn to_binary(bmp: Bitmap) -> String {
     let mut bin_str = String::new();
-    let mut target_bit = 0b1_0000_0000;
+    let mut target_bit = 1 << (BITMAP_DIGIT - 1);
 
     for _ in 0..BITMAP_DIGIT {
         if bmp & target_bit == 0 {
@@ -73,7 +73,7 @@ mod tests {
     }
 
     #[test]
-    fn to_bin_test() {
+    fn to_binary_test() {
         let bin = to_binary(0b0_0000_0000);
         assert_eq!(bin, "000000000");
 
