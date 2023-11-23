@@ -31,9 +31,9 @@ pub fn to_binary(bmp: Bitmap) -> String {
 
     for i in 0..BITMAP_DIGIT {
         if bmp & (0b100000000 >> i) == 0 {
-            bin_str.push_str("0");
+            bin_str.push('0');
         } else {
-            bin_str.push_str("1");
+            bin_str.push('1');
         }
     }
     bin_str
