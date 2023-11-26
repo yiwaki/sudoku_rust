@@ -59,13 +59,13 @@ pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
         return x.clone();
     }
 
-    let addr = matrix::cell_no_to_addr(cell_no);
-    let bits = matrix::bitmap::split_to_single_bits(x[addr.row][addr.col]);
+    let pivot = matrix::cell_no_to_addr(cell_no);
+    let bits = matrix::bitmap::split_to_single_bits(x[pivot.row][pivot.col]);
 
     let mut y = matrix::alloc_matrix();
 
-    for bit in bits {
-        y = match _prune_by_pivot(x, &addr, bit) {
+    for target_bit in bits {
+        y = match _prune_by_pivot(x, &pivot, target_bit) {
             Some(z) => z,
             None => {
                 continue;

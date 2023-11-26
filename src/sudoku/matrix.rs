@@ -113,6 +113,7 @@ pub fn disp(x: &Matrix) {
         }
         println!();
     }
+    println!();
 }
 
 #[cfg(test)]
