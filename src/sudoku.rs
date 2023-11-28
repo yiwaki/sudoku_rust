@@ -64,13 +64,19 @@ pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
 
     let mut y = matrix::alloc_matrix();
 
-    for target_bit in bits {
-        y = match _prune_by_pivot(x, &pivot, target_bit) {
+    for target_bit in bits.iter() {
+        y = match _prune_by_pivot(x, &pivot, *target_bit) {
             Some(z) => z,
             None => {
                 continue;
             }
         };
+
+        if matrix::test_bitmap(&y, &pivot) {
+            continue;
+        }
+        // println!("{}: {:?} {}", cell_no, bits, *target_bit.ilog2() + 1);
+        // matrix::disp(&y);
 
         y = bruteforce(&y, cell_no + 1);
 

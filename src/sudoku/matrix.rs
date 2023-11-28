@@ -116,6 +116,25 @@ pub fn disp(x: &Matrix) {
     println!();
 }
 
+#[allow(dead_code)]
+pub fn test_bitmap(x: &Matrix, addr: &Address) -> bool {
+    for block_type in BLOCK_TYPES {
+        let block_no = addr_to_block_no(&block_type, addr);
+        let area = block_range(&block_type, block_no);
+
+        let mut bmp: bitmap::Bitmap = 0;
+        for row in (area.row_range.from)..(area.row_range.to) {
+            for col in (area.col_range.from)..(area.col_range.to) {
+                bmp &= x[row][col];
+            }
+        }
+        if bmp != bitmap::FULL_BIT {
+            return false;
+        }
+    }
+    true
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
