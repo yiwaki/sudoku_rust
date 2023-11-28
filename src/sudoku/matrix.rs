@@ -79,6 +79,24 @@ pub fn block_range(block_type: &Block, block_no: usize) -> Area {
     area
 }
 
+pub fn test_bitmap_by_addr(x: &Matrix, addr: &Address) -> bool {
+    for block_type in BLOCK_TYPES {
+        let block_no = addr_to_block_no(&block_type, addr);
+        let area = block_range(&block_type, block_no);
+
+        let mut bmp: bitmap::Bitmap = 0;
+        for row in (area.row_range.from)..(area.row_range.to) {
+            for col in (area.col_range.from)..(area.col_range.to) {
+                bmp &= x[row][col];
+            }
+        }
+        if bmp != bitmap::FULL_BIT {
+            return false;
+        }
+    }
+    true
+}
+
 #[allow(dead_code)]
 pub fn to_bmp(x: &Matrix) -> Matrix {
     let mut y = alloc_matrix();
@@ -114,25 +132,6 @@ pub fn disp(x: &Matrix) {
         println!();
     }
     println!();
-}
-
-#[allow(dead_code)]
-pub fn test_bitmap(x: &Matrix, addr: &Address) -> bool {
-    for block_type in BLOCK_TYPES {
-        let block_no = addr_to_block_no(&block_type, addr);
-        let area = block_range(&block_type, block_no);
-
-        let mut bmp: bitmap::Bitmap = 0;
-        for row in (area.row_range.from)..(area.row_range.to) {
-            for col in (area.col_range.from)..(area.col_range.to) {
-                bmp &= x[row][col];
-            }
-        }
-        if bmp != bitmap::FULL_BIT {
-            return false;
-        }
-    }
-    true
 }
 
 #[cfg(test)]

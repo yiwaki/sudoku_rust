@@ -12,4 +12,4 @@ develop:
 	pip install .
 
 test:
-	cargo test --lib --release
+	cargo test --lib
