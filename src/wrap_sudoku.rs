@@ -35,7 +35,7 @@ fn bruteforce<'py>(
 }
 
 #[pymodule]
-fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
+fn sudoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(bruteforce, m)?)?;
 
     Ok(())
