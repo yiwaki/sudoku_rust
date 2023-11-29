@@ -18,9 +18,10 @@ fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
                 (1 << (*x - 1)) as sudoku::matrix::bitmap::Bitmap
             }
         });
-        let x = [(); sudoku::matrix::MATRIX_SIZE]
-            .map(|()| [(); sudoku::matrix::MATRIX_SIZE].map(|()| *arr.iter().next().unwrap()));
-        let x = Box::new(x);
+        let x = Box::new(
+            [(); sudoku::matrix::MATRIX_SIZE]
+                .map(|()| [(); sudoku::matrix::MATRIX_SIZE].map(|()| *arr.iter().next().unwrap())),
+        );
 
         let y = sudoku::bruteforce(&x, 0);
 
