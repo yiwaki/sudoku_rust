@@ -11,21 +11,21 @@ fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
         py: Python<'py>,
         arr: PyReadonlyArray2<'py, sudoku::matrix::bitmap::Bitmap>,
     ) -> &'py PyArray2<sudoku::matrix::bitmap::Bitmap> {
-        let arr = arr.as_array();
-
-        let mut x = sudoku::matrix::alloc_matrix();
-        for i in 0..sudoku::matrix::MATRIX_SIZE {
-            for j in 0..sudoku::matrix::MATRIX_SIZE {
-                if arr[(i, j)] == 0 {
-                    x[i][j] = sudoku::matrix::bitmap::FULL_BIT;
-                } else {
-                    x[i][j] = 1 << (arr[(i, j)] - 1);
-                }
+        let arr = arr.as_array().map(|x| {
+            if *x == 0 {
+                sudoku::matrix::bitmap::FULL_BIT
+            } else {
+                (1 << (*x - 1)) as sudoku::matrix::bitmap::Bitmap
             }
-        }
+        });
+        let x = [(); sudoku::matrix::MATRIX_SIZE]
+            .map(|()| [(); sudoku::matrix::MATRIX_SIZE].map(|()| *arr.iter().next().unwrap()));
+        let x = Box::new(x);
 
         let y = sudoku::bruteforce(&x, 0);
 
+        // let arr = Array2(y);
+        // let arr = arr.map(|x| x)
         let mut arr = Array::zeros((sudoku::matrix::MATRIX_SIZE, sudoku::matrix::MATRIX_SIZE));
         for i in 0..sudoku::matrix::MATRIX_SIZE {
             for j in 0..sudoku::matrix::MATRIX_SIZE {
