@@ -1,4 +1,4 @@
-use numpy::{ndarray::arr2, IntoPyArray, PyArray2, PyReadonlyArray2};
+use numpy::{ndarray, IntoPyArray, PyArray2, PyReadonlyArray2};
 use pyo3::{pymodule, types::PyModule, PyResult, Python};
 
 mod sudoku;
@@ -25,7 +25,7 @@ fn sudoku_rust<'py>(_py: Python<'py>, m: &'py PyModule) -> PyResult<()> {
 
         let y = sudoku::bruteforce(&x, 0);
 
-        let arr = arr2(&*y).map(|&z| z.ilog2() as sudoku::matrix::bitmap::Bitmap + 1);
+        let arr = ndarray::arr2(&*y).map(|&z| z.ilog2() as sudoku::matrix::bitmap::Bitmap + 1);
         arr.into_pyarray(py)
     }
 
