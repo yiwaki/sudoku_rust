@@ -10,6 +10,7 @@ pub fn alloc_matrix() -> Matrix {
     Box::new([[0; MATRIX_SIZE]; MATRIX_SIZE])
 }
 
+#[derive(Debug)]
 pub enum Block {
     Row,
     Column,
@@ -18,6 +19,7 @@ pub enum Block {
 
 pub const BLOCK_TYPES: [Block; 3] = [Block::Row, Block::Column, Block::Square];
 
+#[derive(Debug)]
 pub struct Address {
     pub row: usize,
     pub col: usize,
@@ -87,10 +89,15 @@ pub fn test_bitmap_by_addr(x: &Matrix, addr: &Address) -> bool {
         let mut bmp: bitmap::Bitmap = 0;
         for row in (area.row_range.from)..(area.row_range.to) {
             for col in (area.col_range.from)..(area.col_range.to) {
-                bmp &= x[row][col];
+                bmp |= x[row][col];
             }
         }
+
         if bmp != bitmap::FULL_BIT {
+            if cfg!(debug_assertions) {
+                println!("{:b}:{:?}:{}-{:?}", bmp, block_type, block_no, addr);
+                disp(x);
+            }
             return false;
         }
     }

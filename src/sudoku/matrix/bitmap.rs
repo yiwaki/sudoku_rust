@@ -30,18 +30,7 @@ pub fn popcount(bit: Bitmap) -> usize {
 }
 
 pub fn to_binary(bmp: Bitmap) -> String {
-    let mut bin_str = String::new();
-    let mut target_bit = 1 << (BITMAP_DIGIT - 1);
-
-    for _ in 0..BITMAP_DIGIT {
-        if bmp & target_bit == 0 {
-            bin_str.push('0');
-        } else {
-            bin_str.push('1');
-        }
-        target_bit >>= 1;
-    }
-    bin_str
+    format!("{:09b}", bmp)
 }
 
 #[cfg(test)]

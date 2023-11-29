@@ -51,32 +51,30 @@ fn _prune_by_pivot(
             }
         }
     }
-    Some(y)
+
+    if matrix::test_bitmap_by_addr(&y, pivot) {
+        Some(y)
+    } else {
+        None
+    }
 }
 
 pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
+    let mut y = x.clone();
     if cell_no >= matrix::CELL_COUNT {
-        return x.clone();
+        return y;
     }
 
     let pivot = matrix::cell_no_to_addr(cell_no);
     let bits = matrix::bitmap::split_to_single_bits(x[pivot.row][pivot.col]);
 
-    let mut y = x.clone();
-
-    for target_bit in bits.iter() {
-        y = match _prune_by_pivot(x, &pivot, *target_bit) {
+    for target_bit in bits.into_iter() {
+        y = match _prune_by_pivot(x, &pivot, target_bit) {
             Some(z) => z,
             None => {
                 continue;
             }
         };
-
-        if matrix::test_bitmap_by_addr(&y, &pivot) {
-            continue;
-        }
-        // println!("{}: {:?} {}", cell_no, bits, *target_bit.ilog2() + 1);
-        // matrix::disp(&y);
 
         y = bruteforce(&y, cell_no + 1);
 
