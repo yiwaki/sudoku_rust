@@ -1,3 +1,5 @@
+use crate::sudoku::matrix;
+
 pub mod bitmap;
 
 pub const MATRIX_SIZE: usize = 9;
@@ -95,7 +97,14 @@ pub fn test_bitmap_by_addr(x: &Matrix, addr: &Address) -> bool {
 
         if bmp != bitmap::FULL_BIT {
             if cfg!(debug_assertions) {
-                println!("{:09b}:{:?}:{}-{:?}", bmp, block_type, block_no, addr);
+                println!(
+                    "{:0w$b}:{:?}:{}-{:?}",
+                    bmp,
+                    block_type,
+                    block_no,
+                    addr,
+                    w = matrix::bitmap::BITMAP_DIGIT,
+                );
                 disp(x);
             }
             return false;

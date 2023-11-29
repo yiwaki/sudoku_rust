@@ -30,7 +30,7 @@ pub fn popcount(bit: Bitmap) -> usize {
 }
 
 pub fn to_binary(bmp: Bitmap) -> String {
-    format!("{:09b}", bmp)
+    format!("{:0w$b}", bmp, w = BITMAP_DIGIT)
 }
 
 #[cfg(test)]
