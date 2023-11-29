@@ -95,7 +95,7 @@ pub fn test_bitmap_by_addr(x: &Matrix, addr: &Address) -> bool {
 
         if bmp != bitmap::FULL_BIT {
             if cfg!(debug_assertions) {
-                println!("{:b}:{:?}:{}-{:?}", bmp, block_type, block_no, addr);
+                println!("{:09b}:{:?}:{}-{:?}", bmp, block_type, block_no, addr);
                 disp(x);
             }
             return false;
