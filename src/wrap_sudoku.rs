@@ -3,7 +3,7 @@ use pyo3::{pyfunction, pymodule, types::PyModule, wrap_pyfunction, PyResult, Pyt
 
 mod sudoku;
 
-fn _ndarray_to_bmp_matrix(
+fn _ndarray_to_matrix(
     x: &ndarray::ArrayView2<sudoku::matrix::bitmap::Bitmap>,
 ) -> sudoku::matrix::Matrix {
     let mut it = x.iter();
@@ -19,7 +19,7 @@ fn _ndarray_to_bmp_matrix(
     }))
 }
 
-fn _bmp_matrix_to_ndarray(
+fn _matrix_to_ndarray(
     x: &sudoku::matrix::Matrix,
 ) -> ndarray::Array2<sudoku::matrix::bitmap::Bitmap> {
     ndarray::arr2(&**x).map(|z| (*z).ilog2() as sudoku::matrix::bitmap::Bitmap + 1)
@@ -30,11 +30,11 @@ fn bruteforce<'py>(
     py: Python<'py>,
     arr: PyReadonlyArray2<'py, sudoku::matrix::bitmap::Bitmap>,
 ) -> &'py PyArray2<sudoku::matrix::bitmap::Bitmap> {
-    let x = _ndarray_to_bmp_matrix(&arr.as_array());
+    let x = _ndarray_to_matrix(&arr.as_array());
 
     let y = sudoku::bruteforce(&x, 0);
 
-    _bmp_matrix_to_ndarray(&y).into_pyarray(py)
+    _matrix_to_ndarray(&y).into_pyarray(py)
 }
 
 #[pymodule]
