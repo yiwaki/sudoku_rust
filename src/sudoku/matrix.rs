@@ -75,7 +75,7 @@ impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for row in 0..MATRIX_SIZE {
             for col in 0..MATRIX_SIZE {
-                let _ = write!(f, "{:09b} ", self.mat[row][col]);
+                let _ = write!(f, "{:0w$b} ", self.mat[row][col], w = MATRIX_SIZE);
             }
             let _ = writeln!(f);
         }
