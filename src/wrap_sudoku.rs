@@ -7,7 +7,7 @@ fn _ndarray_to_matrix(
     x: &ndarray::ArrayView2<sudoku::matrix::bitmap::Bitmap>,
 ) -> sudoku::matrix::Matrix {
     let mut it = x.iter();
-    Box::new([(); sudoku::matrix::MATRIX_SIZE].map(|()| {
+    sudoku::matrix::Matrix::new([(); sudoku::matrix::MATRIX_SIZE].map(|()| {
         [(); sudoku::matrix::MATRIX_SIZE].map(|()| {
             let z = it.next().unwrap();
             if *z == 0 {

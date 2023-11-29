@@ -6,11 +6,12 @@ fn _done(x: &matrix::Matrix) -> bool {
             let area = matrix::block_range(&block_type, block_no);
 
             let mut bmp: matrix::bitmap::Bitmap = 0;
-            for row_no in (area.row_range.from)..(area.row_range.to) {
-                for col_no in (area.col_range.from)..(area.col_range.to) {
-                    bmp |= x[row_no][col_no];
+            for row in (area.row_range.from)..(area.row_range.to) {
+                for col in (area.col_range.from)..(area.col_range.to) {
+                    let addr = matrix::Address { row, col };
+                    bmp |= x[&addr];
 
-                    if matrix::bitmap::popcount(x[row_no][col_no]) > 1 {
+                    if matrix::bitmap::popcount(x[&addr]) > 1 {
                         return false;
                     }
                 }
@@ -36,16 +37,17 @@ fn _prune_by_pivot(
 
         let area = matrix::block_range(&block_type, block_no);
 
-        for row_no in (area.row_range.from)..(area.row_range.to) {
-            for col_no in (area.col_range.from)..(area.col_range.to) {
-                if row_no == pivot.row && col_no == pivot.col {
-                    y[row_no][col_no] = target_bit;
+        for row in (area.row_range.from)..(area.row_range.to) {
+            for col in (area.col_range.from)..(area.col_range.to) {
+                let addr = matrix::Address { row, col };
+                if addr == *pivot {
+                    y[&addr] = target_bit;
                     continue;
                 }
 
-                y[row_no][col_no] &= !target_bit;
+                y[&addr] &= !target_bit;
 
-                if y[row_no][col_no] == 0 {
+                if y[&addr] == 0 {
                     return None;
                 }
             }
@@ -66,7 +68,7 @@ pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
     }
 
     let pivot = matrix::cell_no_to_addr(cell_no);
-    let bits = matrix::bitmap::split_to_single_bits(x[pivot.row][pivot.col]);
+    let bits = matrix::bitmap::split_to_single_bits(x[&pivot]);
 
     for target_bit in bits.into_iter() {
         y = match _prune_by_pivot(x, &pivot, target_bit) {
@@ -91,7 +93,7 @@ mod tests {
 
     #[test]
     fn bruteforce_test() {
-        let x = Box::new([
+        let x = matrix::Matrix::new([
             [511, 511, 8, 511, 16, 511, 511, 511, 1],
             [511, 511, 32, 511, 511, 511, 511, 4, 511],
             [16, 4, 511, 64, 511, 511, 511, 511, 128],
@@ -103,12 +105,12 @@ mod tests {
             [511, 511, 511, 32, 511, 511, 1, 511, 511],
         ]);
         println!("Puzzle:");
-        matrix::disp(&x);
+        println!("{}", x);
 
         let y = bruteforce(&x, 0);
 
         println!("Solution:");
-        matrix::disp(&y);
+        println!("{}", y);
         assert!(_done(&y));
     }
 }

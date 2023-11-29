@@ -29,10 +29,6 @@ pub fn popcount(bit: Bitmap) -> usize {
     cnt
 }
 
-pub fn to_binary(bmp: Bitmap) -> String {
-    format!("{:0w$b}", bmp, w = BITMAP_DIGIT)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -59,17 +55,5 @@ mod tests {
 
         let cnt = popcount(0b1_1111_1111);
         assert_eq!(cnt, 9);
-    }
-
-    #[test]
-    fn to_binary_test() {
-        let bin = to_binary(0b0_0000_0000);
-        assert_eq!(bin, "000000000");
-
-        let bin = to_binary(0b1_0010_0101);
-        assert_eq!(bin, "100100101");
-
-        let bin = to_binary(0b1_1111_1111);
-        assert_eq!(bin, "111111111");
     }
 }

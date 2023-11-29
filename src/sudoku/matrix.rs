@@ -1,10 +1,11 @@
+use std::fmt;
+use std::ops::{Deref, Index, IndexMut};
+
 pub mod bitmap;
 
 pub const MATRIX_SIZE: usize = 9;
 pub const SQUARE_SIZE: usize = 3;
 pub const CELL_COUNT: usize = MATRIX_SIZE * MATRIX_SIZE;
-
-pub type Matrix = Box<[[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE]>;
 
 #[derive(Debug)]
 pub enum Block {
@@ -21,6 +22,12 @@ pub struct Address {
     pub col: usize,
 }
 
+impl PartialEq for Address {
+    fn eq(&self, other: &Self) -> bool {
+        self.row == other.row && self.col == other.col
+    }
+}
+
 pub struct Range {
     pub from: usize,
     pub to: usize,
@@ -29,6 +36,51 @@ pub struct Range {
 pub struct Area {
     pub row_range: Range,
     pub col_range: Range,
+}
+
+type MatrixBuffer = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
+
+#[derive(Clone)]
+pub struct Matrix {
+    mat: MatrixBuffer,
+}
+
+impl Matrix {
+    pub fn new(x: MatrixBuffer) -> Matrix {
+        Matrix { mat: x }
+    }
+}
+
+impl Index<&Address> for Matrix {
+    type Output = bitmap::Bitmap;
+    fn index(&self, index: &Address) -> &Self::Output {
+        &self.mat[index.row][index.col]
+    }
+}
+
+impl IndexMut<&Address> for Matrix {
+    fn index_mut(&mut self, index: &Address) -> &mut Self::Output {
+        &mut self.mat[index.row][index.col]
+    }
+}
+
+impl Deref for Matrix {
+    type Target = MatrixBuffer;
+    fn deref(&self) -> &MatrixBuffer {
+        &self.mat
+    }
+}
+
+impl fmt::Display for Matrix {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        for row in 0..MATRIX_SIZE {
+            for col in 0..MATRIX_SIZE {
+                let _ = write!(f, "{:09b} ", self.mat[row][col]);
+            }
+            let _ = writeln!(f);
+        }
+        writeln!(f)
+    }
 }
 
 pub fn cell_no_to_addr(cell_no: usize) -> Address {
@@ -85,30 +137,20 @@ pub fn test_bitmap_by_addr(x: &Matrix, addr: &Address) -> bool {
         let mut bmp: bitmap::Bitmap = 0;
         for row in (area.row_range.from)..(area.row_range.to) {
             for col in (area.col_range.from)..(area.col_range.to) {
-                bmp |= x[row][col];
+                let addr = Address { row, col };
+                bmp |= x[&addr];
             }
         }
 
         if bmp != bitmap::FULL_BIT {
             if cfg!(debug_assertions) {
                 println!("{:09b}:{:?}:{}-{:?}", bmp, block_type, block_no, addr);
-                disp(x);
+                println!("{}", x);
             }
             return false;
         }
     }
     true
-}
-
-#[allow(dead_code)]
-pub fn disp(x: &Matrix) {
-    for row in 0..MATRIX_SIZE {
-        for col in 0..MATRIX_SIZE {
-            print!("{} ", bitmap::to_binary(x[row][col]));
-        }
-        println!();
-    }
-    println!();
 }
 
 #[cfg(test)]
