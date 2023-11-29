@@ -42,32 +42,32 @@ type MatrixBuffer = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
 
 #[derive(Clone)]
 pub struct Matrix {
-    mat: MatrixBuffer,
+    buffer: MatrixBuffer,
 }
 
 impl Matrix {
     pub fn new(x: MatrixBuffer) -> Matrix {
-        Matrix { mat: x }
+        Matrix { buffer: x }
     }
 }
 
 impl Index<&Address> for Matrix {
     type Output = bitmap::Bitmap;
     fn index(&self, index: &Address) -> &Self::Output {
-        &self.mat[index.row][index.col]
+        &self.buffer[index.row][index.col]
     }
 }
 
 impl IndexMut<&Address> for Matrix {
     fn index_mut(&mut self, index: &Address) -> &mut Self::Output {
-        &mut self.mat[index.row][index.col]
+        &mut self.buffer[index.row][index.col]
     }
 }
 
 impl Deref for Matrix {
     type Target = MatrixBuffer;
     fn deref(&self) -> &MatrixBuffer {
-        &self.mat
+        &self.buffer
     }
 }
 
@@ -75,7 +75,7 @@ impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for row in 0..MATRIX_SIZE {
             for col in 0..MATRIX_SIZE {
-                let _ = write!(f, "{:0w$b} ", self.mat[row][col], w = MATRIX_SIZE);
+                let _ = write!(f, "{:0w$b} ", self.buffer[row][col], w = MATRIX_SIZE);
             }
             let _ = writeln!(f);
         }

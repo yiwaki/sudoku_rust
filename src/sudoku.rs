@@ -91,6 +91,18 @@ pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
 mod tests {
     use super::*;
 
+    fn _check_problem(problem: &matrix::Matrix, solution: &matrix::Matrix) -> bool {
+        for row in 0..matrix::MATRIX_SIZE {
+            for col in 0..matrix::MATRIX_SIZE {
+                let addr = matrix::Address { row, col };
+                if problem[&addr] != matrix::bitmap::FULL_BIT && problem[&addr] != solution[&addr] {
+                    return false;
+                }
+            }
+        }
+        _done(solution)
+    }
+
     #[test]
     fn bruteforce_test() {
         let x = matrix::Matrix::new([
@@ -111,6 +123,6 @@ mod tests {
 
         println!("Solution:");
         println!("{}", y);
-        assert!(_done(&y));
+        assert!(_check_problem(&x, &y));
     }
 }
