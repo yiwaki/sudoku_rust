@@ -62,15 +62,15 @@ impl Matrix {
     }
 }
 
-impl Index<&Address> for Matrix {
+impl Index<Address> for Matrix {
     type Output = bitmap::Bitmap;
-    fn index(&self, index: &Address) -> &Self::Output {
+    fn index(&self, index: Address) -> &Self::Output {
         &self.buffer[index.0][index.1]
     }
 }
 
-impl IndexMut<&Address> for Matrix {
-    fn index_mut(&mut self, index: &Address) -> &mut Self::Output {
+impl IndexMut<Address> for Matrix {
+    fn index_mut(&mut self, index: Address) -> &mut Self::Output {
         &mut self.buffer[index.0][index.1]
     }
 }
@@ -98,7 +98,7 @@ pub fn cell_no_to_addr(cell_no: usize) -> Address {
     (cell_no / MATRIX_SIZE, cell_no % MATRIX_SIZE)
 }
 
-pub fn addr_to_block_no(block_type: &Block, addr: &Address) -> usize {
+pub fn addr_to_block_no(block_type: &Block, addr: Address) -> usize {
     match block_type {
         Block::Row => addr.0,
         Block::Column => addr.1,
@@ -131,7 +131,7 @@ pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) {
     }
 }
 
-pub fn test_bitmap_by_addr(x: &Matrix, addr: &Address) -> bool {
+pub fn test_bitmap_by_addr(x: &Matrix, addr: Address) -> bool {
     for block_type in BLOCK_TYPES {
         let block_no = addr_to_block_no(&block_type, addr);
         let (row_range, col_range) = block_range(&block_type, block_no);
@@ -140,7 +140,7 @@ pub fn test_bitmap_by_addr(x: &Matrix, addr: &Address) -> bool {
         for row in (row_range.start)..(row_range.end) {
             for col in (col_range.start)..(col_range.end) {
                 let addr = (row, col);
-                bmp |= x[&addr];
+                bmp |= x[addr];
             }
         }
 
@@ -162,20 +162,19 @@ mod tests {
     #[test]
     fn cell_no_to_addr_test() {
         let addr = cell_no_to_addr(5);
-        assert_eq!(addr.0, 0);
-        assert_eq!(addr.1, 5);
+        assert_eq!(addr, (0, 5));
     }
 
     #[test]
     fn addr_to_block_no_test() {
         let addr = (1, 2);
-        let block_no = addr_to_block_no(&Block::Row, &addr);
+        let block_no = addr_to_block_no(&Block::Row, addr);
         assert_eq!(block_no, 1);
 
-        let block_no = addr_to_block_no(&Block::Column, &addr);
+        let block_no = addr_to_block_no(&Block::Column, addr);
         assert_eq!(block_no, 2);
 
-        let block_no = addr_to_block_no(&Block::Square, &addr);
+        let block_no = addr_to_block_no(&Block::Square, addr);
         assert_eq!(block_no, 0);
     }
 

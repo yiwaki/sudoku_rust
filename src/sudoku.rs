@@ -8,9 +8,9 @@ fn _done(x: &matrix::Matrix) -> bool {
             let mut bmp: matrix::bitmap::Bitmap = 0;
             for row in row_range.into_iter() {
                 for col in col_range.into_iter() {
-                    bmp |= x[&(row, col)];
+                    bmp |= x[(row, col)];
 
-                    if matrix::bitmap::popcount(x[&(row, col)]) > 1 {
+                    if matrix::bitmap::popcount(x[(row, col)]) > 1 {
                         return false;
                     }
                 }
@@ -26,7 +26,7 @@ fn _done(x: &matrix::Matrix) -> bool {
 
 fn _prune_by_pivot(
     x: &matrix::Matrix,
-    pivot: &matrix::Address,
+    pivot: matrix::Address,
     target_bit: matrix::bitmap::Bitmap,
 ) -> Option<matrix::Matrix> {
     let mut y = x.clone();
@@ -38,14 +38,14 @@ fn _prune_by_pivot(
 
         for row in row_range.into_iter() {
             for col in col_range.into_iter() {
-                if (row, col) == *pivot {
-                    y[&(row, col)] = target_bit;
+                if (row, col) == pivot {
+                    y[(row, col)] = target_bit;
                     continue;
                 }
 
-                y[&(row, col)] &= !target_bit;
+                y[(row, col)] &= !target_bit;
 
-                if y[&(row, col)] == 0 {
+                if y[(row, col)] == 0 {
                     return None;
                 }
             }
@@ -66,10 +66,10 @@ pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
     }
 
     let pivot = matrix::cell_no_to_addr(cell_no);
-    let bits = matrix::bitmap::split_to_single_bits(x[&pivot]);
+    let bits = matrix::bitmap::split_to_single_bits(x[pivot]);
 
     for target_bit in bits.into_iter() {
-        y = match _prune_by_pivot(x, &pivot, target_bit) {
+        y = match _prune_by_pivot(x, pivot, target_bit) {
             Some(z) => z,
             None => {
                 continue;
@@ -92,8 +92,8 @@ mod tests {
     fn _check_problem(problem: &matrix::Matrix, solution: &matrix::Matrix) -> bool {
         for row in 0..matrix::MATRIX_SIZE {
             for col in 0..matrix::MATRIX_SIZE {
-                if problem[&(row, col)] != matrix::bitmap::FULL_BIT
-                    && problem[&(row, col)] != solution[&(row, col)]
+                if problem[(row, col)] != matrix::bitmap::FULL_BIT
+                    && problem[(row, col)] != solution[(row, col)]
                 {
                     return false;
                 }
