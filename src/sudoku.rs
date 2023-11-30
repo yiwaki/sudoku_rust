@@ -8,10 +8,9 @@ fn _done(x: &matrix::Matrix) -> bool {
             let mut bmp: matrix::bitmap::Bitmap = 0;
             for row in row_range.into_iter() {
                 for col in col_range.into_iter() {
-                    let addr = matrix::Address { row, col };
-                    bmp |= x[&addr];
+                    bmp |= x[&(row, col)];
 
-                    if matrix::bitmap::popcount(x[&addr]) > 1 {
+                    if matrix::bitmap::popcount(x[&(row, col)]) > 1 {
                         return false;
                     }
                 }
@@ -39,15 +38,14 @@ fn _prune_by_pivot(
 
         for row in row_range.into_iter() {
             for col in col_range.into_iter() {
-                let addr = matrix::Address { row, col };
-                if addr == *pivot {
-                    y[&addr] = target_bit;
+                if (row, col) == *pivot {
+                    y[&(row, col)] = target_bit;
                     continue;
                 }
 
-                y[&addr] &= !target_bit;
+                y[&(row, col)] &= !target_bit;
 
-                if y[&addr] == 0 {
+                if y[&(row, col)] == 0 {
                     return None;
                 }
             }
@@ -94,8 +92,9 @@ mod tests {
     fn _check_problem(problem: &matrix::Matrix, solution: &matrix::Matrix) -> bool {
         for row in 0..matrix::MATRIX_SIZE {
             for col in 0..matrix::MATRIX_SIZE {
-                let addr = matrix::Address { row, col };
-                if problem[&addr] != matrix::bitmap::FULL_BIT && problem[&addr] != solution[&addr] {
+                if problem[&(row, col)] != matrix::bitmap::FULL_BIT
+                    && problem[&(row, col)] != solution[&(row, col)]
+                {
                     return false;
                 }
             }
