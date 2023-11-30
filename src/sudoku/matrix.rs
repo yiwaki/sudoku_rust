@@ -101,18 +101,17 @@ pub fn addr_to_block_no(block_type: &Block, addr: Address) -> usize {
     }
 }
 
-pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) {
+pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) /* (row_range, col_range) */
+{
     match block_type {
         Block::Row => (
             Range::new(block_no, block_no + 1),
             Range::new(0, MATRIX_SIZE),
         ),
-
         Block::Column => (
             Range::new(0, MATRIX_SIZE),
             Range::new(block_no, block_no + 1),
         ),
-
         Block::Square => (
             Range::new(
                 block_no / SQUARE_SIZE * SQUARE_SIZE,
@@ -132,8 +131,8 @@ pub fn test_bitmap_by_addr(x: &Matrix, addr: Address) -> bool {
         let (row_range, col_range) = block_range(&block_type, block_no);
 
         let mut bmp: bitmap::Bitmap = 0;
-        for row in (row_range.start)..(row_range.end) {
-            for col in (col_range.start)..(col_range.end) {
+        for row in row_range.into_iter() {
+            for col in col_range.into_iter() {
                 let addr = (row, col);
                 bmp |= x[addr];
             }
