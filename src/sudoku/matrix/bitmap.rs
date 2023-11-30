@@ -47,13 +47,8 @@ mod tests {
 
     #[test]
     fn popcount_test() {
-        let cnt = popcount(0b0_0000_0000);
-        assert_eq!(cnt, 0);
-
-        let cnt = popcount(0b1_0010_0101);
-        assert_eq!(cnt, 4);
-
-        let cnt = popcount(0b1_1111_1111);
-        assert_eq!(cnt, 9);
+        assert_eq!(popcount(0b0_0000_0000), 0);
+        assert_eq!(popcount(0b1_0010_0101), 4);
+        assert_eq!(popcount(0b1_1111_1111), 9);
     }
 }

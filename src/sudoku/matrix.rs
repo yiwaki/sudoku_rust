@@ -32,7 +32,6 @@ impl Range {
 
 impl Iterator for Range {
     type Item = usize;
-
     fn next(&mut self) -> Option<Self::Item> {
         if self.start >= self.end {
             None
@@ -133,8 +132,7 @@ pub fn test_bitmap_by_addr(x: &Matrix, addr: Address) -> bool {
         let mut bmp: bitmap::Bitmap = 0;
         for row in row_range.into_iter() {
             for col in col_range.into_iter() {
-                let addr = (row, col);
-                bmp |= x[addr];
+                bmp |= x[(row, col)];
             }
         }
 
