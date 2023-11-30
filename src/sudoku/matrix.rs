@@ -28,6 +28,7 @@ impl PartialEq for Address {
     }
 }
 
+#[derive(Clone)]
 pub struct Range {
     pub start: usize,
     pub end: usize,
@@ -37,7 +38,7 @@ impl Iterator for Range {
     type Item = usize;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.start > self.end {
+        if self.start >= self.end {
             None
         } else {
             let c = self.start;
@@ -190,6 +191,18 @@ mod tests {
 
         let block_no = addr_to_block_no(&Block::Square, &addr);
         assert_eq!(block_no, 0);
+    }
+
+    #[test]
+    fn range_test() {
+        let r = Range { start: 0, end: 3 };
+        let c = Range { start: 0, end: 2 };
+        for i in r.into_iter() {
+            for j in c.into_iter() {
+                print!("({},{}) ", i, j);
+            }
+        }
+        println!();
     }
 
     #[test]
