@@ -29,13 +29,22 @@ impl PartialEq for Address {
 }
 
 pub struct Range {
-    pub from: usize,
-    pub to: usize,
+    pub start: usize,
+    pub end: usize,
 }
 
-pub struct Area {
-    pub row_range: Range,
-    pub col_range: Range,
+impl Iterator for Range {
+    type Item = usize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.start > self.end {
+            None
+        } else {
+            let c = self.start;
+            self.start += 1;
+            Some(c)
+        }
+    }
 }
 
 type MatrixBuffer = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
@@ -98,45 +107,51 @@ pub fn addr_to_block_no(block_type: &Block, addr: &Address) -> usize {
     }
 }
 
-pub fn block_range(block_type: &Block, block_no: usize) -> Area {
-    let mut area = Area {
-        row_range: Range { from: 0, to: 0 },
-        col_range: Range { from: 0, to: 0 },
-    };
-
+pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) {
     match block_type {
-        Block::Row => {
-            area.row_range.from = block_no;
-            area.row_range.to = area.row_range.from + 1;
-            area.col_range.from = 0;
-            area.col_range.to = MATRIX_SIZE;
-        }
+        Block::Row => (
+            Range {
+                start: block_no,
+                end: block_no + 1,
+            },
+            Range {
+                start: 0,
+                end: MATRIX_SIZE,
+            },
+        ),
 
-        Block::Column => {
-            area.row_range.from = 0;
-            area.row_range.to = MATRIX_SIZE;
-            area.col_range.from = block_no;
-            area.col_range.to = area.col_range.from + 1;
-        }
+        Block::Column => (
+            Range {
+                start: 0,
+                end: MATRIX_SIZE,
+            },
+            Range {
+                start: block_no,
+                end: block_no + 1,
+            },
+        ),
 
-        Block::Square => {
-            area.row_range.from = block_no / SQUARE_SIZE * SQUARE_SIZE;
-            area.row_range.to = area.row_range.from + SQUARE_SIZE;
-            area.col_range.from = block_no % SQUARE_SIZE * SQUARE_SIZE;
-            area.col_range.to = area.col_range.from + SQUARE_SIZE;
-        }
+        Block::Square => (
+            Range {
+                start: block_no / SQUARE_SIZE * SQUARE_SIZE,
+                end: block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
+            },
+            Range {
+                start: block_no % SQUARE_SIZE * SQUARE_SIZE,
+                end: block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
+            },
+        ),
     }
-    area
 }
 
 pub fn test_bitmap_by_addr(x: &Matrix, addr: &Address) -> bool {
     for block_type in BLOCK_TYPES {
         let block_no = addr_to_block_no(&block_type, addr);
-        let area = block_range(&block_type, block_no);
+        let (row_range, col_range) = block_range(&block_type, block_no);
 
         let mut bmp: bitmap::Bitmap = 0;
-        for row in (area.row_range.from)..(area.row_range.to) {
-            for col in (area.col_range.from)..(area.col_range.to) {
+        for row in (row_range.start)..(row_range.end) {
+            for col in (col_range.start)..(col_range.end) {
                 let addr = Address { row, col };
                 bmp |= x[&addr];
             }
@@ -179,22 +194,22 @@ mod tests {
 
     #[test]
     fn block_range_test() {
-        let area = block_range(&Block::Row, 4);
-        assert_eq!(area.row_range.from, 4);
-        assert_eq!(area.row_range.to, 5);
-        assert_eq!(area.col_range.from, 0);
-        assert_eq!(area.col_range.to, MATRIX_SIZE);
+        let (row_range, col_range) = block_range(&Block::Row, 4);
+        assert_eq!(row_range.start, 4);
+        assert_eq!(row_range.end, 5);
+        assert_eq!(col_range.start, 0);
+        assert_eq!(col_range.end, MATRIX_SIZE);
 
-        let area = block_range(&Block::Column, 4);
-        assert_eq!(area.row_range.from, 0);
-        assert_eq!(area.row_range.to, MATRIX_SIZE);
-        assert_eq!(area.col_range.from, 4);
-        assert_eq!(area.col_range.to, 5);
+        let (row_range, col_range) = block_range(&Block::Column, 4);
+        assert_eq!(row_range.start, 0);
+        assert_eq!(row_range.end, MATRIX_SIZE);
+        assert_eq!(col_range.start, 4);
+        assert_eq!(col_range.end, 5);
 
-        let area = block_range(&Block::Square, 4);
-        assert_eq!(area.row_range.from, 3);
-        assert_eq!(area.row_range.to, 6);
-        assert_eq!(area.col_range.from, 3);
-        assert_eq!(area.col_range.to, 6);
+        let (row_range, col_range) = block_range(&Block::Square, 4);
+        assert_eq!(row_range.start, 3);
+        assert_eq!(row_range.end, 6);
+        assert_eq!(col_range.start, 3);
+        assert_eq!(col_range.end, 6);
     }
 }

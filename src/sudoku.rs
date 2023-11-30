@@ -3,11 +3,11 @@ pub mod matrix;
 fn _done(x: &matrix::Matrix) -> bool {
     for block_type in matrix::BLOCK_TYPES {
         for block_no in 0..matrix::MATRIX_SIZE {
-            let area = matrix::block_range(&block_type, block_no);
+            let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
             let mut bmp: matrix::bitmap::Bitmap = 0;
-            for row in (area.row_range.from)..(area.row_range.to) {
-                for col in (area.col_range.from)..(area.col_range.to) {
+            for row in (row_range.start)..(row_range.end) {
+                for col in (col_range.start)..(col_range.end) {
                     let addr = matrix::Address { row, col };
                     bmp |= x[&addr];
 
@@ -35,10 +35,10 @@ fn _prune_by_pivot(
     for block_type in matrix::BLOCK_TYPES {
         let block_no = matrix::addr_to_block_no(&block_type, pivot);
 
-        let area = matrix::block_range(&block_type, block_no);
+        let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-        for row in (area.row_range.from)..(area.row_range.to) {
-            for col in (area.col_range.from)..(area.col_range.to) {
+        for row in (row_range.start)..(row_range.end) {
+            for col in (col_range.start)..(col_range.end) {
                 let addr = matrix::Address { row, col };
                 if addr == *pivot {
                     y[&addr] = target_bit;
