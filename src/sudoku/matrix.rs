@@ -22,17 +22,28 @@ pub type Address = (usize, usize);
 pub struct Range {
     pub start: usize,
     pub end: usize,
+    current: usize,
+}
+
+impl Range {
+    fn new(start: usize, end: usize) -> Range {
+        Range {
+            start,
+            end,
+            current: start,
+        }
+    }
 }
 
 impl Iterator for Range {
     type Item = usize;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.start >= self.end {
+        if self.current >= self.end {
             None
         } else {
-            let c = self.start;
-            self.start += 1;
+            let c = self.current;
+            self.current += 1;
             Some(c)
         }
     }
@@ -98,36 +109,24 @@ pub fn addr_to_block_no(block_type: &Block, addr: &Address) -> usize {
 pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) {
     match block_type {
         Block::Row => (
-            Range {
-                start: block_no,
-                end: block_no + 1,
-            },
-            Range {
-                start: 0,
-                end: MATRIX_SIZE,
-            },
+            Range::new(block_no, block_no + 1),
+            Range::new(0, MATRIX_SIZE),
         ),
 
         Block::Column => (
-            Range {
-                start: 0,
-                end: MATRIX_SIZE,
-            },
-            Range {
-                start: block_no,
-                end: block_no + 1,
-            },
+            Range::new(0, MATRIX_SIZE),
+            Range::new(block_no, block_no + 1),
         ),
 
         Block::Square => (
-            Range {
-                start: block_no / SQUARE_SIZE * SQUARE_SIZE,
-                end: block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
-            },
-            Range {
-                start: block_no % SQUARE_SIZE * SQUARE_SIZE,
-                end: block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
-            },
+            Range::new(
+                block_no / SQUARE_SIZE * SQUARE_SIZE,
+                block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
+            ),
+            Range::new(
+                block_no % SQUARE_SIZE * SQUARE_SIZE,
+                block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
+            ),
         ),
     }
 }
@@ -183,8 +182,8 @@ mod tests {
     #[test]
     fn range_test() {
         let mut buf = String::new();
-        let r = Range { start: 0, end: 3 };
-        let c = Range { start: 0, end: 2 };
+        let r = Range::new(0, 3);
+        let c = Range::new(0, 2);
         for i in r.into_iter() {
             for j in c.into_iter() {
                 print!("({},{}) ", i, j);
