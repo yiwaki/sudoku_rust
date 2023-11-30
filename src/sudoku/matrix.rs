@@ -20,18 +20,13 @@ pub type Address = (usize, usize);
 
 #[derive(Clone, Copy)]
 pub struct Range {
-    pub start: usize,
-    pub end: usize,
-    current: usize,
+    start: usize,
+    end: usize,
 }
 
 impl Range {
     fn new(start: usize, end: usize) -> Range {
-        Range {
-            start,
-            end,
-            current: start,
-        }
+        Range { start, end }
     }
 }
 
@@ -39,11 +34,11 @@ impl Iterator for Range {
     type Item = usize;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.current >= self.end {
+        if self.start >= self.end {
             None
         } else {
-            let c = self.current;
-            self.current += 1;
+            let c = self.start;
+            self.start += 1;
             Some(c)
         }
     }
