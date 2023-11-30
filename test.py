@@ -1,5 +1,7 @@
 import time
+
 import numpy as np
+
 from sudoku_rust import bruteforce
 
 filepath = "data/evil_3.csv"
