@@ -182,14 +182,17 @@ mod tests {
 
     #[test]
     fn range_test() {
+        let mut buf = String::new();
         let r = Range { start: 0, end: 3 };
         let c = Range { start: 0, end: 2 };
         for i in r.into_iter() {
             for j in c.into_iter() {
                 print!("({},{}) ", i, j);
+                buf.push_str(format!("({},{}) ", i, j).as_str());
             }
         }
         println!();
+        assert_eq!(buf, "(0,0) (0,1) (1,0) (1,1) (2,0) (2,1) ");
     }
 
     #[test]
