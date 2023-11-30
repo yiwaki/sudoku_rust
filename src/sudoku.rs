@@ -38,7 +38,7 @@ fn _prune_by_pivot(
         let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
         for row in row_range.into_iter() {
-            for col in col_range.clone().into_iter() {
+            for col in col_range.into_iter() {
                 let addr = matrix::Address { row, col };
                 if addr == *pivot {
                     y[&addr] = target_bit;
