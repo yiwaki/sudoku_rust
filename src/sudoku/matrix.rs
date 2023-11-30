@@ -28,7 +28,7 @@ impl PartialEq for Address {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct Range {
     pub start: usize,
     pub end: usize,

@@ -6,8 +6,8 @@ fn _done(x: &matrix::Matrix) -> bool {
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
             let mut bmp: matrix::bitmap::Bitmap = 0;
-            for row in (row_range.start)..(row_range.end) {
-                for col in (col_range.start)..(col_range.end) {
+            for row in row_range.into_iter() {
+                for col in col_range.into_iter() {
                     let addr = matrix::Address { row, col };
                     bmp |= x[&addr];
 
@@ -37,8 +37,8 @@ fn _prune_by_pivot(
 
         let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-        for row in (row_range.start)..(row_range.end) {
-            for col in (col_range.start)..(col_range.end) {
+        for row in row_range.into_iter() {
+            for col in col_range.into_iter() {
                 let addr = matrix::Address { row, col };
                 if addr == *pivot {
                     y[&addr] = target_bit;
