@@ -1,5 +1,5 @@
 use std::fmt;
-use std::ops::{Deref, Index, IndexMut};
+use std::ops;
 
 pub mod bitmap;
 
@@ -56,20 +56,20 @@ impl Matrix {
     }
 }
 
-impl Index<Address> for Matrix {
+impl ops::Index<Address> for Matrix {
     type Output = bitmap::Bitmap;
     fn index(&self, index: Address) -> &Self::Output {
         &self.buffer[index.0][index.1]
     }
 }
 
-impl IndexMut<Address> for Matrix {
+impl ops::IndexMut<Address> for Matrix {
     fn index_mut(&mut self, index: Address) -> &mut Self::Output {
         &mut self.buffer[index.0][index.1]
     }
 }
 
-impl Deref for Matrix {
+impl ops::Deref for Matrix {
     type Target = MatrixBuffer;
     fn deref(&self) -> &MatrixBuffer {
         &self.buffer

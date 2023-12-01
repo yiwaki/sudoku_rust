@@ -1,11 +1,10 @@
-use numpy::{ndarray, IntoPyArray, PyArray2, PyReadonlyArray2};
+use numpy::ndarray::{arr2, Array2, ArrayView2};
+use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2};
 use pyo3::{pyfunction, pymodule, types::PyModule, wrap_pyfunction, PyResult, Python};
 
 mod sudoku;
 
-fn _ndarray_to_matrix(
-    x: &ndarray::ArrayView2<sudoku::matrix::bitmap::Bitmap>,
-) -> sudoku::matrix::Matrix {
+fn _ndarray_to_matrix(x: &ArrayView2<sudoku::matrix::bitmap::Bitmap>) -> sudoku::matrix::Matrix {
     let mut it = x.iter();
     sudoku::matrix::Matrix::new([(); sudoku::matrix::MATRIX_SIZE].map(|()| {
         [(); sudoku::matrix::MATRIX_SIZE].map(|()| {
@@ -19,10 +18,8 @@ fn _ndarray_to_matrix(
     }))
 }
 
-fn _matrix_to_ndarray(
-    x: &sudoku::matrix::Matrix,
-) -> ndarray::Array2<sudoku::matrix::bitmap::Bitmap> {
-    ndarray::arr2(&**x).map(|z| (*z).ilog2() as sudoku::matrix::bitmap::Bitmap + 1)
+fn _matrix_to_ndarray(x: &sudoku::matrix::Matrix) -> Array2<sudoku::matrix::bitmap::Bitmap> {
+    arr2(&**x).map(|z| (*z).ilog2() as sudoku::matrix::bitmap::Bitmap + 1)
 }
 
 #[pyfunction]
