@@ -1,22 +1,23 @@
 pub mod matrix;
+use matrix::bitmap;
 
 fn _done(x: &matrix::Matrix) -> bool {
     for block_type in matrix::BLOCK_TYPES {
         for block_no in 0..matrix::MATRIX_SIZE {
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-            let mut bmp: matrix::bitmap::Bitmap = 0;
+            let mut bmp: bitmap::Bitmap = 0;
             for row in row_range.into_iter() {
                 for col in col_range.into_iter() {
                     bmp |= x[(row, col)];
 
-                    if matrix::bitmap::popcount(x[(row, col)]) > 1 {
+                    if bitmap::popcount(x[(row, col)]) > 1 {
                         return false;
                     }
                 }
             }
 
-            if bmp != matrix::bitmap::FULL_BIT {
+            if bmp != bitmap::FULL_BIT {
                 return false;
             }
         }
@@ -27,7 +28,7 @@ fn _done(x: &matrix::Matrix) -> bool {
 fn _prune_by_pivot(
     x: &matrix::Matrix,
     pivot: matrix::Address,
-    target_bit: matrix::bitmap::Bitmap,
+    target_bit: bitmap::Bitmap,
 ) -> Option<matrix::Matrix> {
     let mut y = x.clone();
 
@@ -66,7 +67,7 @@ pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
     }
 
     let pivot = matrix::cell_no_to_addr(cell_no);
-    let bits = matrix::bitmap::split_to_single_bits(x[pivot]);
+    let bits = bitmap::split_to_single_bits(x[pivot]);
 
     for target_bit in bits.into_iter() {
         y = match _prune_by_pivot(x, pivot, target_bit) {
@@ -92,7 +93,7 @@ mod tests {
     fn _check_problem(problem: &matrix::Matrix, solution: &matrix::Matrix) -> bool {
         for row in 0..matrix::MATRIX_SIZE {
             for col in 0..matrix::MATRIX_SIZE {
-                if problem[(row, col)] != matrix::bitmap::FULL_BIT
+                if problem[(row, col)] != bitmap::FULL_BIT
                     && problem[(row, col)] != solution[(row, col)]
                 {
                     return false;

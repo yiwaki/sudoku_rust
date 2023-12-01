@@ -3,14 +3,16 @@ use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2};
 use pyo3::{pyfunction, pymodule, types::PyModule, wrap_pyfunction, PyResult, Python};
 
 mod sudoku;
+use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
+use sudoku::matrix::{Matrix, MATRIX_SIZE};
 
-fn _ndarray_to_matrix(x: &ArrayView2<sudoku::matrix::bitmap::Bitmap>) -> sudoku::matrix::Matrix {
+fn _ndarray_to_matrix(x: &ArrayView2<Bitmap>) -> Matrix {
     let mut it = x.iter();
-    sudoku::matrix::Matrix::new([(); sudoku::matrix::MATRIX_SIZE].map(|()| {
-        [(); sudoku::matrix::MATRIX_SIZE].map(|()| {
+    Matrix::new([(); MATRIX_SIZE].map(|()| {
+        [(); MATRIX_SIZE].map(|()| {
             let z = it.next().unwrap();
             if *z == 0 {
-                sudoku::matrix::bitmap::FULL_BIT
+                FULL_BIT
             } else {
                 1 << (*z - 1)
             }
@@ -18,15 +20,12 @@ fn _ndarray_to_matrix(x: &ArrayView2<sudoku::matrix::bitmap::Bitmap>) -> sudoku:
     }))
 }
 
-fn _matrix_to_ndarray(x: &sudoku::matrix::Matrix) -> Array2<sudoku::matrix::bitmap::Bitmap> {
-    arr2(&**x).map(|z| (*z).ilog2() as sudoku::matrix::bitmap::Bitmap + 1)
+fn _matrix_to_ndarray(x: &Matrix) -> Array2<Bitmap> {
+    arr2(&**x).map(|z| (*z).ilog2() as Bitmap + 1)
 }
 
 #[pyfunction]
-fn bruteforce<'py>(
-    py: Python<'py>,
-    arr: PyReadonlyArray2<'py, sudoku::matrix::bitmap::Bitmap>,
-) -> &'py PyArray2<sudoku::matrix::bitmap::Bitmap> {
+fn bruteforce<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py PyArray2<Bitmap> {
     let x = _ndarray_to_matrix(&arr.as_array());
 
     let y = sudoku::bruteforce(&x, 0);
