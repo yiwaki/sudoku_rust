@@ -22,12 +22,6 @@ pub struct Range {
     end: usize,
 }
 
-impl Range {
-    fn new(start: usize, end: usize) -> Range {
-        Range { start, end }
-    }
-}
-
 impl Iterator for Range {
     type Item = usize;
     fn next(&mut self) -> Option<Self::Item> {
@@ -104,22 +98,34 @@ pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) /* (ro
 {
     match block_type {
         Block::Row => (
-            Range::new(block_no, block_no + 1),
-            Range::new(0, MATRIX_SIZE),
+            Range {
+                start: block_no,
+                end: block_no + 1,
+            },
+            Range {
+                start: 0,
+                end: MATRIX_SIZE,
+            },
         ),
         Block::Column => (
-            Range::new(0, MATRIX_SIZE),
-            Range::new(block_no, block_no + 1),
+            Range {
+                start: 0,
+                end: MATRIX_SIZE,
+            },
+            Range {
+                start: block_no,
+                end: block_no + 1,
+            },
         ),
         Block::Square => (
-            Range::new(
-                block_no / SQUARE_SIZE * SQUARE_SIZE,
-                block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
-            ),
-            Range::new(
-                block_no % SQUARE_SIZE * SQUARE_SIZE,
-                block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
-            ),
+            Range {
+                start: block_no / SQUARE_SIZE * SQUARE_SIZE,
+                end: block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
+            },
+            Range {
+                start: block_no % SQUARE_SIZE * SQUARE_SIZE,
+                end: block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
+            },
         ),
     }
 }
@@ -172,8 +178,8 @@ mod tests {
     #[test]
     fn range_test() {
         let mut buf = String::new();
-        let r = Range::new(0, 3);
-        let c = Range::new(0, 2);
+        let r = Range { start: 0, end: 3 };
+        let c = Range { start: 0, end: 2 };
         for i in r.into_iter() {
             for j in c.into_iter() {
                 print!("({},{}) ", i, j);
