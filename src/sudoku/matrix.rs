@@ -16,8 +16,6 @@ pub enum Block {
 
 pub const BLOCK_TYPES: [Block; 3] = [Block::Row, Block::Column, Block::Square];
 
-pub type Address = (usize, usize);
-
 #[derive(Clone, Copy)]
 pub struct Range {
     start: usize,
@@ -43,6 +41,8 @@ impl Iterator for Range {
     }
 }
 
+pub type Address = (usize, usize);
+
 type MatrixBuffer = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
 
 #[derive(Clone)]
@@ -58,14 +58,14 @@ impl Matrix {
 
 impl ops::Index<Address> for Matrix {
     type Output = bitmap::Bitmap;
-    fn index(&self, index: Address) -> &Self::Output {
-        &self.buffer[index.0][index.1]
+    fn index(&self, addr: Address) -> &Self::Output {
+        &self.buffer[addr.0][addr.1]
     }
 }
 
 impl ops::IndexMut<Address> for Matrix {
-    fn index_mut(&mut self, index: Address) -> &mut Self::Output {
-        &mut self.buffer[index.0][index.1]
+    fn index_mut(&mut self, addr: Address) -> &mut Self::Output {
+        &mut self.buffer[addr.0][addr.1]
     }
 }
 
@@ -80,9 +80,9 @@ impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for row in 0..MATRIX_SIZE {
             for col in 0..MATRIX_SIZE {
-                let _ = write!(f, "{:0w$b} ", self.buffer[row][col], w = MATRIX_SIZE);
+                write!(f, "{:0w$b} ", self.buffer[row][col], w = MATRIX_SIZE)?;
             }
-            let _ = writeln!(f);
+            writeln!(f)?;
         }
         writeln!(f)
     }
@@ -153,8 +153,7 @@ mod tests {
 
     #[test]
     fn cell_no_to_addr_test() {
-        let addr = cell_no_to_addr(5);
-        assert_eq!(addr, (0, 5));
+        assert_eq!(cell_no_to_addr(5), (0, 5));
     }
 
     #[test]
