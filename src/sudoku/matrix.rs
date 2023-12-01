@@ -5,16 +5,19 @@ pub mod bitmap;
 
 pub const MATRIX_SIZE: usize = 9;
 pub const SQUARE_SIZE: usize = 3;
-pub const CELL_COUNT: usize = MATRIX_SIZE * MATRIX_SIZE;
 
 #[derive(Debug)]
 pub enum Block {
-    Row,
-    Column,
-    Square,
+    Row(usize),
+    Column(usize),
+    Square(usize),
 }
 
-pub const BLOCK_TYPES: [Block; 3] = [Block::Row, Block::Column, Block::Square];
+pub const BLOCK_TYPES: [Block; 3] = [
+    Block::Row(MATRIX_SIZE),
+    Block::Column(MATRIX_SIZE),
+    Block::Square(SQUARE_SIZE),
+];
 
 #[derive(Clone, Copy)]
 pub struct Range {
@@ -88,43 +91,43 @@ pub fn cell_no_to_addr(cell_no: usize) -> Address {
 
 pub fn addr_to_block_no(block_type: &Block, addr: Address) -> usize {
     match block_type {
-        Block::Row => addr.0,
-        Block::Column => addr.1,
-        Block::Square => addr.0 / SQUARE_SIZE * SQUARE_SIZE + addr.1 / SQUARE_SIZE,
+        Block::Row(_) => addr.0,
+        Block::Column(_) => addr.1,
+        Block::Square(size) => addr.0 / (*size) * *size + addr.1 / (*size),
     }
 }
 
 pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) /* (row_range, col_range) */
 {
     match block_type {
-        Block::Row => (
+        Block::Row(size) => (
             Range {
                 start: block_no,
                 end: block_no + 1,
             },
             Range {
                 start: 0,
-                end: MATRIX_SIZE,
+                end: *size,
             },
         ),
-        Block::Column => (
+        Block::Column(size) => (
             Range {
                 start: 0,
-                end: MATRIX_SIZE,
+                end: *size,
             },
             Range {
                 start: block_no,
                 end: block_no + 1,
             },
         ),
-        Block::Square => (
+        Block::Square(size) => (
             Range {
-                start: block_no / SQUARE_SIZE * SQUARE_SIZE,
-                end: block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
+                start: block_no / (*size) * (*size),
+                end: block_no / (*size) * (*size) + (*size),
             },
             Range {
-                start: block_no % SQUARE_SIZE * SQUARE_SIZE,
-                end: block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
+                start: block_no % (*size) * (*size),
+                end: block_no % (*size) * (*size) + (*size),
             },
         ),
     }
@@ -165,13 +168,13 @@ mod tests {
     #[test]
     fn addr_to_block_no_test() {
         let addr = (1, 2);
-        let block_no = addr_to_block_no(&Block::Row, addr);
+        let block_no = addr_to_block_no(&BLOCK_TYPES[0], addr);
         assert_eq!(block_no, 1);
 
-        let block_no = addr_to_block_no(&Block::Column, addr);
+        let block_no = addr_to_block_no(&BLOCK_TYPES[1], addr);
         assert_eq!(block_no, 2);
 
-        let block_no = addr_to_block_no(&Block::Square, addr);
+        let block_no = addr_to_block_no(&BLOCK_TYPES[2], addr);
         assert_eq!(block_no, 0);
     }
 
@@ -192,19 +195,19 @@ mod tests {
 
     #[test]
     fn block_range_test() {
-        let (row_range, col_range) = block_range(&Block::Row, 4);
+        let (row_range, col_range) = block_range(&BLOCK_TYPES[0], 4);
         assert_eq!(row_range.start, 4);
         assert_eq!(row_range.end, 5);
         assert_eq!(col_range.start, 0);
         assert_eq!(col_range.end, MATRIX_SIZE);
 
-        let (row_range, col_range) = block_range(&Block::Column, 4);
+        let (row_range, col_range) = block_range(&BLOCK_TYPES[1], 4);
         assert_eq!(row_range.start, 0);
         assert_eq!(row_range.end, MATRIX_SIZE);
         assert_eq!(col_range.start, 4);
         assert_eq!(col_range.end, 5);
 
-        let (row_range, col_range) = block_range(&Block::Square, 4);
+        let (row_range, col_range) = block_range(&BLOCK_TYPES[2], 4);
         assert_eq!(row_range.start, 3);
         assert_eq!(row_range.end, 6);
         assert_eq!(col_range.start, 3);

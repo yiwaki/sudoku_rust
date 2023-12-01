@@ -62,7 +62,7 @@ fn _prune_by_pivot(
 
 pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
     let mut y = x.clone();
-    if cell_no >= matrix::CELL_COUNT {
+    if cell_no >= matrix::MATRIX_SIZE * matrix::MATRIX_SIZE {
         return y;
     }
 
