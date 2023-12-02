@@ -64,7 +64,7 @@ impl ops::IndexMut<Address> for Matrix {
 
 impl ops::Deref for Matrix {
     type Target = MatrixBuffer;
-    fn deref(&self) -> &MatrixBuffer {
+    fn deref(&self) -> &Self::Target {
         &self.buffer
     }
 }
