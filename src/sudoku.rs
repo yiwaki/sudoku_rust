@@ -49,11 +49,7 @@ impl matrix::Matrix {
         Some(self)
     }
 
-    fn _prune_by_pivot(
-        &self,
-        pivot: matrix::Address,
-        target_bit: bitmap::Bitmap,
-    ) -> Option<matrix::Matrix> {
+    fn _prune_by_pivot(&self, pivot: matrix::Address, target_bit: bitmap::Bitmap) -> Option<Self> {
         let mut x = self.clone();
 
         for block_type in matrix::BLOCK_TYPES {
