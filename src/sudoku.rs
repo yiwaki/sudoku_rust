@@ -54,7 +54,7 @@ impl matrix::Matrix {
             }
         }
 
-        matrix::test_blocks_by_pivot(x, pivot)
+        x.test_blocks_by_pivot(pivot)
     }
 
     pub fn solve(&self, cell_no: usize) -> Self {
