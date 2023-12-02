@@ -53,11 +53,7 @@ fn _prune_by_pivot(
         }
     }
 
-    if matrix::test_bitmap_by_addr(&y, pivot) {
-        Some(y)
-    } else {
-        None
-    }
+    matrix::test_bitmap_by_addr(y, pivot)
 }
 
 pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {

@@ -129,7 +129,7 @@ pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) /* (ro
     }
 }
 
-pub fn test_bitmap_by_addr(x: &Matrix, addr: Address) -> bool {
+pub fn test_bitmap_by_addr(x: Matrix, addr: Address) -> Option<Matrix> {
     for block_type in BLOCK_TYPES {
         let block_no = addr_to_block_no(&block_type, addr);
         let (row_range, col_range) = block_range(&block_type, block_no);
@@ -146,10 +146,10 @@ pub fn test_bitmap_by_addr(x: &Matrix, addr: Address) -> bool {
                 println!("{:09b}:{:?}:{}-{:?}", bmp, block_type, block_no, addr);
                 println!("{}", x);
             }
-            return false;
+            return None;
         }
     }
-    true
+    Some(x)
 }
 
 #[cfg(test)]
