@@ -129,9 +129,9 @@ pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) /* (ro
     }
 }
 
-pub fn test_bitmap_by_addr(x: Matrix, addr: Address) -> Option<Matrix> {
+pub fn test_blocks_by_pivot(x: Matrix, pivot: Address) -> Option<Matrix> {
     for block_type in BLOCK_TYPES {
-        let block_no = addr_to_block_no(&block_type, addr);
+        let block_no = addr_to_block_no(&block_type, pivot);
         let (row_range, col_range) = block_range(&block_type, block_no);
 
         let mut bmp: bitmap::Bitmap = 0;
@@ -143,7 +143,7 @@ pub fn test_bitmap_by_addr(x: Matrix, addr: Address) -> Option<Matrix> {
 
         if bmp != bitmap::FULL_BIT {
             if cfg!(debug_assertions) {
-                println!("{:09b}:{:?}:{}-{:?}", bmp, block_type, block_no, addr);
+                println!("{:09b}:{:?}:{}-{:?}", bmp, block_type, block_no, pivot);
                 println!("{}", x);
             }
             return None;
