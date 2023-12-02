@@ -44,7 +44,7 @@ pub struct Matrix {
 }
 
 impl Matrix {
-    pub fn new(x: MatrixBuffer) -> Matrix {
+    pub fn new(x: MatrixBuffer) -> Self {
         Matrix { buffer: x }
     }
 }

@@ -1,85 +1,87 @@
 pub mod matrix;
 use matrix::bitmap;
 
-fn _done(x: &matrix::Matrix) -> bool {
-    for block_type in matrix::BLOCK_TYPES {
-        for block_no in 0..matrix::MATRIX_SIZE {
+impl matrix::Matrix {
+    fn _done(&self) -> bool {
+        for block_type in matrix::BLOCK_TYPES {
+            for block_no in 0..matrix::MATRIX_SIZE {
+                let (row_range, col_range) = matrix::block_range(&block_type, block_no);
+
+                let mut bmp: bitmap::Bitmap = 0;
+                for row in row_range.into_iter() {
+                    for col in col_range.into_iter() {
+                        bmp |= self[(row, col)];
+
+                        if bitmap::popcount(self[(row, col)]) > 1 {
+                            return false;
+                        }
+                    }
+                }
+
+                if bmp != bitmap::FULL_BIT {
+                    return false;
+                }
+            }
+        }
+        true
+    }
+
+    fn _prune_by_pivot(
+        &self,
+        pivot: matrix::Address,
+        target_bit: bitmap::Bitmap,
+    ) -> Option<matrix::Matrix> {
+        let mut x = self.clone();
+
+        for block_type in matrix::BLOCK_TYPES {
+            let block_no = matrix::addr_to_block_no(&block_type, pivot);
+
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-            let mut bmp: bitmap::Bitmap = 0;
             for row in row_range.into_iter() {
                 for col in col_range.into_iter() {
-                    bmp |= x[(row, col)];
+                    if (row, col) == pivot {
+                        x[(row, col)] = target_bit;
+                        continue;
+                    }
 
-                    if bitmap::popcount(x[(row, col)]) > 1 {
-                        return false;
+                    x[(row, col)] &= !target_bit;
+
+                    if x[(row, col)] == 0 {
+                        return None;
                     }
                 }
             }
-
-            if bmp != bitmap::FULL_BIT {
-                return false;
-            }
         }
+
+        matrix::test_blocks_by_pivot(x, pivot)
     }
-    true
-}
 
-fn _prune_by_pivot(
-    x: &matrix::Matrix,
-    pivot: matrix::Address,
-    target_bit: bitmap::Bitmap,
-) -> Option<matrix::Matrix> {
-    let mut y = x.clone();
+    pub fn solve(&self, cell_no: usize) -> Self {
+        let mut y = self.clone();
+        if cell_no >= matrix::MATRIX_SIZE * matrix::MATRIX_SIZE {
+            return y;
+        }
 
-    for block_type in matrix::BLOCK_TYPES {
-        let block_no = matrix::addr_to_block_no(&block_type, pivot);
+        let pivot = matrix::cell_no_to_addr(cell_no);
+        let bits = bitmap::split_to_single_bits(self[pivot]);
 
-        let (row_range, col_range) = matrix::block_range(&block_type, block_no);
-
-        for row in row_range.into_iter() {
-            for col in col_range.into_iter() {
-                if (row, col) == pivot {
-                    y[(row, col)] = target_bit;
+        for target_bit in bits.into_iter() {
+            y = match self._prune_by_pivot(pivot, target_bit) {
+                Some(z) => z,
+                None => {
                     continue;
                 }
+            };
 
-                y[(row, col)] &= !target_bit;
+            y = y.solve(cell_no + 1);
 
-                if y[(row, col)] == 0 {
-                    return None;
-                }
-            }
+            if y._done() {
+                return y;
+            };
         }
+        y
     }
-
-    matrix::test_blocks_by_pivot(y, pivot)
-}
-
-pub fn bruteforce(x: &matrix::Matrix, cell_no: usize) -> matrix::Matrix {
-    let mut y = x.clone();
-    if cell_no >= matrix::MATRIX_SIZE * matrix::MATRIX_SIZE {
-        return y;
-    }
-
-    let pivot = matrix::cell_no_to_addr(cell_no);
-    let bits = bitmap::split_to_single_bits(x[pivot]);
-
-    for target_bit in bits.into_iter() {
-        y = match _prune_by_pivot(x, pivot, target_bit) {
-            Some(z) => z,
-            None => {
-                continue;
-            }
-        };
-
-        y = bruteforce(&y, cell_no + 1);
-
-        if _done(&y) {
-            return y;
-        };
-    }
-    y
 }
 
 #[cfg(test)]
@@ -96,7 +98,7 @@ mod tests {
                 }
             }
         }
-        _done(solution)
+        solution._done()
     }
 
     #[test]
@@ -115,7 +117,7 @@ mod tests {
         println!("Puzzle:");
         println!("{}", x);
 
-        let y = bruteforce(&x, 0);
+        let y = x.solve(0);
 
         println!("Solution:");
         println!("{}", y);
