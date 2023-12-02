@@ -93,8 +93,7 @@ pub fn addr_to_block_no(block_type: &Block, addr: Address) -> usize {
     }
 }
 
-pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) /* (row_range, col_range) */
-{
+pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) {
     match block_type {
         Block::Row => (
             Range {
