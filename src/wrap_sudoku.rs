@@ -8,10 +8,9 @@ use sudoku::matrix::{Matrix, MATRIX_SIZE};
 
 impl Matrix {
     fn ndarray_to_matrix(x: &ArrayView2<Bitmap>) -> Self {
-        let mut it = x.iter();
         Matrix::new([(); MATRIX_SIZE].map(|()| {
             [(); MATRIX_SIZE].map(|()| {
-                let z = it.next().unwrap();
+                let z = x.iter().next().unwrap();
                 if *z == 0 {
                     FULL_BIT
                 } else {
@@ -28,11 +27,10 @@ impl Matrix {
 
 #[pyfunction]
 fn solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py PyArray2<Bitmap> {
-    let x = Matrix::ndarray_to_matrix(&arr.as_array());
-
-    let y = x.solve(0);
-
-    y.matrix_to_ndarray().into_pyarray(py)
+    Matrix::ndarray_to_matrix(&arr.as_array())
+        .solve(0)
+        .matrix_to_ndarray()
+        .into_pyarray(py)
 }
 
 #[pymodule]
