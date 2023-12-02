@@ -6,7 +6,7 @@ pub mod bitmap;
 pub const MATRIX_SIZE: usize = 9;
 pub const SQUARE_SIZE: usize = 3;
 
-// Cell No                       Row No.      Column No.   Square No.
+// Cell No.                      Row No.      Column No.   Square No.
 // +--------------------------+  +---------+  +---------+  +---------+
 // | 0  1  2  3  4  5  6  7  8|  |000000000|  |012345678|  |000111222|
 // | 9 10 11 12 13 14 15 16 17|  |111111111|  |012345678|  |000111222|
