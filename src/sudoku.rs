@@ -26,6 +26,29 @@ impl matrix::Matrix {
         true
     }
 
+    fn _check_blocks_by_pivot(self, pivot: matrix::Address) -> Option<Self> {
+        for block_type in matrix::BLOCK_TYPES {
+            let block_no = matrix::addr_to_block_no(&block_type, pivot);
+            let (row_range, col_range) = matrix::block_range(&block_type, block_no);
+
+            let mut bmp: bitmap::Bitmap = 0;
+            for row in row_range.into_iter() {
+                for col in col_range.into_iter() {
+                    bmp |= self[(row, col)];
+                }
+            }
+
+            if bmp != bitmap::FULL_BIT {
+                if cfg!(debug_assertions) {
+                    println!("{:09b}:{:?}:{}-{:?}", bmp, block_type, block_no, pivot);
+                    println!("{}", self);
+                }
+                return None;
+            }
+        }
+        Some(self)
+    }
+
     fn _prune_by_pivot(
         &self,
         pivot: matrix::Address,
@@ -54,33 +77,33 @@ impl matrix::Matrix {
             }
         }
 
-        x.test_blocks_by_pivot(pivot)
+        x._check_blocks_by_pivot(pivot)
     }
 
     pub fn solve(&self, cell_no: usize) -> Self {
-        let mut y = self.clone();
+        let mut x = self.clone();
         if cell_no >= matrix::MATRIX_SIZE * matrix::MATRIX_SIZE {
-            return y;
+            return x;
         }
 
         let pivot = matrix::cell_no_to_addr(cell_no);
         let bits = bitmap::split_to_single_bits(self[pivot]);
 
         for target_bit in bits.into_iter() {
-            y = match self._prune_by_pivot(pivot, target_bit) {
-                Some(z) => z,
+            x = match self._prune_by_pivot(pivot, target_bit) {
+                Some(y) => y,
                 None => {
                     continue;
                 }
             };
 
-            y = y.solve(cell_no + 1);
+            x = x.solve(cell_no + 1);
 
-            if y._done() {
-                return y;
+            if x._done() {
+                return x;
             };
         }
-        y
+        x
     }
 }
 
