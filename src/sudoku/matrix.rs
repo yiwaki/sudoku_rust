@@ -6,7 +6,8 @@ pub mod bitmap;
 pub const MATRIX_SIZE: usize = 9;
 pub const SQUARE_SIZE: usize = 3;
 
-// Cell No.                      Row No.      Column No.   Square No.
+// Matrix of                     Block No. of each block type
+// Cell No.                      Row          Column       Square No.
 // +--------------------------+  +---------+  +---------+  +---------+
 // | 0  1  2  3  4  5  6  7  8|  |000000000|  |012345678|  |000111222|
 // | 9 10 11 12 13 14 15 16 17|  |111111111|  |012345678|  |000111222|
@@ -18,6 +19,8 @@ pub const SQUARE_SIZE: usize = 3;
 // |63 64 65 66 67 68 69 70 71|  |777777777|  |012345678|  |666777888|
 // |72 73 74 75 76 77 78 79 80|  |888888888|  |012345678|  |666777888|
 // +--------------------------+  +---------+  +---------+  +---------+
+//
+// Address in Matrix: (Row No., Column No)
 
 #[derive(Debug)]
 pub enum Block {
