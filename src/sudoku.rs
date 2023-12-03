@@ -77,10 +77,11 @@ impl matrix::Matrix {
     }
 
     pub fn solve(&self, cell_no: usize) -> Self {
-        let mut x = self.clone();
         if cell_no >= matrix::MATRIX_SIZE * matrix::MATRIX_SIZE {
-            return x;
+            return self.clone();
         }
+
+        let mut x = matrix::Matrix::new();
 
         let pivot = matrix::cell_no_to_addr(cell_no);
         let bits = bitmap::split_to_single_bits(self[pivot]);
@@ -122,7 +123,7 @@ mod tests {
 
     #[test]
     fn bruteforce_test() {
-        let x = matrix::Matrix::new([
+        let x = matrix::Matrix::from([
             [511, 511, 8, 511, 16, 511, 511, 511, 1],
             [511, 511, 32, 511, 511, 511, 511, 4, 511],
             [16, 4, 511, 64, 511, 511, 511, 511, 128],

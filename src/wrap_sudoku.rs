@@ -8,7 +8,7 @@ use sudoku::matrix::{Matrix, MATRIX_SIZE};
 
 impl Matrix {
     fn ndarray_to_matrix(x: &ArrayView2<Bitmap>) -> Self {
-        Matrix::new([(); MATRIX_SIZE].map(|()| {
+        Matrix::from([(); MATRIX_SIZE].map(|()| {
             [(); MATRIX_SIZE].map(|()| {
                 let z = x.iter().next().unwrap();
                 if *z == 0 {
