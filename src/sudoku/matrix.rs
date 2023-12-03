@@ -20,7 +20,7 @@ pub const SQUARE_SIZE: usize = 3;
 // |72 73 74 75 76 77 78 79 80|  |888888888|  |012345678|  |666777888|
 // +--------------------------+  +---------+  +---------+  +---------+
 //
-// Address in Matrix: (Row No., Column No)
+// Address on Matrix: (Row No., Column No)
 
 #[derive(Debug)]
 pub enum Block {
