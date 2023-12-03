@@ -7,10 +7,10 @@ impl matrix::Matrix {
             for block_no in 0..matrix::MATRIX_SIZE {
                 let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-                let mut bmp: bitmap::Bitmap = 0;
+                let mut bitmap: bitmap::Bitmap = 0;
                 for row in row_range.into_iter() {
                     for col in col_range.into_iter() {
-                        bmp |= self[(row, col)];
+                        bitmap |= self[(row, col)];
 
                         if bitmap::popcount(self[(row, col)]) > 1 {
                             return false;
@@ -18,7 +18,7 @@ impl matrix::Matrix {
                     }
                 }
 
-                if bmp != bitmap::FULL_BIT {
+                if bitmap != bitmap::FULL_BIT {
                     return false;
                 }
             }
@@ -31,16 +31,16 @@ impl matrix::Matrix {
             let block_no = matrix::addr_to_block_no(&block_type, pivot);
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-            let mut bmp: bitmap::Bitmap = 0;
+            let mut bitmap: bitmap::Bitmap = 0;
             for row in row_range.into_iter() {
                 for col in col_range.into_iter() {
-                    bmp |= self[(row, col)];
+                    bitmap |= self[(row, col)];
                 }
             }
 
-            if bmp != bitmap::FULL_BIT {
+            if bitmap != bitmap::FULL_BIT {
                 if cfg!(debug_assertions) {
-                    println!("{:09b}:{:?}:{}-{:?}", bmp, block_type, block_no, pivot);
+                    println!("{:09b}:{:?}:{}-{:?}", bitmap, block_type, block_no, pivot);
                     println!("{}", self);
                 }
                 return None;

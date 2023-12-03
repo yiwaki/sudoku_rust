@@ -3,12 +3,12 @@ pub type Bitmap = u16;
 pub const BITMAP_DIGIT: usize = 9;
 pub const FULL_BIT: Bitmap = 0b1_1111_1111;
 
-pub fn split_to_single_bits(bit: Bitmap) -> Vec<Bitmap> {
+pub fn split_to_single_bits(bitmap: Bitmap) -> Vec<Bitmap> {
     let mut bits: Vec<Bitmap> = Vec::new();
     let mut target_bit: Bitmap = 1;
 
     for _ in 0..BITMAP_DIGIT {
-        if bit & target_bit != 0 {
+        if bitmap & target_bit != 0 {
             bits.push(target_bit);
         }
         target_bit <<= 1;
@@ -16,12 +16,12 @@ pub fn split_to_single_bits(bit: Bitmap) -> Vec<Bitmap> {
     bits
 }
 
-pub fn popcount(bit: Bitmap) -> usize {
+pub fn popcount(bitmap: Bitmap) -> usize {
     let mut cnt = 0;
     let mut target_bit: Bitmap = 1;
 
     for _ in 0..BITMAP_DIGIT {
-        if bit & target_bit != 0 {
+        if bitmap & target_bit != 0 {
             cnt += 1;
         }
         target_bit <<= 1;
