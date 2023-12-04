@@ -85,7 +85,7 @@ impl matrix::Matrix {
 
         let pivot = matrix::cell_no_to_addr(cell_no);
 
-        for target_bit in bitmap::EachBit::from(self[pivot]).into_iter() {
+        for target_bit in bitmap::EachBit::from(self[pivot]) {
             x = match self._pruned_by_pivot(pivot, target_bit) {
                 Some(y) => y,
                 None => {

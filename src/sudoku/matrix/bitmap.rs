@@ -54,19 +54,19 @@ mod tests {
     #[test]
     fn split_single_bit_test() {
         let mut bits = Vec::<Bitmap>::new();
-        for v in EachBit::from(0b0_0000_0000).into_iter() {
+        for v in EachBit::from(0b0_0000_0000) {
             bits.push(v);
         }
         assert_eq!(bits, []);
 
         let mut bits = Vec::<Bitmap>::new();
-        for v in EachBit::from(0b1_0010_0101).into_iter() {
+        for v in EachBit::from(0b1_0010_0101) {
             bits.push(v);
         }
         assert_eq!(bits, [256, 32, 4, 1]);
 
         let mut bits = Vec::<Bitmap>::new();
-        for v in EachBit::from(0b1_1111_1111).into_iter() {
+        for v in EachBit::from(0b1_1111_1111) {
             bits.push(v);
         }
         assert_eq!(bits, [256, 128, 64, 32, 16, 8, 4, 2, 1]);
