@@ -177,8 +177,8 @@ mod tests {
         let mut buf = String::new();
         let r = Range { start: 0, end: 3 };
         let c = Range { start: 0, end: 2 };
-        for i in r.into_iter() {
-            for j in c.into_iter() {
+        for i in r {
+            for j in c {
                 print!("({},{}) ", i, j);
                 buf.push_str(format!("({},{}) ", i, j).as_str());
             }
