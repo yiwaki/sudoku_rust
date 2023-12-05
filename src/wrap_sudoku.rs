@@ -7,7 +7,7 @@ use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
 use sudoku::matrix::{Matrix, MATRIX_SIZE};
 
 impl Matrix {
-    fn ndarray_to_matrix(x: &ArrayView2<Bitmap>) -> Self {
+    fn from_ndarray(x: &ArrayView2<Bitmap>) -> Self {
         Matrix::from([(); MATRIX_SIZE].map(|()| {
             [(); MATRIX_SIZE].map(|()| {
                 let z = x.iter().next().unwrap();
@@ -20,16 +20,16 @@ impl Matrix {
         }))
     }
 
-    fn matrix_to_ndarray(&self) -> Array2<Bitmap> {
+    fn to_ndarray(&self) -> Array2<Bitmap> {
         arr2(&**self).map(|z| (*z).ilog2() as Bitmap + 1)
     }
 }
 
 #[pyfunction]
 fn solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py PyArray2<Bitmap> {
-    Matrix::ndarray_to_matrix(&arr.as_array())
+    Matrix::from_ndarray(&arr.as_array())
         .solve(0)
-        .matrix_to_ndarray()
+        .to_ndarray()
         .into_pyarray(py)
 }
 
