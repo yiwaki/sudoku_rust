@@ -3,6 +3,13 @@ use matrix::bitmap;
 
 impl matrix::Matrix {
     fn _done(&self) -> bool {
+        static mut DONE: bool = false;
+        unsafe {
+            if DONE {
+                return true;
+            }
+        }
+
         for block_type in matrix::BLOCK_TYPES {
             for block_no in 0..matrix::MATRIX_SIZE {
                 let (row_range, col_range) = matrix::block_range(&block_type, block_no);
@@ -10,11 +17,11 @@ impl matrix::Matrix {
                 let mut bitmap: bitmap::Bitmap = 0;
                 for row in row_range {
                     for col in col_range {
-                        bitmap |= self[(row, col)];
-
                         if bitmap::popcount(self[(row, col)]) > 1 {
                             return false;
                         }
+
+                        bitmap |= self[(row, col)];
                     }
                 }
 
@@ -22,6 +29,9 @@ impl matrix::Matrix {
                     return false;
                 }
             }
+        }
+        unsafe {
+            DONE = true;
         }
         true
     }
@@ -39,10 +49,6 @@ impl matrix::Matrix {
             }
 
             if bitmap != bitmap::FULL_BIT {
-                if cfg!(debug_assertions) {
-                    println!("{:09b}:{:?}:{}-{:?}", bitmap, block_type, block_no, pivot);
-                    println!("{}", self);
-                }
                 return None;
             }
         }
