@@ -19,13 +19,6 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 pip install maturin
 ```
 
-## Download this kit
-
-```
-cd [your project directory]
-git clone https://github.com/yiwaki/sudoku_rust
-```
-
 ## Install Python and setup virtual environment
 
 Install Python and venv according to your environment,
@@ -35,6 +28,13 @@ and run the following command to configure your virtual environment of python to
 
 ```
 maturin develop --release
+```
+
+## Download this kit
+
+```
+cd [your project directory]
+git clone https://github.com/yiwaki/sudoku_rust
 ```
 
 ## Run sample program
