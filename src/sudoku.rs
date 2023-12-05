@@ -23,7 +23,6 @@ impl matrix::Matrix {
                 }
             }
         }
-
         true
     }
 
