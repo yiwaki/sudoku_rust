@@ -40,7 +40,7 @@ pip install numpy
 ## Compile and install
 
 ```
-make develop
+maturin develop --release
 ```
 
 ## Run sample program
