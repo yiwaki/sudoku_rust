@@ -25,8 +25,8 @@ impl Matrix {
     }
 }
 
-#[pyfunction]
-fn solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py PyArray2<Bitmap> {
+#[pyfunction(name = "solve")]
+fn wrap_solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py PyArray2<Bitmap> {
     Matrix::from_ndarray(&arr.as_array())
         .solve(0)
         .to_ndarray()
@@ -35,7 +35,7 @@ fn solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py PyArr
 
 #[pymodule]
 fn sudoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(solve, m)?)?;
+    m.add_function(wrap_pyfunction!(wrap_solve, m)?)?;
 
     Ok(())
 }
