@@ -31,12 +31,6 @@ git clone https://github.com/yiwaki/sudoku_rust
 Install Python and venv according to your environment,
 and run the following command to configure your virtual environment of python to your project directory.
 
-```
-cd sudoku_rust
-python3 -m venv .venv
-pip install numpy
-```
-
 ## Compile and install
 
 ```
