@@ -2,7 +2,7 @@ pub mod matrix;
 use matrix::bitmap;
 
 impl matrix::Matrix {
-    fn _done(&self) -> bool {
+    fn _done(self) -> Option<Self> {
         for block_type in matrix::BLOCK_TYPES {
             for block_no in 0..matrix::MATRIX_SIZE {
                 let (row_range, col_range) = matrix::block_range(&block_type, block_no);
@@ -11,7 +11,7 @@ impl matrix::Matrix {
                 for row in row_range {
                     for col in col_range {
                         if bitmap::popcount(self[(row, col)]) > 1 {
-                            return false;
+                            return None;
                         }
 
                         bitmap |= self[(row, col)];
@@ -19,11 +19,11 @@ impl matrix::Matrix {
                 }
 
                 if bitmap != bitmap::FULL_BIT {
-                    return false;
+                    return None;
                 }
             }
         }
-        true
+        Some(self)
     }
 
     fn _check_blocks_by_pivot(self, pivot: matrix::Address) -> Option<Self> {
@@ -87,10 +87,10 @@ impl matrix::Matrix {
                 continue;
             };
 
-            x = x.solve(cell_no + 1);
-
-            if x._done() {
-                return x;
+            x = if let Some(y) = x.solve(cell_no + 1)._done() {
+                return y;
+            } else {
+                x
             };
         }
         x
@@ -101,7 +101,7 @@ impl matrix::Matrix {
 mod tests {
     use super::*;
 
-    fn _check_problem(problem: &matrix::Matrix, solution: &matrix::Matrix) -> bool {
+    fn _check_problem(problem: matrix::Matrix, solution: matrix::Matrix) -> bool {
         for row in 0..matrix::MATRIX_SIZE {
             for col in 0..matrix::MATRIX_SIZE {
                 if problem[(row, col)] != bitmap::FULL_BIT
@@ -111,7 +111,7 @@ mod tests {
                 }
             }
         }
-        solution._done()
+        solution._done().is_some()
     }
 
     #[test]
@@ -134,6 +134,6 @@ mod tests {
 
         println!("Solution:");
         println!("{}", y);
-        assert!(_check_problem(&x, &y));
+        assert!(_check_problem(x, y));
     }
 }
