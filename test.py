@@ -9,9 +9,9 @@ x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
 print("Puzzle:")
 print(x)
 
-start = time.process_time()
+start = time.perf_counter()
 y = solve(x)
-end = time.process_time()
+end = time.perf_counter()
 elapsed = end - start
 
 print("Solution:")
