@@ -68,7 +68,6 @@ impl matrix::Matrix {
                 }
             }
         }
-
         x._check_blocks_by_pivot(pivot)
     }
 
