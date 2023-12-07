@@ -2,9 +2,9 @@ use numpy::ndarray::{arr2, Array2, ArrayView2};
 use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2};
 use pyo3::{pyfunction, pymodule, types::PyModule, wrap_pyfunction, PyResult, Python};
 
-mod sudoku;
-use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
-use sudoku::matrix::{Matrix, MATRIX_SIZE};
+mod solve;
+use solve::matrix::bitmap::{Bitmap, FULL_BIT};
+use solve::matrix::{Matrix, MATRIX_SIZE};
 
 impl Matrix {
     fn from_ndarray(x: &ArrayView2<Bitmap>) -> Self {
