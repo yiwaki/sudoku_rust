@@ -8,8 +8,8 @@ pub struct ForEachBit {
     current_bit: Bitmap,
 }
 
-impl ForEachBit {
-    pub fn from(bitmap: Bitmap) -> Self {
+impl From<Bitmap> for ForEachBit {
+    fn from(bitmap: Bitmap) -> Self {
         ForEachBit {
             bit_buffer: bitmap,
             current_bit: 0b1_0000_0000,

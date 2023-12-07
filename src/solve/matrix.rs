@@ -65,8 +65,10 @@ impl Matrix {
             buffer: [[0; MATRIX_SIZE]; MATRIX_SIZE],
         }
     }
+}
 
-    pub fn from(x: MatrixBuffer) -> Self {
+impl From<MatrixBuffer> for Matrix {
+    fn from(x: MatrixBuffer) -> Self {
         Matrix { buffer: x }
     }
 }

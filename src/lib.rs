@@ -6,8 +6,8 @@ mod solve;
 use solve::matrix::bitmap::{Bitmap, FULL_BIT};
 use solve::matrix::{Matrix, MATRIX_SIZE};
 
-impl Matrix {
-    fn from_ndarray(x: &ArrayView2<Bitmap>) -> Self {
+impl From<&ArrayView2<'_, Bitmap>> for Matrix {
+    fn from(x: &ArrayView2<Bitmap>) -> Self {
         Matrix::from([(); MATRIX_SIZE].map(|()| {
             [(); MATRIX_SIZE].map(|()| {
                 let z = x.iter().next().unwrap();
@@ -19,7 +19,9 @@ impl Matrix {
             })
         }))
     }
+}
 
+impl Matrix {
     fn to_ndarray(&self) -> Array2<Bitmap> {
         arr2(&**self).map(|z| (*z).ilog2() as Bitmap + 1)
     }
@@ -27,7 +29,7 @@ impl Matrix {
 
 #[pyfunction(name = "solve")]
 fn wrap_solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py PyArray2<Bitmap> {
-    Matrix::from_ndarray(&arr.as_array())
+    Matrix::from(&arr.as_array())
         .solve(0)
         .to_ndarray()
         .into_pyarray(py)
