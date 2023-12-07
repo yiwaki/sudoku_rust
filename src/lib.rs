@@ -34,6 +34,7 @@ fn wrap_solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py 
 }
 
 #[pymodule]
+#[pyo3(name = "sudoku")]
 fn sudoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(wrap_solve, m)?)?;
 
