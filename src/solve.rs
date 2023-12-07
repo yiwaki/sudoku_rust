@@ -81,16 +81,14 @@ impl matrix::Matrix {
         let pivot = matrix::cell_no_to_addr(cell_no);
 
         for target_bit in bitmap::EachBit::from(self[pivot]) {
-            x = if let Some(y) = self._pruned_by_pivot(pivot, target_bit) {
-                y
-            } else {
-                continue;
+            x = match self._pruned_by_pivot(pivot, target_bit) {
+                Some(y) => y,
+                None => continue,
             };
 
-            x = if let Some(y) = x.solve(cell_no + 1)._done() {
-                return y;
-            } else {
-                x
+            x = match x.solve(cell_no + 1)._done() {
+                Some(y) => return y,
+                None => x,
             };
         }
         x
