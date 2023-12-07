@@ -3,21 +3,21 @@ pub type Bitmap = u16;
 pub const BITMAP_DIGIT: usize = 9;
 pub const FULL_BIT: Bitmap = 0b1_1111_1111;
 
-pub struct EachBit {
+pub struct ForEachBit {
     bit_buffer: Bitmap,
     current_bit: Bitmap,
 }
 
-impl EachBit {
+impl ForEachBit {
     pub fn from(bitmap: Bitmap) -> Self {
-        EachBit {
+        ForEachBit {
             bit_buffer: bitmap,
             current_bit: 0b1_0000_0000,
         }
     }
 }
 
-impl Iterator for EachBit {
+impl Iterator for ForEachBit {
     type Item = Bitmap;
     fn next(&mut self) -> Option<Self::Item> {
         while self.bit_buffer & self.current_bit == 0 && self.current_bit != 0 {
@@ -54,19 +54,19 @@ mod tests {
     #[test]
     fn split_single_bit_test() {
         let mut bits = Vec::<Bitmap>::new();
-        for v in EachBit::from(0b0_0000_0000) {
+        for v in ForEachBit::from(0b0_0000_0000) {
             bits.push(v);
         }
         assert_eq!(bits, []);
 
         let mut bits = Vec::<Bitmap>::new();
-        for v in EachBit::from(0b1_0010_0101) {
+        for v in ForEachBit::from(0b1_0010_0101) {
             bits.push(v);
         }
         assert_eq!(bits, [256, 32, 4, 1]);
 
         let mut bits = Vec::<Bitmap>::new();
-        for v in EachBit::from(0b1_1111_1111) {
+        for v in ForEachBit::from(0b1_1111_1111) {
             bits.push(v);
         }
         assert_eq!(bits, [256, 128, 64, 32, 16, 8, 4, 2, 1]);
