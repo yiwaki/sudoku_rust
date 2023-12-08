@@ -8,6 +8,12 @@ edition = "2021"
 name = "sudoku_rust"
 crate-type = ["cdylib"]
 
+[[bin]]
+name = "sudoku"
+path = "src/main.rs"
+
 [dependencies]
+chrono = "0.4.31"
+chrono_elapsed = "1.0.12"
 numpy = "0.20.0"
 pyo3 = "0.20.0"

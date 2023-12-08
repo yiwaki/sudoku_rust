@@ -52,7 +52,7 @@ impl Iterator for Range {
 
 pub type Address = (usize, usize);
 
-type MatrixBuffer = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
+pub type MatrixBuffer = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
 
 #[derive(Clone)]
 pub struct Matrix {
