@@ -2,10 +2,10 @@ use chrono::Utc;
 
 mod sudoku;
 use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
-use sudoku::matrix::{Matrix, MatrixBuffer, MATRIX_SIZE};
+use sudoku::matrix::{Matrix, MatrixBuffer};
 
 fn disp_matrix(x: &MatrixBuffer) {
-    for row in x.iter().take(MATRIX_SIZE) {
+    for row in x.iter() {
         for cell in row.iter() {
             print!("{} ", cell);
         }
@@ -26,7 +26,9 @@ fn main() {
         [8, 9, 0, 0, 5, 4, 0, 2, 1],
     ];
 
-    let x = Matrix::from(problem.map(|y| y.map(|z| if z == 0 { FULL_BIT } else { 1 << (z - 1) })));
+    let x: Matrix = problem
+        .map(|y| y.map(|z| if z == 0 { FULL_BIT } else { 1 << (z - 1) }))
+        .into();
 
     println!("Problem:");
     disp_matrix(&problem);
