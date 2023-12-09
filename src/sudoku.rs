@@ -8,6 +8,7 @@ impl matrix::Matrix {
                 let mut bitmap = 0;
 
                 let (row_range, col_range) = matrix::block_range(&block_type, block_no);
+
                 for row in row_range.into_iter() {
                     for col in col_range.into_iter() {
                         bitmap |= self[(row, col)];
@@ -31,6 +32,7 @@ impl matrix::Matrix {
     fn _check_blocks_by_pivot(self, pivot: matrix::Address) -> Option<Self> {
         for block_type in matrix::BLOCK_TYPES {
             let block_no = matrix::addr_to_block_no(&block_type, pivot);
+
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
             let mut bitmap: bitmap::Bitmap = 0;

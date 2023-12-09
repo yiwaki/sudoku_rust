@@ -76,7 +76,10 @@ mod tests {
     #[test]
     fn popcount_test() {
         assert_eq!(popcount(0b0_0000_0000), 0);
-        assert_eq!(popcount(0b1_0010_0101), 4);
+        assert_eq!(popcount(0b0_0010_0100), 2);
+        assert_eq!(popcount(0b0_0010_0101), 3);
+        assert_eq!(popcount(0b1_0010_1100), 4);
+        assert_eq!(popcount(0b1_0010_1101), 5);
         assert_eq!(popcount(0b1_1111_1111), 9);
     }
 }
