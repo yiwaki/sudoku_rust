@@ -43,6 +43,6 @@ fn main() {
     disp_matrix(&solution.map(|y| y.map(|z| z.ilog2() as Bitmap + 1)));
 
     let dt = end - start;
-    let dt_ns = dt.num_nanoseconds().unwrap();
-    println!("elapsed time: {} ns", dt_ns);
+    let dt_sec = dt.num_microseconds().unwrap() as f64 * 1E-6;
+    println!("elapsed time: {:0.6}", dt_sec);
 }
