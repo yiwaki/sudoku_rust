@@ -60,7 +60,17 @@ impl Iterator for Range {
 
 pub type Address = (usize, usize);
 
-pub type MatrixBuffer = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
+type MatrixBuffer = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
+
+#[allow(dead_code)]
+pub fn display_matrix(x: &MatrixBuffer) {
+    for row in x.iter() {
+        for cell in row.iter() {
+            print!("{} ", cell);
+        }
+        println!();
+    }
+}
 
 #[derive(Clone)]
 pub struct Matrix {
