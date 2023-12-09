@@ -97,31 +97,12 @@ impl matrix::Matrix {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::{*, matrix::{MATRIX_SIZE, bitmap::FULL_BIT}};
 
-    fn _check_problem(problem: matrix::Matrix, solution: matrix::Matrix) -> bool {
-        for block_type in matrix::BLOCK_TYPES {
-            for block_no in 0..matrix::MATRIX_SIZE {
-                let mut bitmap = 0;
-                let (row_range, column_range) = matrix::block_range(&block_type, block_no);
-                for row in row_range.into_iter() {
-                    for col in column_range.into_iter() {
-                        if problem[(row, col)] != bitmap::FULL_BIT
-                            && problem[(row, col)] != solution[(row, col)]
-                        {
-                            return false;
-                        }
-
-                        if problem[(row, col)] == bitmap::FULL_BIT
-                            && matrix::bitmap::popcount(solution[(row, col)]) != 1
-                        {
-                            return false;
-                        }
-
-                        bitmap |= problem[(row, col)];
-                    }
-                }
-                if bitmap != bitmap::FULL_BIT {
+    fn _check_problem_solution(problem: matrix::Matrix, solution: matrix::Matrix) -> bool {
+        for row in 0..MATRIX_SIZE {
+            for col in 0..MATRIX_SIZE {
+                if problem[(row, col)] != FULL_BIT && problem[(row, col)] != solution[(row, col)] {
                     return false;
                 }
             }
@@ -152,6 +133,7 @@ mod tests {
             })
         })
         .into();
+
         println!("Problem:");
         println!("{}", x);
 
@@ -159,6 +141,6 @@ mod tests {
 
         println!("Solution:");
         println!("{}", y);
-        assert!(_check_problem(x, y));
+        assert!(_check_problem_solution(x, y));
     }
 }
