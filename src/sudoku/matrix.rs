@@ -37,6 +37,12 @@ pub struct Range {
     end: usize,
 }
 
+impl Range {
+    pub fn new(start: usize, end: usize) -> Self {
+        Range { start, end }
+    }
+}
+
 impl Iterator for Range {
     type Item = usize;
     fn next(&mut self) -> Option<Self::Item> {
@@ -121,34 +127,16 @@ pub fn addr_to_block_no(block_type: &Block, addr: Address) -> usize {
 pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) {
     match block_type {
         Block::Row => (
-            Range {
-                start: block_no,
-                end: block_no + 1,
-            },
-            Range {
-                start: 0,
-                end: MATRIX_SIZE,
-            },
+            Range::new(block_no, block_no + 1),
+            Range::new(0, MATRIX_SIZE),
         ),
         Block::Column => (
-            Range {
-                start: 0,
-                end: MATRIX_SIZE,
-            },
-            Range {
-                start: block_no,
-                end: block_no + 1,
-            },
+            Range::new(0, MATRIX_SIZE),
+            Range::new(block_no,block_no + 1),
         ),
         Block::Square => (
-            Range {
-                start: block_no / SQUARE_SIZE * SQUARE_SIZE,
-                end: block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
-            },
-            Range {
-                start: block_no % SQUARE_SIZE * SQUARE_SIZE,
-                end: block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
-            },
+            Range::new(block_no / SQUARE_SIZE * SQUARE_SIZE, block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE),
+            Range::new(block_no % SQUARE_SIZE * SQUARE_SIZE, block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE),
         ),
     }
 }
