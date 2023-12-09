@@ -8,8 +8,8 @@ impl matrix::Matrix {
                 let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
                 let mut bitmap: bitmap::Bitmap = 0;
-                for row in row_range {
-                    for col in col_range {
+                for row in row_range.into_iter() {
+                    for col in col_range.into_iter() {
                         if bitmap::popcount(self[(row, col)]) > 1 {
                             return None;
                         }
@@ -32,8 +32,8 @@ impl matrix::Matrix {
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
             let mut bitmap: bitmap::Bitmap = 0;
-            for row in row_range {
-                for col in col_range {
+            for row in row_range.into_iter() {
+                for col in col_range.into_iter() {
                     bitmap |= self[(row, col)];
                 }
             }
@@ -53,8 +53,8 @@ impl matrix::Matrix {
 
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-            for row in row_range {
-                for col in col_range {
+            for row in row_range.into_iter() {
+                for col in col_range.into_iter() {
                     if (row, col) == pivot {
                         x[(row, col)] = target_bit;
                         continue;
@@ -104,8 +104,8 @@ mod tests {
             for block_no in 0..matrix::MATRIX_SIZE {
                 let mut bitmap = 0;
                 let (row_range, column_range) = matrix::block_range(&block_type, block_no);
-                for row in row_range {
-                    for col in column_range {
+                for row in row_range.into_iter() {
+                    for col in column_range.into_iter() {
                         if problem[(row, col)] != bitmap::FULL_BIT
                             && problem[(row, col)] != solution[(row, col)]
                         {
