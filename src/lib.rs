@@ -11,11 +11,11 @@ impl From<&ArrayView2<'_, Bitmap>> for Matrix {
     fn from(x: &ArrayView2<Bitmap>) -> Self {
         Matrix::from([(); MATRIX_SIZE].map(|()| {
             [(); MATRIX_SIZE].map(|()| {
-                let y = x.iter().next().unwrap();
-                if *y == 0 {
+                let &y = x.iter().next().unwrap();
+                if y == 0 {
                     FULL_BIT
                 } else {
-                    1 << (*y - 1)
+                    1 << (y - 1)
                 }
             })
         }))
@@ -24,7 +24,7 @@ impl From<&ArrayView2<'_, Bitmap>> for Matrix {
 
 impl Matrix {
     fn to_ndarray(&self) -> Array2<Bitmap> {
-        arr2(&**self).map(|z| (*z).ilog2() as Bitmap + 1)
+        arr2(&**self).map(|&x| x.ilog2() as Bitmap + 1)
     }
 }
 
