@@ -144,11 +144,17 @@ pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) {
         ),
         Block::Column => (
             Range::new(0, MATRIX_SIZE),
-            Range::new(block_no,block_no + 1),
+            Range::new(block_no, block_no + 1),
         ),
         Block::Square => (
-            Range::new(block_no / SQUARE_SIZE * SQUARE_SIZE, block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE),
-            Range::new(block_no % SQUARE_SIZE * SQUARE_SIZE, block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE),
+            Range::new(
+                block_no / SQUARE_SIZE * SQUARE_SIZE,
+                block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
+            ),
+            Range::new(
+                block_no % SQUARE_SIZE * SQUARE_SIZE,
+                block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
+            ),
         ),
     }
 }

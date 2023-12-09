@@ -2,7 +2,7 @@ use chrono::Utc;
 
 mod sudoku;
 use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
-use sudoku::matrix::{Matrix, display_matrix_buffer};
+use sudoku::matrix::{display_matrix_buffer, Matrix};
 
 fn main() {
     let problem = [
