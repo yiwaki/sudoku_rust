@@ -24,7 +24,7 @@ pub const SQUARE_SIZE: usize = 3;
 //
 // Address on Matrix: (Row No., Column No)
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Block {
     Row,
     Column,

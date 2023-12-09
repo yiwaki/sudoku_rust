@@ -3,22 +3,26 @@ use matrix::bitmap;
 
 impl matrix::Matrix {
     fn _done(self) -> Option<Self> {
-        for block_type in matrix::BLOCK_TYPES {
-            for block_no in 0..matrix::MATRIX_SIZE {
-                let (row_range, col_range) = matrix::block_range(&block_type, block_no);
+        for block_no in 0..matrix::MATRIX_SIZE {
+            for block_type in matrix::BLOCK_TYPES {
+                let mut bitmap = 0;
 
-                let mut bitmap: bitmap::Bitmap = 0;
+                let (row_range, col_range) = matrix::block_range(&block_type, block_no);
                 for row in row_range.into_iter() {
                     for col in col_range.into_iter() {
+                        bitmap |= self[(row, col)];
+
+                        if block_type != matrix::Block::Row {
+                            continue;
+                        }
+
                         if bitmap::popcount(self[(row, col)]) > 1 {
                             return None;
                         }
-
-                        bitmap |= self[(row, col)];
                     }
                 }
 
-                if bitmap != bitmap::FULL_BIT {
+                if bitmap != matrix::bitmap::FULL_BIT {
                     return None;
                 }
             }
@@ -97,12 +101,14 @@ impl matrix::Matrix {
 
 #[cfg(test)]
 mod tests {
-    use super::{*, matrix::{MATRIX_SIZE, bitmap::FULL_BIT}};
+    use super::*;
 
     fn _check_problem_solution(problem: matrix::Matrix, solution: matrix::Matrix) -> bool {
-        for row in 0..MATRIX_SIZE {
-            for col in 0..MATRIX_SIZE {
-                if problem[(row, col)] != FULL_BIT && problem[(row, col)] != solution[(row, col)] {
+        for row in 0..matrix::MATRIX_SIZE {
+            for col in 0..matrix::MATRIX_SIZE {
+                if problem[(row, col)] != matrix::bitmap::FULL_BIT
+                    && problem[(row, col)] != solution[(row, col)]
+                {
                     return false;
                 }
             }
@@ -141,6 +147,7 @@ mod tests {
 
         println!("Solution:");
         println!("{}", y);
+
         assert!(_check_problem_solution(x, y));
     }
 }
