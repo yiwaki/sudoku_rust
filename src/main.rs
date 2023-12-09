@@ -2,7 +2,7 @@ use chrono::Utc;
 
 mod sudoku;
 use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
-use sudoku::matrix::{Matrix, display_matrix};
+use sudoku::matrix::{Matrix, display_matrix_buffer};
 
 fn main() {
     let problem = [
@@ -22,7 +22,7 @@ fn main() {
         .into();
 
     println!("Problem:");
-    display_matrix(&problem);
+    display_matrix_buffer(&problem);
 
     let start = Utc::now().time();
 
@@ -31,7 +31,7 @@ fn main() {
     let end = Utc::now().time();
 
     println!("Solution:");
-    display_matrix(&solution.map(|y| y.map(|z| z.ilog2() as Bitmap + 1)));
+    display_matrix_buffer(&solution.map(|y| y.map(|z| z.ilog2() as Bitmap + 1)));
 
     let dt = (end - start).num_microseconds().unwrap() as f64 * 1E-6;
     println!("elapsed time: {:0.6}", dt);
