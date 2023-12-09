@@ -67,6 +67,7 @@ impl Matrix {
     }
 }
 
+// implement Into trait for Matrix automatically
 impl From<MatrixBuffer> for Matrix {
     fn from(x: MatrixBuffer) -> Self {
         Matrix { buffer: x }

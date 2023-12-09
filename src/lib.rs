@@ -6,6 +6,7 @@ mod sudoku;
 use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
 use sudoku::matrix::{Matrix, MATRIX_SIZE};
 
+// implement Into trait for Matrix automatically
 impl From<&ArrayView2<'_, Bitmap>> for Matrix {
     fn from(x: &ArrayView2<Bitmap>) -> Self {
         Matrix::from([(); MATRIX_SIZE].map(|()| {

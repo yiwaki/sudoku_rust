@@ -8,6 +8,7 @@ pub struct ForEachBit {
     current_bit: Bitmap,
 }
 
+// implement Into trait for ForEachBit automatically
 impl From<Bitmap> for ForEachBit {
     fn from(bitmap: Bitmap) -> Self {
         ForEachBit {
