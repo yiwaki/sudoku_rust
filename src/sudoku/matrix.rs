@@ -1,6 +1,8 @@
 use std::fmt;
 use std::ops;
 
+use crate::sudoku::matrix::bitmap::BITMAP_DIGIT;
+
 pub mod bitmap;
 
 pub const MATRIX_SIZE: usize = 9;
@@ -102,9 +104,9 @@ impl ops::Deref for Matrix {
 
 impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for row in 0..MATRIX_SIZE {
-            for col in 0..MATRIX_SIZE {
-                write!(f, "{:0w$b} ", self.buffer[row][col], w = MATRIX_SIZE)?;
+        for row in self.buffer.iter() {
+            for cell in row.iter() {
+                write!(f, "{:0w$b} ", cell, w = BITMAP_DIGIT)?;
             }
             writeln!(f)?;
         }
