@@ -100,11 +100,28 @@ mod tests {
     use super::*;
 
     fn _check_problem(problem: matrix::Matrix, solution: matrix::Matrix) -> bool {
-        for row in 0..matrix::MATRIX_SIZE {
-            for col in 0..matrix::MATRIX_SIZE {
-                if problem[(row, col)] != bitmap::FULL_BIT
-                    && problem[(row, col)] != solution[(row, col)]
-                {
+        for block_type in matrix::BLOCK_TYPES {
+            for block_no in 0..matrix::MATRIX_SIZE {
+                let mut bitmap = 0;
+                let (row_range, column_range) = matrix::block_range(&block_type, block_no);
+                for row in row_range {
+                    for col in column_range {
+                        if problem[(row, col)] != bitmap::FULL_BIT
+                            && problem[(row, col)] != solution[(row, col)]
+                        {
+                            return false;
+                        }
+
+                        if problem[(row, col)] == bitmap::FULL_BIT
+                            && matrix::bitmap::popcount(solution[(row, col)]) != 1
+                        {
+                            return false;
+                        }
+
+                        bitmap |= problem[(row, col)];
+                    }
+                }
+                if bitmap != bitmap::FULL_BIT {
                     return false;
                 }
             }
