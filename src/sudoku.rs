@@ -30,7 +30,7 @@ impl matrix::Matrix {
     }
 
     fn _check_blocks_by_pivot(self, pivot: matrix::Address) -> Option<Self> {
-        for block_type in matrix::BLOCK_TYPES {
+        for block_type in matrix::BLOCK_TYPES.into_iter() {
             let block_no = matrix::addr_to_block_no(&block_type, pivot);
 
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
@@ -52,7 +52,7 @@ impl matrix::Matrix {
     fn _pruned_by_pivot(&self, pivot: matrix::Address, target_bit: bitmap::Bitmap) -> Option<Self> {
         let mut x = self.clone();
 
-        for block_type in matrix::BLOCK_TYPES {
+        for block_type in matrix::BLOCK_TYPES.into_iter() {
             let block_no = matrix::addr_to_block_no(&block_type, pivot);
 
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
