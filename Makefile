@@ -1,8 +1,8 @@
 clean:
 	cargo clean
 
-run:
-	cargo run
+check:
+	cargo check
 
 develop:
 	maturin develop --release

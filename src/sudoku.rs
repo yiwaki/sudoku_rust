@@ -102,6 +102,7 @@ impl matrix::Matrix {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use chrono::Utc;
 
     fn _check_problem_solution(problem: matrix::Matrix, solution: matrix::Matrix) -> bool {
         for row in 0..matrix::MATRIX_SIZE {
@@ -143,10 +144,15 @@ mod tests {
         println!("Problem:");
         println!("{}", x);
 
+        let start = Utc::now().time();
         let y = x.solve(0);
 
         println!("Solution:");
         println!("{}", y);
+        let end = Utc::now().time();
+
+        let dt = (end - start).num_microseconds().unwrap() as f64 * 1E-6;
+        println!("elapsed time: {:0.6}", dt);
 
         assert!(_check_problem_solution(x, y));
     }

@@ -9,10 +9,6 @@ name = "sudoku_rust"
 path = "src/lib.rs"
 crate-type = ["cdylib"]
 
-[[bin]]
-name = "sudoku"
-path = "src/main.rs"
-
 [dependencies]
 chrono = "0.4.31"
 numpy = "0.20.0"
