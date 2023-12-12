@@ -13,16 +13,16 @@ For more information on Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki/Su
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
+## Install Python and setup virtual environment
+
+Install Python and venv according to your environment,
+and run the following command to configure your virtual environment of python to your project directory.
+
 ## Install Maturin
 
 ```
 pip install maturin
 ```
-
-## Install Python and setup virtual environment
-
-Install Python and venv according to your environment,
-and run the following command to configure your virtual environment of python to your project directory.
 
 ## Compile and install
 
