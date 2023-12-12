@@ -4,7 +4,7 @@ use matrix::{bitmap, Matrix};
 impl matrix::Matrix {
     fn _done(self) -> Option<Self> {
         for block_no in 0..matrix::MATRIX_SIZE {
-            for block_type in matrix::BLOCK_TYPES {
+            for block_type in matrix::BLOCK_TYPES.into_iter() {
                 let mut bitmap = 0;
 
                 let (row_range, col_range) = matrix::block_range(&block_type, block_no);
