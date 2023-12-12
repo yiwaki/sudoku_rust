@@ -78,7 +78,6 @@ impl matrix::Matrix {
     }
 
     pub fn solve(&self, cell_no: usize) -> Self {
-        // println!("{}", self);
         if cell_no >= matrix::MATRIX_SIZE * matrix::MATRIX_SIZE {
             return self.clone();
         }
