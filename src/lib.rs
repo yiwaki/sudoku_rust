@@ -3,8 +3,8 @@ use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2};
 use pyo3::{pyfunction, pymodule, types::PyModule, wrap_pyfunction, PyResult, Python};
 
 mod sudoku;
-use crate::sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
-use crate::sudoku::matrix::{Matrix, MATRIX_SIZE};
+use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
+use sudoku::matrix::{Matrix, MATRIX_SIZE};
 
 // implement Into trait for Matrix automatically
 impl From<&ArrayView2<'_, Bitmap>> for Matrix {

@@ -1,9 +1,8 @@
 use std::fmt;
 use std::ops;
 
-use crate::sudoku::matrix::bitmap::BITMAP_DIGIT;
-
 pub mod bitmap;
+use bitmap::BITMAP_DIGIT;
 
 pub const MATRIX_SIZE: usize = 9;
 pub const SQUARE_SIZE: usize = 3;

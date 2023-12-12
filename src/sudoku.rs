@@ -1,7 +1,5 @@
 pub mod matrix;
-use matrix::bitmap;
-
-use crate::sudoku::matrix::Matrix;
+use matrix::{bitmap, Matrix};
 
 impl matrix::Matrix {
     fn _done(self) -> Option<Self> {
