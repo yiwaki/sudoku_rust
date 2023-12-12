@@ -9,10 +9,11 @@ use sudoku::matrix::{Matrix, MATRIX_SIZE};
 // implement Into trait for Matrix automatically
 impl From<&ArrayView2<'_, Bitmap>> for Matrix {
     fn from(x: &ArrayView2<Bitmap>) -> Self {
+        let mut it = x.iter();
         [(); MATRIX_SIZE]
             .map(|()| {
                 [(); MATRIX_SIZE].map(|()| {
-                    let &y = x.iter().next().unwrap();
+                    let y = *it.next().unwrap();
                     if y == 0 {
                         FULL_BIT
                     } else {

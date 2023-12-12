@@ -1,6 +1,8 @@
 pub mod matrix;
 use matrix::bitmap;
 
+use crate::sudoku::matrix::Matrix;
+
 impl matrix::Matrix {
     fn _done(self) -> Option<Self> {
         for block_no in 0..matrix::MATRIX_SIZE {
@@ -76,11 +78,12 @@ impl matrix::Matrix {
     }
 
     pub fn solve(&self, cell_no: usize) -> Self {
+        // println!("{}", self);
         if cell_no >= matrix::MATRIX_SIZE * matrix::MATRIX_SIZE {
             return self.clone();
         }
 
-        let mut x = matrix::Matrix::new();
+        let mut x = Matrix::new();
 
         let pivot = matrix::cell_no_to_addr(cell_no);
 
@@ -120,15 +123,15 @@ mod tests {
     #[test]
     fn solve_test() {
         let x: matrix::Matrix = [
-            [1, 3, 0, 7, 9, 0, 0, 4, 5],
-            [0, 0, 5, 0, 0, 0, 0, 0, 6],
-            [2, 0, 0, 0, 8, 0, 9, 0, 0],
-            [3, 1, 0, 4, 6, 5, 8, 0, 0],
-            [4, 0, 0, 0, 0, 0, 0, 0, 2],
-            [0, 0, 7, 9, 3, 2, 0, 1, 4],
-            [0, 0, 3, 0, 7, 0, 0, 0, 8],
-            [7, 0, 0, 0, 0, 0, 3, 0, 0],
-            [8, 9, 0, 0, 5, 4, 0, 2, 1],
+            [0, 0, 4, 0, 5, 0, 0, 0, 1],
+            [0, 0, 6, 0, 0, 0, 0, 3, 0],
+            [5, 3, 0, 7, 0, 0, 0, 0, 8],
+            [1, 2, 0, 0, 6, 0, 0, 8, 0],
+            [0, 0, 3, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 9, 0, 0, 7],
+            [4, 0, 0, 0, 0, 0, 0, 0, 0],
+            [8, 5, 0, 0, 1, 0, 0, 2, 0],
+            [0, 0, 0, 6, 0, 0, 1, 0, 0],
         ]
         .map(|y| {
             y.map(|z| {
@@ -145,6 +148,7 @@ mod tests {
         println!("{}", x);
 
         let start = Utc::now().time();
+
         let y = x.solve(0);
 
         println!("Solution:");

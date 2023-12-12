@@ -120,7 +120,7 @@ impl fmt::Display for Matrix {
             }
             writeln!(f)?;
         }
-        writeln!(f)
+        Ok(())
     }
 }
 
