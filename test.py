@@ -2,7 +2,7 @@ import time
 
 import numpy as np
 
-from sudoku_rust import solve
+from sudoku_rust import solve, check
 
 filepath = "data/evil_3.csv"
 x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
@@ -19,5 +19,5 @@ print(y)
 
 print(f"elapsed time: {elapsed:.6f}")
 
-if not np.all((x == y) == (x != 0)):
+if not check(y) and not np.all((x == y) == (x != 0)):
     print("Error")
