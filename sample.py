@@ -4,6 +4,7 @@ import numpy as np
 
 from sudoku_rust import solve, check
 
+
 filepath = "data/evil_3.csv"
 x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
 print("Puzzle:")
@@ -19,5 +20,5 @@ print(y)
 
 print(f"elapsed time: {elapsed:.6f}")
 
-if not check(y) and not np.all((x == y) == (x != 0)):
-    print("Error")
+assert check(y)
+assert np.all((x == y) == (x != 0))

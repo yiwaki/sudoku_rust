@@ -40,7 +40,7 @@ fn wrap_solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py 
 }
 
 #[pyfunction(name = "check")]
-fn wrap_done<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> bool {
+fn wrap_check<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> bool {
     match Matrix::from(&arr.as_array()).done() {
         Some(_) => true,
         None => false,
@@ -50,6 +50,6 @@ fn wrap_done<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> bool 
 #[pymodule]
 fn sudoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(wrap_solve, m)?)?;
-    m.add_function(wrap_pyfunction!(wrap_done, m)?)?;
+    m.add_function(wrap_pyfunction!(wrap_check, m)?)?;
     Ok(())
 }

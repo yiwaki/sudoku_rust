@@ -7,5 +7,9 @@ check:
 develop:
 	maturin develop --release
 
-test:
+test_all:
 	cargo test --lib
+	pytest
+
+sample:
+	python sample.py

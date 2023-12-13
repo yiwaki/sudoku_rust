@@ -40,7 +40,7 @@ git clone https://github.com/yiwaki/sudoku_rust
 ## Run sample program
 
 ```
-python test.py
+make sample
 ```
 
 ## How to make Sudoku puzzle
