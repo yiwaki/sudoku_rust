@@ -15,8 +15,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 ## Install Python and setup virtual environment
 
-Install Python and venv according to your environment,
-and run the following command to configure your virtual environment of python to your project directory.
+Install Python and venv according to your environment, and run the following command to configure your virtual environment of python to your project directory.
 
 ## Install Maturin
 
@@ -45,4 +44,4 @@ make sample
 
 ## How to make Sudoku puzzle
 
-see sample data -> data/easy.csv
+see the sample data -> data/easy.csv
