@@ -27,12 +27,6 @@ python -m venv [your venv directory]
 pip install maturin
 ```
 
-## Compile and install
-
-```
-maturin develop --release
-```
-
 ## Download this kit
 
 ```
