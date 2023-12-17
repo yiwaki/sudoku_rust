@@ -35,6 +35,7 @@ impl Matrix {
 fn wrap_solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py PyArray2<Bitmap> {
     Matrix::from(&arr.as_array())
         .solve(0)
+        .unwrap()
         .to_ndarray()
         .into_pyarray(py)
 }

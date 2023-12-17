@@ -83,12 +83,6 @@ impl From<MatrixBuffer> for Matrix {
     }
 }
 
-impl Matrix {
-    pub fn new() -> Matrix {
-        [[0; MATRIX_SIZE]; MATRIX_SIZE].into()
-    }
-}
-
 impl ops::Index<Address> for Matrix {
     type Output = bitmap::Bitmap;
     fn index(&self, addr: Address) -> &Self::Output {

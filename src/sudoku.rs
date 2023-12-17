@@ -1,5 +1,5 @@
 pub mod matrix;
-use matrix::{bitmap, Matrix};
+use matrix::bitmap;
 
 impl matrix::Matrix {
     pub fn done(self) -> Option<Self> {
@@ -75,9 +75,9 @@ impl matrix::Matrix {
         x._check_blocks_by_pivot(pivot)
     }
 
-    pub fn solve(&self, cell_no: usize) -> Self {
+    pub fn solve(&self, cell_no: usize) -> Option<Self> {
         if cell_no >= matrix::MATRIX_SIZE * matrix::MATRIX_SIZE {
-            return self.clone();
+            return Some(self.clone());
         }
 
         let pivot = matrix::cell_no_to_addr(cell_no);
@@ -88,11 +88,11 @@ impl matrix::Matrix {
                 None => continue,
             };
 
-            if let Some(y) = x.solve(cell_no + 1).done() {
-                return y;
+            if let Some(y) = x.solve(cell_no + 1) {
+                return y.done();
             }
         }
-        Matrix::new()
+        None
     }
 }
 
@@ -143,7 +143,7 @@ mod tests {
 
         let start = Utc::now().time();
 
-        let y = x.solve(0);
+        let y = x.solve(0).unwrap();
 
         println!("Solution:");
         println!("{}", y);
