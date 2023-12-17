@@ -2,7 +2,7 @@ clean:
 	cargo clean
 
 check:
-	cargo check
+	cargo clippy
 
 develop:
 	maturin develop --release

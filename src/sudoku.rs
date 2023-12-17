@@ -1,5 +1,5 @@
 pub mod matrix;
-use matrix::{bitmap, Matrix};
+use matrix::bitmap;
 
 impl matrix::Matrix {
     pub fn done(self) -> Option<Self> {
@@ -80,12 +80,10 @@ impl matrix::Matrix {
             return self.clone();
         }
 
-        let mut x = Matrix::new();
-
         let pivot = matrix::cell_no_to_addr(cell_no);
 
         for target_bit in bitmap::ForEachBit::from(self[pivot]) {
-            x = match self._pruned_by_pivot(pivot, target_bit) {
+            let x = match self._pruned_by_pivot(pivot, target_bit) {
                 Some(y) => y,
                 None => continue,
             };
@@ -94,7 +92,7 @@ impl matrix::Matrix {
                 return y;
             }
         }
-        x
+        self.clone()
     }
 }
 

@@ -76,14 +76,6 @@ pub struct Matrix {
     buffer: MatrixBuffer,
 }
 
-impl Matrix {
-    pub fn new() -> Self {
-        Matrix {
-            buffer: [[0; MATRIX_SIZE]; MATRIX_SIZE],
-        }
-    }
-}
-
 // implement Into trait for Matrix automatically
 impl From<MatrixBuffer> for Matrix {
     fn from(x: MatrixBuffer) -> Self {
