@@ -90,10 +90,9 @@ impl matrix::Matrix {
                 None => continue,
             };
 
-            x = match x.solve(cell_no + 1).done() {
-                Some(y) => return y,
-                None => x,
-            };
+            if let Some(y) = x.solve(cell_no + 1).done() {
+                return y;
+            }
         }
         x
     }
