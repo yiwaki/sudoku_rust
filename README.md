@@ -15,7 +15,11 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 ## Install Python and setup virtual environment
 
-Install Python and venv according to your environment, and run the following command to configure your virtual environment of python to your project directory.
+Install Python and venv according to your environment, and run the following command to configure your virtual environment of python to your venv directory.
+
+```
+python -m venv [your venv directory]
+```
 
 ## Install Maturin
 
@@ -36,9 +40,24 @@ cd [your project directory]
 git clone https://github.com/yiwaki/sudoku_rust
 ```
 
+## Activate your venv
+
+- For Windows (PowerShell)
+
+```
+[your venv directory]\Scripts\Activate.ps1
+```
+
+- For macOS, Linux, another Unix-like OS (bash/zsh)
+
+```
+source [your venv directory]/bin/activate
+```
+
 ## Run sample program
 
 ```
+cd sudoku_rust
 make sample
 ```
 
