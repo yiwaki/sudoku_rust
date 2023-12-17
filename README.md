@@ -50,7 +50,7 @@ cd sudoku_rust
 make develop
 ```
 
-- For macOS, Linux, another Unix-like OS (bash/zsh)
+- For macOS, Linux, or another Unix-like OS (bash/zsh)
 
 ```
 cd sudoku_rust
