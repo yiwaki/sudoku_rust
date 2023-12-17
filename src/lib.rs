@@ -41,10 +41,7 @@ fn wrap_solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py 
 
 #[pyfunction(name = "check")]
 fn wrap_done<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> bool {
-    match Matrix::from(&arr.as_array()).done() {
-        Some(_) => true,
-        None => false,
-    }
+    Matrix::from(&arr.as_array()).done().is_some()
 }
 
 #[pymodule]
