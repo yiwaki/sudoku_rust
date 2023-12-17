@@ -49,7 +49,7 @@ pip install pytest numpy
 ```
 cd sudoku_rust
 source [your venv directory]/bin/activate
-pip install pytest, numpy
+pip install pytest numpy
 ```
 
 ## Build it and run sample program
