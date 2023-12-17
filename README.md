@@ -41,7 +41,7 @@ git clone https://github.com/yiwaki/sudoku_rust
 ```
 cd sudoku_rust
 [your venv directory]\Scripts\Activate.ps1
-pip install pytest, numpy
+pip install pytest numpy
 ```
 
 - For macOS, Linux, or another Unix-like OS (bash/zsh)
