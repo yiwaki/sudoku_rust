@@ -2,8 +2,7 @@ import time
 
 import numpy as np
 
-from sudoku_rust import solve, check
-
+from sudoku_rust import check, solve
 
 filepath = "data/evil_3.csv"
 x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
