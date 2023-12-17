@@ -6,10 +6,10 @@ check:
 
 develop:
 	maturin develop --release
+	pytest
 
 test:
 	cargo test --lib
-	pytest
 
 sample:
 	python sample.py
