@@ -8,9 +8,8 @@ pub struct ForEachBit {
     current_bit: Bitmap,
 }
 
-// implement Into trait for ForEachBit automatically
-impl From<Bitmap> for ForEachBit {
-    fn from(bitmap: Bitmap) -> Self {
+impl ForEachBit {
+    pub fn new(bitmap: Bitmap) -> Self {
         ForEachBit {
             bit_buffer: bitmap,
             current_bit: 0b1_0000_0000,
@@ -55,19 +54,19 @@ mod tests {
     #[test]
     fn split_single_bit_test() {
         let mut bits = Vec::<Bitmap>::new();
-        for v in ForEachBit::from(0b0_0000_0000) {
+        for v in ForEachBit::new(0b0_0000_0000) {
             bits.push(v);
         }
         assert_eq!(bits, []);
 
         let mut bits = Vec::<Bitmap>::new();
-        for v in ForEachBit::from(0b1_0010_0101) {
+        for v in ForEachBit::new(0b1_0010_0101) {
             bits.push(v);
         }
         assert_eq!(bits, [256, 32, 4, 1]);
 
         let mut bits = Vec::<Bitmap>::new();
-        for v in ForEachBit::from(0b1_1111_1111) {
+        for v in ForEachBit::new(0b1_1111_1111) {
             bits.push(v);
         }
         assert_eq!(bits, [256, 128, 64, 32, 16, 8, 4, 2, 1]);
