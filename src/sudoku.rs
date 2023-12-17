@@ -1,5 +1,5 @@
 pub mod matrix;
-use matrix::bitmap;
+use matrix::{bitmap, Matrix};
 
 impl matrix::Matrix {
     pub fn done(self) -> Option<Self> {
@@ -92,7 +92,7 @@ impl matrix::Matrix {
                 return y;
             }
         }
-        self.clone()
+        Matrix::new()
     }
 }
 
