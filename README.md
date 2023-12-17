@@ -40,24 +40,27 @@ cd [your project directory]
 git clone https://github.com/yiwaki/sudoku_rust
 ```
 
-## Activate your venv
+## Activate your venv and build it
 
 - For Windows (PowerShell)
 
 ```
+cd sudoku_rust
 [your venv directory]\Scripts\Activate.ps1
+make develop
 ```
 
 - For macOS, Linux, another Unix-like OS (bash/zsh)
 
 ```
+cd sudoku_rust
 source [your venv directory]/bin/activate
+make develop
 ```
 
 ## Run sample program
 
 ```
-cd sudoku_rust
 make sample
 ```
 
