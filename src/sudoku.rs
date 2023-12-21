@@ -2,7 +2,7 @@ pub mod matrix;
 use matrix::bitmap;
 
 impl matrix::Matrix {
-    pub fn done(self) -> Option<Self> {
+    pub fn has_done(self) -> Option<Self> {
         for block_no in 0..matrix::MATRIX_SIZE {
             for block_type in matrix::BLOCK_TYPES.into_iter() {
                 let mut bitmap = 0;
@@ -89,7 +89,7 @@ impl matrix::Matrix {
             };
 
             if let Some(y) = x.solve(cell_no + 1) {
-                return y.done();
+                return y.has_done();
             }
         }
         None
@@ -111,7 +111,7 @@ mod tests {
                 }
             }
         }
-        solution.done().is_some()
+        solution.has_done().is_some()
     }
 
     #[test]
