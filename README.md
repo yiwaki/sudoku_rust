@@ -35,7 +35,6 @@ git clone https://github.com/yiwaki/sudoku_rust
 ```
 cd sudoku_rust
 ./make_env
-pip install pytest numpy
 ```
 
 ## Build it and run sample program
