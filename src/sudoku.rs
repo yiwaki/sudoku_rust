@@ -29,7 +29,7 @@ impl matrix::Matrix {
         Some(self)
     }
 
-    fn _check_blocks_by_pivot(self, pivot: matrix::Address) -> Option<Self> {
+    fn _check_blocks_with_pivot(self, pivot: matrix::Address) -> Option<Self> {
         for block_type in matrix::BLOCK_TYPES.into_iter() {
             let block_no = matrix::addr_to_block_no(&block_type, pivot);
 
@@ -72,7 +72,7 @@ impl matrix::Matrix {
                 }
             }
         }
-        x._check_blocks_by_pivot(pivot)
+        x._check_blocks_with_pivot(pivot)
     }
 
     pub fn solve(self, cell_no: usize) -> Option<Self> {
