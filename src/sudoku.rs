@@ -75,9 +75,9 @@ impl matrix::Matrix {
         x._check_blocks_by_pivot(pivot)
     }
 
-    pub fn solve(&self, cell_no: usize) -> Option<Self> {
+    pub fn solve(self, cell_no: usize) -> Option<Self> {
         if cell_no >= matrix::MATRIX_SIZE * matrix::MATRIX_SIZE {
-            return Some(self.clone());
+            return Some(self);
         }
 
         let pivot = matrix::cell_no_to_addr(cell_no);
@@ -143,7 +143,7 @@ mod tests {
 
         let start = Utc::now().time();
 
-        let y = x.solve(0).unwrap();
+        let y = x.clone().solve(0).unwrap();
 
         println!("Solution:");
         println!("{}", y);
