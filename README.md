@@ -4,14 +4,37 @@ Python module to solve Sudoku puzzle written in Rust.
 
 For more information on Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki/Sudoku).
 
-## Install Python
+## Install make command
+
+For Windows, download the installation kit for your Windows from [here](http://gnuwin32.sourceforge.net/packages/make.htm) and run it.
+
+For macOS:
+
+```
+xcode-select --install
+```
+
+For Debian/Ubuntu:
+
+```
+sudo apt install -y make
+```
+
+For CentOS/Fedora:
+
+```
+sudo yum install make -y
+```
+
+## Install Python and venv
 
 Install Python and venv according to your environment.
 
 ## Install Rust
 
-- For Windows, download the installation kit for your Windows from [here](https://forge.rust-lang.org/infra/other-installation-methods.eichithi-emueru) and run it.
-- For macOS, linux, or another Unix-like OS, run the following shell command.
+For Windows, download the installation kit for your Windows from [here](https://forge.rust-lang.org/infra/other-installation-methods.eichithi-emueru) and run it.
+
+For macOS, linux, or another Unix-like OS, run the following shell command.
 
 ```
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh

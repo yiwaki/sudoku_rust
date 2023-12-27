@@ -5,13 +5,13 @@ impl matrix::Matrix {
     pub fn has_done(self) -> Option<Self> {
         for block_no in 0..matrix::MATRIX_SIZE {
             for block_type in matrix::BLOCK_TYPES.into_iter() {
-                let mut bitmap = 0;
+                let mut bmp: bitmap::Bitmap = 0;
 
                 let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
                 for row in row_range.into_iter() {
                     for col in col_range.into_iter() {
-                        bitmap |= self[(row, col)];
+                        bmp |= self[(row, col)];
 
                         if block_type == matrix::Block::Row
                             && bitmap::popcount(self[(row, col)]) > 1
@@ -21,7 +21,7 @@ impl matrix::Matrix {
                     }
                 }
 
-                if bitmap != matrix::bitmap::FULL_BIT {
+                if bmp != matrix::bitmap::FULL_BIT {
                     return None;
                 }
             }
