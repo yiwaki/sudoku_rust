@@ -1,5 +1,6 @@
 clean:
 	cargo clean
+	rm -fr .pytest_cache
 
 check:
 	cargo clippy
