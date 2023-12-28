@@ -12,5 +12,8 @@ develop:
 test:
 	cargo test --lib
 
+coverage:
+	cargo llvm-cov --html --open --ignore-filename-regex lib.rs
+
 sample:
 	python sample.py

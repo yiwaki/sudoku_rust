@@ -207,4 +207,15 @@ mod tests {
         assert_eq!(col_range.start, 3);
         assert_eq!(col_range.end, 6);
     }
+
+    #[test]
+    fn matrix_test() {
+        let matrix_buffer: MatrixBuffer = [[1, 2, 3, 4, 5, 6, 7, 8, 9]; 9];
+        display_matrix_buffer(&matrix_buffer);
+
+        let matrix: Matrix = matrix_buffer.into();
+        println!("{}", matrix);
+
+        assert_eq!(matrix_buffer, *matrix);
+    }
 }

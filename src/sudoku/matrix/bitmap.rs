@@ -53,11 +53,8 @@ mod tests {
 
     #[test]
     fn split_single_bit_test() {
-        let mut bits = Vec::<Bitmap>::new();
-        for v in ForEachBit::new(0b0_0000_0000) {
-            bits.push(v);
-        }
-        assert_eq!(bits, []);
+        let v = ForEachBit::new(0b0_0000_0000).next();
+        assert_eq!(v, None);
 
         let mut bits = Vec::<Bitmap>::new();
         for v in ForEachBit::new(0b1_0010_0101) {
