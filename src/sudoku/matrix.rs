@@ -175,12 +175,12 @@ mod tests {
     #[test]
     fn range_test() {
         let mut buf = String::new();
-        let r = Range { start: 0, end: 3 };
-        let c = Range { start: 0, end: 2 };
-        for i in r {
-            for j in c {
-                print!("({},{}) ", i, j);
-                buf.push_str(format!("({},{}) ", i, j).as_str());
+        let rows = Range::new(0, 3);
+        let cols = Range::new(0, 2);
+        for row in rows {
+            for col in cols {
+                print!("({},{}) ", row, col);
+                buf.push_str(format!("({},{}) ", row, col).as_str());
             }
         }
         println!();
