@@ -107,9 +107,9 @@ impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for row in self.buffer.iter() {
             for cell in row.iter() {
-                write!(f, "{:0w$b} ", cell, w = BITMAP_DIGIT)?;
+                let _ = write!(f, "{:0w$b} ", cell, w = BITMAP_DIGIT);
             }
-            writeln!(f)?;
+            let _ = writeln!(f);
         }
         Ok(())
     }
