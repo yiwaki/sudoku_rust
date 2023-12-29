@@ -76,7 +76,7 @@ pub struct Matrix {
     buffer: MatrixBuffer,
 }
 
-// implement Into trait for Matrix automatically
+// implement Into<MatrixBuffer> for Matrix automatically
 impl From<MatrixBuffer> for Matrix {
     fn from(x: MatrixBuffer) -> Self {
         Matrix { buffer: x }
