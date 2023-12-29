@@ -5,14 +5,14 @@ clean:
 check:
 	cargo clippy
 
-develop:
+build:
 	maturin develop --release
 	pytest
 
 test:
 	cargo test --lib
 
-coverage:
+cover:
 	cargo llvm-cov --html --open --ignore-filename-regex lib.rs
 
 sample:

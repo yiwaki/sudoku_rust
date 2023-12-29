@@ -64,7 +64,7 @@ cd sudoku_rust
 
 ```
 ./venv/Scripts/activate     # if necessary
-make develop
+make build
 make sample
 ```
 
