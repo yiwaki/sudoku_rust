@@ -175,7 +175,7 @@ mod tests {
     #[test]
     fn range_test() {
         let mut buf = String::new();
-        let rows = Range::new(0, 3);
+        let rows = Range::new(0, 3).clone();
         let cols = Range::new(0, 2);
         for row in rows {
             for col in cols {
