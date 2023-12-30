@@ -60,10 +60,23 @@ cd sudoku_rust
 ./make_env
 ```
 
+## Activate your venv
+
+- For Windows
+
+```
+./venv/Scripts/activate
+```
+
+- For maxOS, Linux, or another Unix-like OS
+
+```
+./venv/bin/activate
+```
+
 ## Build it and run sample program
 
 ```
-./venv/Scripts/activate     # if necessary
 make build
 make sample
 ```
