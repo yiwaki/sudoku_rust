@@ -1,12 +1,6 @@
 use std::fmt;
 use std::ops;
 
-pub mod bitmap;
-use bitmap::BITMAP_DIGIT;
-
-pub const MATRIX_SIZE: usize = 9;
-pub const SQUARE_SIZE: usize = 3;
-
 // Matrix of                     Block No. of each block type
 // Cell No.                      Row          Column       Square
 // +--------------------------+  +---------+  +---------+  +---------+
@@ -23,6 +17,12 @@ pub const SQUARE_SIZE: usize = 3;
 //
 // Address on Matrix: (Row No., Column No.)
 
+pub mod bitmap;
+use bitmap::BITMAP_DIGIT;
+
+pub const MATRIX_SIZE: usize = 9;
+pub const SQUARE_SIZE: usize = 3;
+
 #[derive(PartialEq)]
 pub enum Block {
     Row,
@@ -31,31 +31,6 @@ pub enum Block {
 }
 
 pub const BLOCK_TYPES: [Block; 3] = [Block::Row, Block::Column, Block::Square];
-
-#[derive(Clone, Copy)]
-pub struct Range {
-    start: usize,
-    end: usize,
-}
-
-impl Range {
-    pub fn new(start: usize, end: usize) -> Self {
-        Range { start, end }
-    }
-}
-
-impl Iterator for Range {
-    type Item = usize;
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.start >= self.end {
-            None
-        } else {
-            let c = self.start;
-            self.start += 1;
-            Some(c)
-        }
-    }
-}
 
 pub type Address = (usize, usize);
 
@@ -124,6 +99,31 @@ pub fn addr_to_block_no(block_type: &Block, addr: Address) -> usize {
         Block::Row => addr.0,
         Block::Column => addr.1,
         Block::Square => addr.0 / SQUARE_SIZE * SQUARE_SIZE + addr.1 / SQUARE_SIZE,
+    }
+}
+
+#[derive(Clone, Copy)]
+pub struct Range {
+    start: usize,
+    end: usize,
+}
+
+impl Range {
+    pub fn new(start: usize, end: usize) -> Self {
+        Range { start, end }
+    }
+}
+
+impl Iterator for Range {
+    type Item = usize;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.start >= self.end {
+            None
+        } else {
+            let c = self.start;
+            self.start += 1;
+            Some(c)
+        }
     }
 }
 
