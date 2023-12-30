@@ -156,7 +156,9 @@ mod tests {
 
     #[test]
     fn cell_no_to_addr_test() {
+        assert_eq!(cell_no_to_addr(0), (0, 0));
         assert_eq!(cell_no_to_addr(5), (0, 5));
+        assert_eq!(cell_no_to_addr(80), (8, 8));
     }
 
     #[test]
