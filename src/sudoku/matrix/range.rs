@@ -23,6 +23,7 @@ impl Iterator for Range {
     }
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
 
