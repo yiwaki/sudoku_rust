@@ -18,6 +18,8 @@ use std::ops;
 // Address on Matrix: (Row No., Column No.)
 
 pub mod bitmap;
+pub mod range;
+
 use bitmap::BITMAP_DIGIT;
 
 pub const MATRIX_SIZE: usize = 9;
@@ -102,47 +104,22 @@ pub fn addr_to_block_no(block_type: &Block, addr: Address) -> usize {
     }
 }
 
-#[derive(Clone, Copy)]
-pub struct Range {
-    start: usize,
-    end: usize,
-}
-
-impl Range {
-    pub fn new(start: usize, end: usize) -> Self {
-        Range { start, end }
-    }
-}
-
-impl Iterator for Range {
-    type Item = usize;
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.start >= self.end {
-            None
-        } else {
-            let c = self.start;
-            self.start += 1;
-            Some(c)
-        }
-    }
-}
-
-pub fn block_range(block_type: &Block, block_no: usize) -> (Range, Range) {
+pub fn block_range(block_type: &Block, block_no: usize) -> (range::Range, range::Range) {
     match block_type {
         Block::Row => (
-            Range::new(block_no, block_no + 1),
-            Range::new(0, MATRIX_SIZE),
+            range::Range::new(block_no, block_no + 1),
+            range::Range::new(0, MATRIX_SIZE),
         ),
         Block::Column => (
-            Range::new(0, MATRIX_SIZE),
-            Range::new(block_no, block_no + 1),
+            range::Range::new(0, MATRIX_SIZE),
+            range::Range::new(block_no, block_no + 1),
         ),
         Block::Square => (
-            Range::new(
+            range::Range::new(
                 block_no / SQUARE_SIZE * SQUARE_SIZE,
                 block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
             ),
-            Range::new(
+            range::Range::new(
                 block_no % SQUARE_SIZE * SQUARE_SIZE,
                 block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
             ),
@@ -175,39 +152,18 @@ mod tests {
     }
 
     #[test]
-    fn range_test() {
-        let mut buf = String::new();
-        let rows = Range::new(0, 3).clone();
-        let cols = Range::new(0, 2);
-        for row in rows {
-            for col in cols {
-                print!("({},{}) ", row, col);
-                buf.push_str(format!("({},{}) ", row, col).as_str());
-            }
-        }
-        println!();
-        assert_eq!(buf, "(0,0) (0,1) (1,0) (1,1) (2,0) (2,1) ");
-    }
-
-    #[test]
     fn block_range_test() {
         let (row_range, col_range) = block_range(&Block::Row, 4);
-        assert_eq!(row_range.start, 4);
-        assert_eq!(row_range.end, 5);
-        assert_eq!(col_range.start, 0);
-        assert_eq!(col_range.end, MATRIX_SIZE);
+        assert_eq!(row_range, range::Range::new(4, 5));
+        assert_eq!(col_range, range::Range::new(0, MATRIX_SIZE));
 
         let (row_range, col_range) = block_range(&Block::Column, 4);
-        assert_eq!(row_range.start, 0);
-        assert_eq!(row_range.end, MATRIX_SIZE);
-        assert_eq!(col_range.start, 4);
-        assert_eq!(col_range.end, 5);
+        assert_eq!(row_range, range::Range::new(0, MATRIX_SIZE));
+        assert_eq!(col_range, range::Range::new(4, 5));
 
         let (row_range, col_range) = block_range(&Block::Square, 4);
-        assert_eq!(row_range.start, 3);
-        assert_eq!(row_range.end, 6);
-        assert_eq!(col_range.start, 3);
-        assert_eq!(col_range.end, 6);
+        assert_eq!(row_range, range::Range::new(3, 6));
+        assert_eq!(col_range, range::Range::new(3, 6));
     }
 
     #[test]
