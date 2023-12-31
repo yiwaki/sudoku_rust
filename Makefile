@@ -5,7 +5,7 @@ clean:
 check:
 	cargo clippy
 
-build:
+develop:
 	maturin develop --release
 	pytest
 

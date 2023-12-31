@@ -77,7 +77,7 @@ cd sudoku_rust
 ## Build it and run sample program
 
 ```
-make build
+make develop
 make sample
 ```
 
