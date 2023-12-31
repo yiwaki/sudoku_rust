@@ -17,7 +17,7 @@ elapsed = end - start
 print("Solution:")
 print(y)
 
-print(f"elapsed time: {elapsed:.6f}")
+print(f"process time: {elapsed:.6f}")
 
 assert check(y)
 assert np.all((x == y) == (x != 0))

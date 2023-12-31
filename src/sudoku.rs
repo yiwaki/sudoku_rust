@@ -29,7 +29,7 @@ impl matrix::Matrix {
         Some(self)
     }
 
-    fn _check_blocks_with_pivot(self, pivot: matrix::Address) -> Option<Self> {
+    fn _check_blocks_from_pivot(self, pivot: matrix::Address) -> Option<Self> {
         for block_type in matrix::BLOCK_TYPES.into_iter() {
             let block_no = matrix::addr_to_block_no(&block_type, pivot);
 
@@ -49,7 +49,11 @@ impl matrix::Matrix {
         Some(self)
     }
 
-    fn _pruned_by_pivot(&self, pivot: matrix::Address, target_bit: bitmap::Bitmap) -> Option<Self> {
+    fn _prune_from_pivot(
+        &self,
+        pivot: matrix::Address,
+        target_bit: bitmap::Bitmap,
+    ) -> Option<Self> {
         let mut x = self.clone();
 
         for block_type in matrix::BLOCK_TYPES.into_iter() {
@@ -72,7 +76,7 @@ impl matrix::Matrix {
                 }
             }
         }
-        x._check_blocks_with_pivot(pivot)
+        x._check_blocks_from_pivot(pivot)
     }
 
     pub fn solve(self, cell_no: usize) -> Option<Self> {
@@ -83,7 +87,7 @@ impl matrix::Matrix {
         let pivot = matrix::cell_no_to_addr(cell_no);
 
         for target_bit in bitmap::ForEachBit::new(self[pivot]) {
-            let x = match self._pruned_by_pivot(pivot, target_bit) {
+            let x = match self._prune_from_pivot(pivot, target_bit) {
                 Some(y) => y,
                 None => continue,
             };
