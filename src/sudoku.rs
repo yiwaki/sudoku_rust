@@ -1,11 +1,11 @@
 pub mod matrix;
-use matrix::bitmap;
+use matrix::{bitmap, bitmap::Bitmap, bitmap::FULL_BIT};
 
 impl matrix::Matrix {
     pub fn has_done(self) -> Option<Self> {
         for block_no in 0..matrix::MATRIX_SIZE {
             for block_type in matrix::BLOCK_TYPES.into_iter() {
-                let mut bmp: bitmap::Bitmap = 0;
+                let mut bmp: Bitmap = 0;
 
                 let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
@@ -21,7 +21,7 @@ impl matrix::Matrix {
                     }
                 }
 
-                if bmp != matrix::bitmap::FULL_BIT {
+                if bmp != FULL_BIT {
                     return None;
                 }
             }
@@ -35,25 +35,21 @@ impl matrix::Matrix {
 
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-            let mut bitmap: bitmap::Bitmap = 0;
+            let mut bmp: Bitmap = 0;
             for row in row_range.into_iter() {
                 for col in col_range.into_iter() {
-                    bitmap |= self[(row, col)];
+                    bmp |= self[(row, col)];
                 }
             }
 
-            if bitmap != bitmap::FULL_BIT {
+            if bmp != FULL_BIT {
                 return None;
             }
         }
         Some(self)
     }
 
-    fn _prune_from_pivot(
-        &self,
-        pivot: matrix::Address,
-        target_bit: bitmap::Bitmap,
-    ) -> Option<Self> {
+    fn _prune_from_pivot(&self, pivot: matrix::Address, target_bit: Bitmap) -> Option<Self> {
         let mut x = self.clone();
 
         for block_type in matrix::BLOCK_TYPES.into_iter() {
@@ -108,9 +104,7 @@ mod tests {
     fn _check_problem_solution(problem: matrix::Matrix, solution: matrix::Matrix) -> bool {
         for row in 0..matrix::MATRIX_SIZE {
             for col in 0..matrix::MATRIX_SIZE {
-                if problem[(row, col)] != matrix::bitmap::FULL_BIT
-                    && problem[(row, col)] != solution[(row, col)]
-                {
+                if problem[(row, col)] != FULL_BIT && problem[(row, col)] != solution[(row, col)] {
                     return false;
                 }
             }
@@ -131,15 +125,7 @@ mod tests {
             [8, 5, 0, 0, 1, 0, 0, 2, 0],
             [0, 0, 0, 6, 0, 0, 1, 0, 0],
         ]
-        .map(|y| {
-            y.map(|z| {
-                if z == 0 {
-                    bitmap::FULL_BIT
-                } else {
-                    1 << (z - 1)
-                }
-            })
-        })
+        .map(|y| y.map(|z| if z == 0 { FULL_BIT } else { 1 << (z - 1) }))
         .into();
 
         println!("Problem:");
