@@ -59,15 +59,14 @@ impl matrix::Matrix {
 
             for row in row_range.into_iter() {
                 for col in col_range.into_iter() {
-                    let target_cell = (row, col);
-                    if target_cell == pivot {
-                        x[target_cell] = target_bit;
+                    if (row, col) == pivot {
+                        x[(row, col)] = target_bit;
                         continue;
                     }
 
-                    x[target_cell] &= !target_bit;
+                    x[(row, col)] &= !target_bit;
 
-                    if x[target_cell] == 0 {
+                    if x[(row, col)] == 0 {
                         return None;
                     }
                 }
