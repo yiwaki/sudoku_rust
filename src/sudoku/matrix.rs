@@ -18,7 +18,6 @@ use std::ops;
 // Address on Matrix: (Row No., Column No.)
 
 pub mod bitmap;
-pub mod range;
 
 use bitmap::BITMAP_DIGIT;
 
@@ -104,25 +103,15 @@ pub fn addr_to_block_no(block_type: &Block, addr: Address) -> usize {
     }
 }
 
-pub fn block_range(block_type: &Block, block_no: usize) -> (range::Range, range::Range) {
+pub fn block_range(block_type: &Block, block_no: usize) -> (ops::Range<usize>, ops::Range<usize>) {
     match block_type {
-        Block::Row => (
-            range::Range::new(block_no, block_no + 1),
-            range::Range::new(0, MATRIX_SIZE),
-        ),
-        Block::Column => (
-            range::Range::new(0, MATRIX_SIZE),
-            range::Range::new(block_no, block_no + 1),
-        ),
+        Block::Row => (block_no..block_no + 1, 0..MATRIX_SIZE),
+        Block::Column => (0..MATRIX_SIZE, block_no..block_no + 1),
         Block::Square => (
-            range::Range::new(
-                block_no / SQUARE_SIZE * SQUARE_SIZE,
-                block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
-            ),
-            range::Range::new(
-                block_no % SQUARE_SIZE * SQUARE_SIZE,
-                block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
-            ),
+            block_no / SQUARE_SIZE * SQUARE_SIZE
+                ..block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
+            block_no % SQUARE_SIZE * SQUARE_SIZE
+                ..block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
         ),
     }
 }
@@ -154,16 +143,16 @@ mod tests {
     #[test]
     fn block_range_test() {
         let (row_range, col_range) = block_range(&Block::Row, 4);
-        assert_eq!(row_range, range::Range::new(4, 5));
-        assert_eq!(col_range, range::Range::new(0, MATRIX_SIZE));
+        assert_eq!(row_range, 4..5);
+        assert_eq!(col_range, 0..MATRIX_SIZE);
 
         let (row_range, col_range) = block_range(&Block::Column, 4);
-        assert_eq!(row_range, range::Range::new(0, MATRIX_SIZE));
-        assert_eq!(col_range, range::Range::new(4, 5));
+        assert_eq!(row_range, 0..MATRIX_SIZE);
+        assert_eq!(col_range, 4..5);
 
         let (row_range, col_range) = block_range(&Block::Square, 4);
-        assert_eq!(row_range, range::Range::new(3, 6));
-        assert_eq!(col_range, range::Range::new(3, 6));
+        assert_eq!(row_range, 3..6);
+        assert_eq!(col_range, 3..6);
     }
 
     #[test]

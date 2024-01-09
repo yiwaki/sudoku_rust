@@ -9,8 +9,8 @@ impl matrix::Matrix {
 
                 let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-                for row in row_range.into_iter() {
-                    for col in col_range.into_iter() {
+                for row in row_range {
+                    for col in col_range.clone() {
                         bmp |= self[(row, col)];
 
                         if block_type == matrix::Block::Row
@@ -36,8 +36,8 @@ impl matrix::Matrix {
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
             let mut bmp: Bitmap = 0;
-            for row in row_range.into_iter() {
-                for col in col_range.into_iter() {
+            for row in row_range {
+                for col in col_range.clone() {
                     bmp |= self[(row, col)];
                 }
             }
@@ -57,8 +57,8 @@ impl matrix::Matrix {
 
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-            for row in row_range.into_iter() {
-                for col in col_range.into_iter() {
+            for row in row_range {
+                for col in col_range.clone() {
                     if (row, col) == pivot {
                         x[(row, col)] = target_bit;
                         continue;
