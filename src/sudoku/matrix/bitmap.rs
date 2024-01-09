@@ -5,14 +5,14 @@ pub const FULL_BIT: Bitmap = 0b1_1111_1111;
 
 pub struct ForEachBit {
     bit_buffer: Bitmap,
-    current_bit: Bitmap,
+    next_bit: Bitmap,
 }
 
 impl ForEachBit {
     pub fn new(bitmap: Bitmap) -> Self {
         ForEachBit {
             bit_buffer: bitmap,
-            current_bit: 0b1_0000_0000,
+            next_bit: 0b1_0000_0000,
         }
     }
 }
@@ -20,15 +20,15 @@ impl ForEachBit {
 impl Iterator for ForEachBit {
     type Item = Bitmap;
     fn next(&mut self) -> Option<Self::Item> {
-        while self.bit_buffer & self.current_bit == 0 && self.current_bit != 0 {
-            self.current_bit >>= 1;
+        while self.bit_buffer & self.next_bit == 0 && self.next_bit != 0 {
+            self.next_bit >>= 1;
         }
 
-        if self.current_bit == 0 {
+        if self.next_bit == 0 {
             None
         } else {
-            let cur = self.current_bit;
-            self.current_bit >>= 1;
+            let cur = self.next_bit;
+            self.next_bit >>= 1;
             Some(cur)
         }
     }
