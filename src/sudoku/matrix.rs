@@ -26,7 +26,7 @@ pub const SQUARE_SIZE: usize = 3;
 
 #[derive(PartialEq)]
 pub enum Block {
-    Row,
+    Row = 1,
     Column,
     Square,
 }
