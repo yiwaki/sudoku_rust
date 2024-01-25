@@ -84,7 +84,7 @@ impl matrix::Matrix {
 
         for target_bit in bitmap::EachBit::new(self[pivot]) {
             let x = match self._pruned_by_pivot(pivot, target_bit) {
-                Some(y) => y,
+                Some(x) => x,
                 None => continue,
             };
 
