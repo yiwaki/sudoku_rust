@@ -54,7 +54,6 @@ impl matrix::Matrix {
 
         for block_type in matrix::BLOCK_TYPES.into_iter() {
             let block_no = matrix::addr_to_block_no(&block_type, pivot);
-
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
             x[pivot] = target_bit;
