@@ -1,5 +1,4 @@
-use std::fmt;
-use std::ops;
+use std::{fmt, ops};
 
 // Matrix of                     Block No. of each block type
 // Cell No.                      Row          Column       Square
