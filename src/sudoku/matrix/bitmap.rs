@@ -63,7 +63,7 @@ mod tests {
         assert_eq!(bits, [256, 32, 4, 1]);
 
         let mut bits = Vec::<Bitmap>::new();
-        for v in EachBit::new(0b1_1111_1111) {
+        for v in EachBit::new(FULL_BIT) {
             bits.push(v);
         }
         assert_eq!(bits, [256, 128, 64, 32, 16, 8, 4, 2, 1]);
