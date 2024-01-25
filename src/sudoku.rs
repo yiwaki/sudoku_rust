@@ -29,7 +29,7 @@ impl matrix::Matrix {
         Some(self)
     }
 
-    fn _check_blocks_by_pivot(&self, block_type: &Block, pivot: Address) -> Result<(), ()> {
+    fn _check_blocks_by_pivot(&self, block_type: &Block, pivot: Address) -> bool {
         let block_no = matrix::addr_to_block_no(&block_type, pivot);
 
         let (row_range, col_range) = matrix::block_range(&block_type, block_no);
@@ -40,12 +40,7 @@ impl matrix::Matrix {
                 bmp |= self[(row, col)];
             }
         }
-
-        if bmp == FULL_BIT {
-            Ok(())
-        } else {
-            Err(())
-        }
+        bmp == FULL_BIT
     }
 
     fn _pruned_by_pivot(&self, pivot: Address, target_bit: Bitmap) -> Option<Self> {
@@ -69,7 +64,7 @@ impl matrix::Matrix {
                 }
             }
 
-            if x._check_blocks_by_pivot(&block_type, pivot).is_err() {
+            if !x._check_blocks_by_pivot(&block_type, pivot) {
                 return None;
             }
         }
