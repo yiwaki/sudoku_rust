@@ -1,6 +1,8 @@
 pub mod matrix;
 use matrix::{bitmap, bitmap::Bitmap, bitmap::FULL_BIT};
 
+use self::matrix::Block;
+
 impl matrix::Matrix {
     pub fn has_done(self) -> Option<Self> {
         for block_no in 0..matrix::MATRIX_SIZE {
@@ -29,24 +31,23 @@ impl matrix::Matrix {
         Some(self)
     }
 
-    fn _check_blocks_from_pivot(self, pivot: matrix::Address) -> Option<Self> {
-        for block_type in matrix::BLOCK_TYPES.into_iter() {
-            let block_no = matrix::addr_to_block_no(&block_type, pivot);
+    fn _check_blocks_by_pivot(&self, block_type: &Block, pivot: matrix::Address) -> Result<(), ()> {
+        let block_no = matrix::addr_to_block_no(block_type, pivot);
 
-            let (row_range, col_range) = matrix::block_range(&block_type, block_no);
+        let (row_range, col_range) = matrix::block_range(block_type, block_no);
 
-            let mut bmp: Bitmap = 0;
-            for row in row_range {
-                for col in col_range.clone() {
-                    bmp |= self[(row, col)];
-                }
-            }
-
-            if bmp != FULL_BIT {
-                return None;
+        let mut bmp: Bitmap = 0;
+        for row in row_range {
+            for col in col_range.clone() {
+                bmp |= self[(row, col)];
             }
         }
-        Some(self)
+
+        if bmp == FULL_BIT {
+            return Ok(());
+        } else {
+            return Err(());
+        }
     }
 
     fn _pruned_by_pivot(&self, pivot: matrix::Address, target_bit: Bitmap) -> Option<Self> {
@@ -69,8 +70,12 @@ impl matrix::Matrix {
                     }
                 }
             }
+
+            if x._check_blocks_by_pivot(&block_type, pivot).is_err() {
+                return None;
+            }
         }
-        x._check_blocks_from_pivot(pivot)
+        Some(x)
     }
 
     pub fn solve(self, cell_no: usize) -> Option<Self> {
