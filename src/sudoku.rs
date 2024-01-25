@@ -44,9 +44,9 @@ impl matrix::Matrix {
         }
 
         if bmp == FULL_BIT {
-            return Ok(());
+            Ok(())
         } else {
-            return Err(());
+            Err(())
         }
     }
 
