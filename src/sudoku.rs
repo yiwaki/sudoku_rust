@@ -57,14 +57,12 @@ impl matrix::Matrix {
 
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
+            x[pivot] = target_bit;
             for row in row_range {
                 for col in col_range.clone() {
-                    if (row, col) == pivot {
-                        x[(row, col)] = target_bit;
-                        continue;
+                    if (row, col) != pivot {
+                        x[(row, col)] &= !target_bit;
                     }
-
-                    x[(row, col)] &= !target_bit;
 
                     if x[(row, col)] == 0 {
                         return None;
