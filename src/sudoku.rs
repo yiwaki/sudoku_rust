@@ -88,8 +88,8 @@ impl matrix::Matrix {
                 None => continue,
             };
 
-            if let Some(y) = x.solve(cell_no + 1) {
-                return y.has_done();
+            if let Some(x) = x.solve(cell_no + 1) {
+                return x.has_done();
             }
         }
         None
