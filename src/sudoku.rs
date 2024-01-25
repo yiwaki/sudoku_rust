@@ -52,11 +52,12 @@ impl matrix::Matrix {
     fn _pruned_by_pivot(&self, pivot: matrix::Address, target_bit: Bitmap) -> Option<Self> {
         let mut x = self.clone();
 
+        x[pivot] = target_bit;
+
         for block_type in matrix::BLOCK_TYPES.into_iter() {
             let block_no = matrix::addr_to_block_no(&block_type, pivot);
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-            x[pivot] = target_bit;
             for row in row_range {
                 for col in col_range.clone() {
                     if (row, col) != pivot {
