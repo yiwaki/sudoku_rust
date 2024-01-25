@@ -30,9 +30,9 @@ impl matrix::Matrix {
     }
 
     fn _check_blocks_by_pivot(&self, block_type: &matrix::Block, pivot: matrix::Address) -> bool {
-        let block_no = matrix::addr_to_block_no(&block_type, pivot);
+        let block_no = matrix::addr_to_block_no(block_type, pivot);
 
-        let (row_range, col_range) = matrix::block_range(&block_type, block_no);
+        let (row_range, col_range) = matrix::block_range(block_type, block_no);
 
         let mut bmp: Bitmap = 0;
         for row in row_range {
