@@ -1,5 +1,5 @@
 pub mod matrix;
-use matrix::{bitmap, bitmap::Bitmap, bitmap::FULL_BIT, Address, Block};
+use matrix::{bitmap, bitmap::Bitmap, bitmap::FULL_BIT};
 
 impl matrix::Matrix {
     pub fn has_done(self) -> Option<Self> {
@@ -29,7 +29,7 @@ impl matrix::Matrix {
         Some(self)
     }
 
-    fn _check_blocks_by_pivot(&self, block_type: &Block, pivot: Address) -> bool {
+    fn _check_blocks_by_pivot(&self, block_type: &matrix::Block, pivot: matrix::Address) -> bool {
         let block_no = matrix::addr_to_block_no(&block_type, pivot);
 
         let (row_range, col_range) = matrix::block_range(&block_type, block_no);
@@ -43,7 +43,7 @@ impl matrix::Matrix {
         bmp == FULL_BIT
     }
 
-    fn _pruned_by_pivot(&self, pivot: Address, target_bit: Bitmap) -> Option<Self> {
+    fn _pruned_by_pivot(&self, pivot: matrix::Address, target_bit: Bitmap) -> Option<Self> {
         let mut x = self.clone();
 
         x[pivot] = target_bit;
