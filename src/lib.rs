@@ -26,7 +26,7 @@ impl From<&ArrayView2<'_, Bitmap>> for Matrix {
 }
 
 impl Matrix {
-    fn to_ndarray(&self) -> Array2<Bitmap> {
+    fn into_ndarray(&self) -> Array2<Bitmap> {
         arr2(&**self).map(|&x| x.ilog2() as Bitmap + 1)
     }
 }
@@ -36,7 +36,7 @@ fn wrap_solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py 
     Matrix::from(&arr.as_array())
         .solve(0)
         .unwrap()
-        .to_ndarray()
+        .into_ndarray()
         .into_pyarray(py)
 }
 
