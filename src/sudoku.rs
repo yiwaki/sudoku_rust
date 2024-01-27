@@ -5,10 +5,9 @@ impl matrix::Matrix {
     pub fn has_done(self) -> Option<Self> {
         for block_no in 0..matrix::MATRIX_SIZE {
             for block_type in matrix::BLOCK_TYPES.into_iter() {
-                let mut bmp: Bitmap = 0;
-
                 let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
+                let mut bmp: Bitmap = 0;
                 for row in row_range {
                     for col in col_range.clone() {
                         bmp |= self[(row, col)];
