@@ -4,7 +4,7 @@ use matrix::{bitmap, bitmap::Bitmap, bitmap::FULL_BIT};
 impl matrix::Matrix {
     pub fn has_done(self) -> Option<Self> {
         for block_no in 0..matrix::MATRIX_SIZE {
-            for block_type in matrix::BLOCK_TYPES.into_iter() {
+            for block_type in matrix::BLOCK_TYPES {
                 let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
                 let mut bmp: Bitmap = 0;
@@ -47,7 +47,7 @@ impl matrix::Matrix {
 
         x[pivot] = target_bit;
 
-        for block_type in matrix::BLOCK_TYPES.into_iter() {
+        for block_type in matrix::BLOCK_TYPES {
             let block_no = matrix::addr_to_block_no(&block_type, pivot);
             let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
