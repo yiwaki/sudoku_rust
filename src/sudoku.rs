@@ -160,9 +160,10 @@ mod tests {
         }
 
         {
+            let x = x.clone();
             let mut y = y.clone();
             y[(0, 2)] = y[(0, 3)];
-            assert!(!_check_problem_solution(x.clone(), y));
+            assert!(!_check_problem_solution(x, y));
         }
     }
 }
