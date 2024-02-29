@@ -96,7 +96,7 @@ mod tests {
     use super::*;
     use chrono::Utc;
 
-    fn _check_problem_solution(problem: matrix::Matrix, solution: matrix::Matrix) -> bool {
+    fn _check_problem_solution(problem: &matrix::Matrix, solution: &matrix::Matrix) -> bool {
         for row in 0..matrix::MATRIX_SIZE {
             for col in 0..matrix::MATRIX_SIZE {
                 if problem[(row, col)] != FULL_BIT && problem[(row, col)] != solution[(row, col)] {
@@ -104,7 +104,7 @@ mod tests {
                 }
             }
         }
-        solution.has_done().is_some()
+        solution.clone().has_done().is_some()
     }
 
     #[test]
@@ -137,13 +137,13 @@ mod tests {
         let dt = (end - start).num_microseconds().unwrap() as f64 * 1E-6;
         println!("elapsed time: {:0.6}", dt);
 
-        assert!(_check_problem_solution(x.clone(), y.clone()));
+        assert!(_check_problem_solution(&x, &y));
 
         assert!(x.clone().has_done().is_none());
 
         {
-            let mut y = x.clone();
-            y[(5, 2)] = y[(5, 2)];
+            let mut y = y.clone();
+            y[(5, 2)] = y[(5, 3)];
             assert!(y.has_done().is_none());
         }
 
@@ -163,7 +163,7 @@ mod tests {
             let x = x.clone();
             let mut y = y.clone();
             y[(0, 2)] = y[(0, 3)];
-            assert!(!_check_problem_solution(x, y));
+            assert!(!_check_problem_solution(&x, &y));
         }
     }
 }
