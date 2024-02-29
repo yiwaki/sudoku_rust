@@ -137,6 +137,32 @@ mod tests {
         let dt = (end - start).num_microseconds().unwrap() as f64 * 1E-6;
         println!("elapsed time: {:0.6}", dt);
 
-        assert!(_check_problem_solution(x, y));
+        assert!(_check_problem_solution(x.clone(), y.clone()));
+
+        assert!(x.clone().has_done().is_none());
+
+        {
+            let mut y = x.clone();
+            y[(5, 2)] = y[(5, 2)];
+            assert!(y.has_done().is_none());
+        }
+
+        {
+            let mut y = y.clone();
+            y[(5, 2)] |= 1;
+            assert!(y.has_done().is_none());
+        }
+
+        {
+            let mut y = y.clone();
+            y[(5, 2)] = 0;
+            assert!(y.has_done().is_none());
+        }
+
+        {
+            let mut y = y.clone();
+            y[(0, 2)] = y[(0, 3)];
+            assert!(!_check_problem_solution(x.clone(), y));
+        }
     }
 }
