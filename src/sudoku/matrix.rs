@@ -38,8 +38,8 @@ type MatrixBuffer = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
 
 #[allow(dead_code)]
 pub fn display_matrix_buffer(x: &MatrixBuffer) {
-    for row in x.iter() {
-        for cell in row.iter() {
+    for row in x {
+        for cell in row {
             print!("{} ", cell);
         }
         println!();
