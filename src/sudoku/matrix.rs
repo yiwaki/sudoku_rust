@@ -102,16 +102,16 @@ pub fn addr_to_block_no(block_type: &Block, addr: Address) -> usize {
     }
 }
 
-pub fn block_range(block_type: &Block, block_no: usize) -> [ops::Range<usize>; 2] {
+pub fn block_range(block_type: &Block, block_no: usize) -> (ops::Range<usize>, ops::Range<usize>) {
     match block_type {
-        Block::Row => [block_no..block_no + 1, 0..MATRIX_SIZE],
-        Block::Column => [0..MATRIX_SIZE, block_no..block_no + 1],
-        Block::Square => [
+        Block::Row => (block_no..block_no + 1, 0..MATRIX_SIZE),
+        Block::Column => (0..MATRIX_SIZE, block_no..block_no + 1),
+        Block::Square => (
             block_no / SQUARE_SIZE * SQUARE_SIZE
                 ..block_no / SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
             block_no % SQUARE_SIZE * SQUARE_SIZE
                 ..block_no % SQUARE_SIZE * SQUARE_SIZE + SQUARE_SIZE,
-        ],
+        ),
     }
 }
 
@@ -141,17 +141,17 @@ mod tests {
 
     #[test]
     fn block_range_test() {
-        let range = block_range(&Block::Row, 4);
-        assert_eq!(range[0], 4..5);
-        assert_eq!(range[1], 0..MATRIX_SIZE);
+        let (row_range, col_range) = block_range(&Block::Row, 4);
+        assert_eq!(row_range, 4..5);
+        assert_eq!(col_range, 0..MATRIX_SIZE);
 
-        let range = block_range(&Block::Column, 4);
-        assert_eq!(range[0], 0..MATRIX_SIZE);
-        assert_eq!(range[1], 4..5);
+        let (row_range, col_range) = block_range(&Block::Column, 4);
+        assert_eq!(row_range, 0..MATRIX_SIZE);
+        assert_eq!(col_range, 4..5);
 
-        let range = block_range(&Block::Square, 4);
-        assert_eq!(range[0], 3..6);
-        assert_eq!(range[1], 3..6);
+        let (row_range, col_range) = block_range(&Block::Square, 4);
+        assert_eq!(row_range, 3..6);
+        assert_eq!(col_range, 3..6);
     }
 
     #[test]

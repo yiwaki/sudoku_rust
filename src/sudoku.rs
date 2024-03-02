@@ -5,11 +5,11 @@ impl matrix::Matrix {
     pub fn has_done(self) -> Option<Self> {
         for block_type in matrix::BLOCK_TYPES {
             for block_no in 0..matrix::MATRIX_SIZE {
-                let range = matrix::block_range(&block_type, block_no);
+                let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
                 let mut bmp: Bitmap = 0;
-                for row in range[0].clone() {
-                    for col in range[1].clone() {
+                for row in row_range {
+                    for col in col_range.clone() {
                         bmp |= self[(row, col)];
 
                         if block_type == matrix::Block::Row
@@ -31,11 +31,11 @@ impl matrix::Matrix {
     fn _check_blocks_by_pivot(&self, block_type: &matrix::Block, pivot: matrix::Address) -> bool {
         let block_no = matrix::addr_to_block_no(block_type, pivot);
 
-        let range = matrix::block_range(block_type, block_no);
+        let (row_range, col_range) = matrix::block_range(block_type, block_no);
 
         let mut bmp: Bitmap = 0;
-        for row in range[0].clone() {
-            for col in range[1].clone() {
+        for row in row_range {
+            for col in col_range.clone() {
                 bmp |= self[(row, col)];
             }
         }
@@ -49,10 +49,10 @@ impl matrix::Matrix {
 
         for block_type in matrix::BLOCK_TYPES {
             let block_no = matrix::addr_to_block_no(&block_type, pivot);
-            let range = matrix::block_range(&block_type, block_no);
+            let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-            for row in range[0].clone() {
-                for col in range[1].clone() {
+            for row in row_range {
+                for col in col_range.clone() {
                     if (row, col) != pivot {
                         x[(row, col)] &= !target_bit;
                     }
