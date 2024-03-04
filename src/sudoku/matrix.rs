@@ -36,7 +36,7 @@ pub type Address = (usize, usize);
 
 type MatrixBuffer = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
 
-#[allow(dead_code)]
+#[cfg(test)]
 pub fn display_matrix_buffer(x: &MatrixBuffer) {
     for row in x {
         for cell in row {
