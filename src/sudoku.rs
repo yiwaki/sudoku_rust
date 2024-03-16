@@ -12,9 +12,11 @@ impl matrix::Matrix {
                     for col in col_range.clone() {
                         bmp |= self[(row, col)];
 
-                        if block_type == matrix::Block::Row
-                            && bitmap::popcount(self[(row, col)]) > 1
-                        {
+                        if block_type != matrix::Block::Row {
+                            continue;
+                        }
+
+                        if bitmap::popcount(self[(row, col)]) > 1 {
                             return None;
                         }
                     }
