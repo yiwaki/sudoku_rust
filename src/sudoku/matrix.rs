@@ -80,8 +80,8 @@ impl ops::Deref for Matrix {
 
 impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for row in self.buffer.iter() {
-            for cell in row.iter() {
+        for row in self.buffer {
+            for cell in row {
                 write!(f, "{:0w$b} ", cell, w = BITMAP_DIGIT)?;
             }
             writeln!(f)?;
