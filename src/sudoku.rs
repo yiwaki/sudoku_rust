@@ -120,7 +120,7 @@ mod tests {
             [8, 5, 0, 0, 1, 0, 0, 2, 0],
             [0, 0, 0, 6, 0, 0, 1, 0, 0],
         ]
-        .map(|y| y.map(|z| if z == 0 { FULL_BIT } else { 1 << (z - 1) }))
+        .map(|r| r.map(|c| if c == 0 { FULL_BIT } else { 1 << (c - 1) }))
         .into();
 
         println!("Problem:");
