@@ -54,7 +54,7 @@ impl matrix::Matrix {
             for row in row_range {
                 for col in col_range.clone() {
                     if (row, col) != pivot {
-                        x[(row, col)] &= !target_bit;
+                        x[(row, col)] &= !target_bit; // set off the target bit from bitmap
                     }
 
                     if x[(row, col)] == 0 {
