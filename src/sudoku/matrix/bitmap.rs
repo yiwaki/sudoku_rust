@@ -55,4 +55,14 @@ mod tests {
         }
         assert_eq!(bits, [256, 128, 64, 32, 16, 8, 4, 2, 1]);
     }
+
+    #[test]
+    fn popcount_test() {
+        assert_eq!(popcount(0b0_0000_0000), 0);
+        assert_eq!(popcount(0b0_0010_0100), 2);
+        assert_eq!(popcount(0b0_0010_0101), 3);
+        assert_eq!(popcount(0b1_0010_1100), 4);
+        assert_eq!(popcount(0b1_0010_1101), 5);
+        assert_eq!(popcount(0b1_1111_1111), 9);
+    }
 }

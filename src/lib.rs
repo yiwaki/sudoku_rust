@@ -26,13 +26,13 @@ impl From<&ArrayView2<'_, Bitmap>> for Matrix {
 }
 
 impl Matrix {
-    fn into_ndarray(&self) -> Array2<Bitmap> {
-        arr2(&**self).map(|&x| x.ilog2() as Bitmap + 1)
+    fn into_ndarray(self) -> Array2<Bitmap> {
+        arr2(&*self).map(|&x| x.ilog2() as Bitmap + 1)
     }
 }
 
 #[pyfunction(name = "solve")]
-fn wrap_solve<'p>(py: Python<'p>, arr: PyReadonlyArray2<'p, Bitmap>) -> &'p PyArray2<Bitmap> {
+fn wrap_solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py PyArray2<Bitmap> {
     Matrix::from(&arr.as_array())
         .solve(0)
         .unwrap()
@@ -41,7 +41,7 @@ fn wrap_solve<'p>(py: Python<'p>, arr: PyReadonlyArray2<'p, Bitmap>) -> &'p PyAr
 }
 
 #[pyfunction(name = "check")]
-fn wrap_done<'p>(_py: Python<'p>, arr: PyReadonlyArray2<'p, Bitmap>) -> bool {
+fn wrap_done<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> bool {
     Matrix::from(&arr.as_array()).has_done().is_some()
 }
 

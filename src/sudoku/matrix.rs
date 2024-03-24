@@ -36,10 +36,10 @@ pub type Address = (usize, usize);
 
 type MatrixBuffer = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
 
-#[allow(dead_code)]
+#[cfg(test)]
 pub fn display_matrix_buffer(x: &MatrixBuffer) {
-    for row in x.iter() {
-        for cell in row.iter() {
+    for row in x {
+        for cell in row {
             print!("{} ", cell);
         }
         println!();
@@ -80,8 +80,8 @@ impl ops::Deref for Matrix {
 
 impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for row in self.buffer.iter() {
-            for cell in row.iter() {
+        for row in self.buffer {
+            for cell in row {
                 write!(f, "{:0w$b} ", cell, w = BITMAP_DIGIT)?;
             }
             writeln!(f)?;

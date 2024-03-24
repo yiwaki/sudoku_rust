@@ -15,5 +15,8 @@ test:
 cover:
 	cargo llvm-cov --html --open --ignore-filename-regex lib.rs
 
+doc:
+	cargo doc
+
 sample:
 	python sample.py
