@@ -11,5 +11,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 chrono = "0.4.31"
-numpy = "0.20.0"
-pyo3 = "0.20.0"
+numpy = "0.21.0"
+pyo3 = "0.21.2"

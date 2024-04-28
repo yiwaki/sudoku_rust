@@ -1,6 +1,6 @@
 use numpy::ndarray::{arr2, Array2, ArrayView2};
 use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2};
-use pyo3::{pyfunction, pymodule, types::PyModule, wrap_pyfunction, PyResult, Python};
+use pyo3::{pyfunction, pymodule, types::PyModule, wrap_pyfunction, Bound, PyResult, Python};
 
 mod sudoku;
 use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
@@ -32,12 +32,15 @@ impl Matrix {
 }
 
 #[pyfunction(name = "solve")]
-fn wrap_solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> &'py PyArray2<Bitmap> {
+fn wrap_solve<'py>(
+    py: Python<'py>,
+    arr: PyReadonlyArray2<'py, Bitmap>,
+) -> Bound<'py, PyArray2<Bitmap>> {
     Matrix::from(&arr.as_array())
         .solve(0)
         .unwrap()
         .into_ndarray()
-        .into_pyarray(py)
+        .into_pyarray_bound(py)
 }
 
 #[pyfunction(name = "check")]
@@ -46,7 +49,7 @@ fn wrap_done<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> bool 
 }
 
 #[pymodule]
-fn sudoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
+fn sudoku_rust<'py>(_py: Python<'py>, m: &Bound<'py, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(wrap_solve, m)?)?;
     m.add_function(wrap_pyfunction!(wrap_done, m)?)?;
     Ok(())
