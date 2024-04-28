@@ -1,7 +1,7 @@
 pub type Bitmap = u16;
 
 pub const BITMAP_DIGIT: usize = 9;
-pub const FULL_BIT: Bitmap = 0b1_1111_1111;
+pub const FULL_BIT: Bitmap = 0b111_111_111;
 
 pub struct EachBit {
     bitmap: Bitmap,
@@ -12,7 +12,7 @@ impl EachBit {
     pub fn new(bitmap: Bitmap) -> Self {
         EachBit {
             bitmap,
-            next_bit: 0b1_0000_0000,
+            next_bit: 0b100_000_000,
         }
     }
 }
@@ -40,11 +40,11 @@ mod tests {
 
     #[test]
     fn split_single_bit_test() {
-        let v = EachBit::new(0b0_0000_0000).next();
+        let v = EachBit::new(0b000_000_000).next();
         assert_eq!(v, None);
 
         let mut bits = Vec::<Bitmap>::new();
-        for v in EachBit::new(0b1_0010_0101) {
+        for v in EachBit::new(0b100_100_101) {
             bits.push(v);
         }
         assert_eq!(bits, [256, 32, 4, 1]);
