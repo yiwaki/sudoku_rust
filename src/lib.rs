@@ -36,9 +36,11 @@ fn wrap_solve<'py>(
     py: Python<'py>,
     arr: PyReadonlyArray2<'py, Bitmap>,
 ) -> Bound<'py, PyArray2<Bitmap>> {
-    Matrix::from(&arr.as_array())
+    let problem = Matrix::from(&arr.as_array());
+    problem
+        .clone()
         .solve(0)
-        .unwrap()
+        .unwrap_or(problem)
         .into_ndarray()
         .into_pyarray_bound(py)
 }
