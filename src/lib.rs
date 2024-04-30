@@ -13,8 +13,8 @@ impl From<&ArrayView2<'_, Bitmap>> for Matrix {
         [(); MATRIX_SIZE]
             .map(|()| {
                 [(); MATRIX_SIZE].map(|()| {
-                    let y = *it.next().unwrap();
-                    if y == 0 {
+                    let y = it.next().unwrap();
+                    if *y == 0 {
                         FULL_BIT
                     } else {
                         1 << (y - 1)
