@@ -27,8 +27,8 @@ impl From<&ArrayView2<'_, Bitmap>> for Matrix {
 
 impl Matrix {
     fn into_ndarray(self) -> Array2<Bitmap> {
-        arr2(&*self).map(|&x| {
-            if x == FULL_BIT {
+        arr2(&*self).map(|x| {
+            if *x == FULL_BIT {
                 0
             } else {
                 x.ilog2() as Bitmap + 1
