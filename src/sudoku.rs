@@ -1,5 +1,5 @@
 pub mod matrix;
-use matrix::{bitmap, bitmap::Bitmap, bitmap::FULL_BIT};
+use matrix::{bmp, bmp::Bmp, bmp::FULL_BIT};
 
 impl matrix::Matrix {
     pub fn has_done(self) -> Option<Self> {
@@ -7,7 +7,7 @@ impl matrix::Matrix {
             for block_no in 0..matrix::MATRIX_SIZE {
                 let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-                let mut bmp: Bitmap = 0;
+                let mut bmp: Bmp = 0;
                 for row in row_range {
                     for col in col_range.clone() {
                         bmp |= self[(row, col)];
@@ -31,7 +31,7 @@ impl matrix::Matrix {
 
         let (row_range, col_range) = matrix::block_range(block_type, block_no);
 
-        let mut bmp: Bitmap = 0;
+        let mut bmp: Bmp = 0;
         for row in row_range {
             for col in col_range.clone() {
                 bmp |= self[(row, col)];
@@ -40,7 +40,7 @@ impl matrix::Matrix {
         bmp == FULL_BIT
     }
 
-    fn _pruned_by_pivot(&self, pivot: matrix::Address, target_bit: Bitmap) -> Option<Self> {
+    fn _pruned_by_pivot(&self, pivot: matrix::Address, target_bit: Bmp) -> Option<Self> {
         let mut x = self.clone();
 
         x[pivot] = target_bit;
@@ -75,7 +75,7 @@ impl matrix::Matrix {
 
         let pivot = matrix::cell_no_to_addr(cell_no);
 
-        for target_bit in bitmap::EachBit::new(self[pivot]) {
+        for target_bit in bmp::EachBit::new(self[pivot]) {
             let Some(x) = self._pruned_by_pivot(pivot, target_bit) else {
                 continue;
             };

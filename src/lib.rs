@@ -3,12 +3,12 @@ use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2};
 use pyo3::{pyfunction, pymodule, types::PyModule, wrap_pyfunction, Bound, PyResult, Python};
 
 mod sudoku;
-use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
+use sudoku::matrix::bmp::{Bmp, FULL_BIT};
 use sudoku::matrix::{Matrix, MATRIX_SIZE};
 
 // implement Into<&ArrayView2<'_, Bitmap>> for Matrix automatically
-impl From<&ArrayView2<'_, Bitmap>> for Matrix {
-    fn from(x: &ArrayView2<Bitmap>) -> Self {
+impl From<&ArrayView2<'_, Bmp>> for Matrix {
+    fn from(x: &ArrayView2<Bmp>) -> Self {
         let mut it = x.iter();
         [(); MATRIX_SIZE]
             .map(|()| {
@@ -26,22 +26,19 @@ impl From<&ArrayView2<'_, Bitmap>> for Matrix {
 }
 
 impl Matrix {
-    fn into_ndarray(self) -> Array2<Bitmap> {
+    fn into_ndarray(self) -> Array2<Bmp> {
         arr2(&*self).map(|x| {
             if *x == FULL_BIT {
                 0
             } else {
-                x.ilog2() as Bitmap + 1
+                x.ilog2() as Bmp + 1
             }
         })
     }
 }
 
 #[pyfunction(name = "solve")]
-fn wrap_solve<'py>(
-    py: Python<'py>,
-    arr: PyReadonlyArray2<'py, Bitmap>,
-) -> Bound<'py, PyArray2<Bitmap>> {
+fn wrap_solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bmp>) -> Bound<'py, PyArray2<Bmp>> {
     let problem = Matrix::from(&arr.as_array());
     problem
         .clone()
@@ -52,7 +49,7 @@ fn wrap_solve<'py>(
 }
 
 #[pyfunction(name = "check")]
-fn wrap_done<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> bool {
+fn wrap_done<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bmp>) -> bool {
     Matrix::from(&arr.as_array()).has_done().is_some()
 }
 
