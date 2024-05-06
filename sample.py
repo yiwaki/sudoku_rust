@@ -1,4 +1,5 @@
 import sys
+import os
 import time
 
 import numpy as np
@@ -9,7 +10,8 @@ if len(sys.argv) == 1:
     print(f"usage: {sys.argv[0]} filename")
     exit()
 
-filepath = sys.argv[1]
+filepath = sys.argv[1].replace(os.path.sep, "/")
+print(filepath)
 x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
 print("Puzzle:")
 print(x)
