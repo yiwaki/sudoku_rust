@@ -40,7 +40,7 @@ impl matrix::Matrix {
         bmp == FULL_BIT
     }
 
-    fn _pruned_by_pivot(&self, pivot: matrix::Address, target_bit: Bmp) -> Option<Self> {
+    fn _prune_by_pivot(&self, pivot: matrix::Address, target_bit: Bmp) -> Option<Self> {
         let mut x = self.clone();
 
         x[pivot] = target_bit;
@@ -76,7 +76,7 @@ impl matrix::Matrix {
         let pivot = matrix::cell_no_to_addr(cell_no);
 
         for target_bit in bmp::EachBit::new(self[pivot]) {
-            let Some(x) = self._pruned_by_pivot(pivot, target_bit) else {
+            let Some(x) = self._prune_by_pivot(pivot, target_bit) else {
                 continue;
             };
 
