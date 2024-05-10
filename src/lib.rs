@@ -13,7 +13,7 @@ impl From<&ArrayView2<'_, Bmp>> for Matrix {
         [(); MATRIX_SIZE]
             .map(|()| {
                 [(); MATRIX_SIZE].map(|()| {
-                    let y = it.next().unwrap();
+                    let y = it.next().unwrap_or(&0);
                     if *y == 0 {
                         FULL_BIT
                     } else {

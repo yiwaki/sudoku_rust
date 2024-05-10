@@ -125,13 +125,13 @@ mod tests {
 
         let start = Utc::now().time();
 
-        let y = x.clone().solve(0).unwrap();
+        let y = x.clone().solve(0).unwrap_or(x.clone());
 
         println!("Solution:");
         println!("{}", y);
         let end = Utc::now().time();
 
-        let dt = (end - start).num_microseconds().unwrap() as f64 * 1E-6;
+        let dt = (end - start).num_microseconds().unwrap_or_default() as f64 * 1E-6;
         println!("elapsed time: {:0.6}", dt);
 
         assert!(_check_problem_solution(&x, &y));
