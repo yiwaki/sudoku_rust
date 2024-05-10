@@ -22,6 +22,7 @@ use bmp::BITMAP_DIGIT;
 
 pub const MATRIX_SIZE: usize = 9;
 pub const SQUARE_SIZE: usize = 3;
+pub const NUM_OF_CELLS: usize = MATRIX_SIZE.pow(2);
 
 #[derive(PartialEq)]
 pub enum Block {

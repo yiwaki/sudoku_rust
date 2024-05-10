@@ -69,7 +69,7 @@ impl matrix::Matrix {
     }
 
     pub fn solve(self, cell_no: usize) -> Option<Self> {
-        if cell_no >= matrix::MATRIX_SIZE * matrix::MATRIX_SIZE {
+        if cell_no >= matrix::NUM_OF_CELLS {
             return Some(self);
         }
 
