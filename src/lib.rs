@@ -1,10 +1,11 @@
-use numpy::ndarray::{arr2, Array2, ArrayView2};
+use numpy::ndarray::{Array2, ArrayView2, arr2};
 use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2};
-use pyo3::{pyfunction, pymodule, types::PyModule, wrap_pyfunction, Bound, PyResult, Python};
+use pyo3::types::{PyModule, PyModuleMethods};
+use pyo3::{Bound, PyResult, Python, pyfunction, pymodule, wrap_pyfunction};
 
 mod sudoku;
 use sudoku::matrix::bmp::{Bmp, FULL_BIT};
-use sudoku::matrix::{Matrix, MATRIX_SIZE};
+use sudoku::matrix::{MATRIX_SIZE, Matrix};
 
 // implement Into<&ArrayView2<'_, Bitmap>> for Matrix automatically
 impl From<&ArrayView2<'_, Bmp>> for Matrix {
@@ -14,11 +15,7 @@ impl From<&ArrayView2<'_, Bmp>> for Matrix {
             .map(|()| {
                 [(); MATRIX_SIZE].map(|()| {
                     let y = it.next().unwrap_or(&0);
-                    if *y == 0 {
-                        FULL_BIT
-                    } else {
-                        1 << (y - 1)
-                    }
+                    if *y == 0 { FULL_BIT } else { 1 << (y - 1) }
                 })
             })
             .into()
@@ -45,7 +42,7 @@ fn wrap_solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bmp>) -> Bound<'p
         .solve(0)
         .unwrap_or(problem)
         .into_ndarray()
-        .into_pyarray_bound(py)
+        .into_pyarray(py)
 }
 
 #[pyfunction(name = "check")]
