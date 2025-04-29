@@ -6,44 +6,51 @@ For more information on Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki/Su
 
 ## Install make command
 
-For Windows, download the installation kit for your Windows from [here](http://gnuwin32.sourceforge.net/packages/make.htm) and run it.
+- For Windows
 
-For macOS:
+Download the installation kit for your Windows from [here](http://gnuwin32.sourceforge.net/packages/make.htm) and run it.
+
+- For macOS:
 
 ```
 xcode-select --install
 ```
 
-For Debian/Ubuntu:
+- For Debian/Ubuntu:
 
 ```
 sudo apt install -y make
 ```
 
-For CentOS/Fedora:
+- For CentOS/Fedora:
 
 ```
-sudo yum install make -y
+sudo yum install -y make
 ```
 
-## Install Python and venv
+## Install uv - Python package and project manager
 
-Install Python and venv according to your environment.
+- For Windows
+
+```
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+- For macOS or Linux
+```
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
 
 ## Install Rust
 
-For Windows, download the installation kit for your Windows from [here](https://forge.rust-lang.org/infra/other-installation-methods.eichithi-emueru) and run it.
+- For Windows
 
-For macOS, linux, or another Unix-like OS, run the following shell command.
+Download the installation kit for your Windows from [here](https://forge.rust-lang.org/infra/other-installation-methods.eichithi-emueru) and run it.
+
+- For macOS, linux, or another Unix-like OS, run the following shell command.
 
 ```
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
-
-## Install Maturin
-
-```
-pip install maturin
 ```
 
 ## Download this kit
@@ -55,23 +62,16 @@ git clone https://github.com/yiwaki/sudoku_rust
 
 ## Make your environment
 
+- For Windows
 ```
 cd sudoku_rust
-./make_env
+./make_env.ps1
 ```
 
-## Activate your venv
-
-- For Windows
-
+- For macOS or Linux
 ```
-./venv/Scripts/activate
-```
-
-- For maxOS, Linux, or another Unix-like OS
-
-```
-./venv/bin/activate
+cd sudoku_rust
+source ./make_env.sh
 ```
 
 ## Build it and run sample program
