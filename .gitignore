@@ -71,10 +71,5 @@ docs/_build/
 # Pyenv
 .python-version
 
-# uv
-pyproject.toml
-uv.lock
-
-# cargo
-Cargo.lock
-Cargo.toml
+# uv, cargo
+*.lock
