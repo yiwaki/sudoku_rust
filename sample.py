@@ -2,7 +2,6 @@ import sys
 import time
 
 import numpy as np
-
 from sudoku_rust import check, solve
 
 if len(sys.argv) == 1:
