@@ -54,7 +54,7 @@ Download the installation kit for your Windows from [here](https://forge.rust-la
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-## Download this kit
+## Clone this repository
 
 ```
 cd [your project directory]
