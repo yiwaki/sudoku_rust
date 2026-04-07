@@ -15,7 +15,7 @@ impl From<&ArrayView2<'_, Bmp>> for Matrix {
             .map(|()| {
                 [(); MATRIX_SIZE].map(|()| {
                     let y = it.next().unwrap_or(&0);
-                    if *y == 0 { FULL_BIT } else { 1 << (y - 1) }
+                    if *y == 0 { FULL_BIT } else { 1 << (*y - 1) }
                 })
             })
             .into()

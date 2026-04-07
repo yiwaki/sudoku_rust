@@ -1,13 +1,13 @@
 clean:
 	cargo clean
-	rm -fr .pytest_cache
+	rm -Force -Recurse .pytest_cache
 
 check:
 	cargo clippy
 
 develop:
 	maturin develop --release
-	pytest
+	uv run pytest
 
 test:
 	cargo test --lib

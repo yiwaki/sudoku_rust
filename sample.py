@@ -10,7 +10,7 @@ if len(sys.argv) == 1:
 
 filepath = sys.argv[1]
 x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
-print("Puzzle:")
+print("Problem:")
 print(x)
 
 start = time.perf_counter()
