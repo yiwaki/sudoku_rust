@@ -14,8 +14,8 @@ impl From<&ArrayView2<'_, Bmp>> for Matrix {
         [(); MATRIX_SIZE]
             .map(|()| {
                 [(); MATRIX_SIZE].map(|()| {
-                    let y = it.next().unwrap_or(&0);
-                    if *y == 0 { FULL_BIT } else { 1 << (*y - 1) }
+                    let &y = it.next().unwrap_or(&0);
+                    if y == 0 { FULL_BIT } else { 1 << (y - 1) }
                 })
             })
             .into()
@@ -24,8 +24,8 @@ impl From<&ArrayView2<'_, Bmp>> for Matrix {
 
 impl Matrix {
     fn into_ndarray(self) -> Array2<Bmp> {
-        arr2(&*self).map(|x| {
-            if *x == FULL_BIT {
+        arr2(&*self).map(|&x| {
+            if x == FULL_BIT {
                 0
             } else {
                 x.ilog2() as Bmp + 1
