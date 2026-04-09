@@ -1,5 +1,6 @@
 clean:
 	cargo clean
+	uv cache clear
 	rm -Force -Recurse .pytest_cache
 
 check:
