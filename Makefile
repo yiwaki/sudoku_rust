@@ -19,4 +19,4 @@ doc:
 	cargo doc
 
 sample:
-	uv run sample.py data/evil_3.csv
+	python py/sample.py data/evil_3.csv
