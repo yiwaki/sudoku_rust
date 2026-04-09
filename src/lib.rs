@@ -62,6 +62,7 @@ fn wrap_done<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bmp>) -> bool {
 
 #[pymodule]
 fn sudoku_rust<'py>(_py: Python<'py>, m: &Bound<'py, PyModule>) -> PyResult<()> {
+    m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     m.add_function(wrap_pyfunction!(wrap_solve, m)?)?;
     m.add_function(wrap_pyfunction!(wrap_done, m)?)?;
     Ok(())

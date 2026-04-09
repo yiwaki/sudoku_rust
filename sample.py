@@ -3,6 +3,8 @@ import time
 
 import numpy as np
 from sudoku_rust import check, solve
+import sudoku_rust
+print(sudoku_rust.__version__)
 
 if len(sys.argv) == 1:
     print(f"usage: {sys.argv[0]} filename")
