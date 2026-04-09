@@ -46,7 +46,7 @@ fn wrap_solve<'py>(
         )));
     }
 
-    let result = Matrix::from(&arr.as_array()).clone().solve(0);
+    let result = Matrix::from(&arr.as_array()).solve(0);
     if result.is_none() {
         return Err(pyo3::exceptions::PyValueError::new_err(
             "No solution found for the given Sudoku problem.",
