@@ -70,7 +70,7 @@ impl matrix::Matrix {
 
     pub fn solve(self, cell_no: usize) -> Option<Self> {
         if cell_no >= matrix::NUM_OF_CELLS {
-            return None;
+            return self.has_done();
         }
 
         let pivot = matrix::cell_no_to_addr(cell_no);
