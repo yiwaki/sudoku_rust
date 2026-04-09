@@ -1,7 +1,7 @@
 clean:
 	cargo clean
 	uv cache clear
-	rm -Force -Recurse .pytest_cache
+	pytest --cache-clear
 
 check:
 	cargo clippy
@@ -17,7 +17,7 @@ cover:
 	cargo llvm-cov --html --open --ignore-filename-regex lib.rs
 
 doc:
-	cargo doc
+	cargo doc --open
 
 sample:
 	python py/sample.py data/evil_3.csv

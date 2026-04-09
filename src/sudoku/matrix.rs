@@ -26,7 +26,7 @@ pub const NUM_OF_CELLS: usize = MATRIX_SIZE.pow(2);
 
 #[derive(PartialEq)]
 pub enum Block {
-    Row = 1,
+    Row,
     Column,
     Square,
 }
@@ -47,7 +47,7 @@ pub fn display_matrix_buffer(x: &MatrixBuffer) {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq)]
 pub struct Matrix {
     buffer: MatrixBuffer,
 }
