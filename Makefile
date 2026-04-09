@@ -8,7 +8,7 @@ check:
 
 develop:
 	maturin develop --release
-	pytest
+	pytest -v
 
 test:
 	cargo test --lib

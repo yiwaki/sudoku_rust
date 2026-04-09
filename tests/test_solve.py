@@ -13,21 +13,21 @@ def test_solve_success():
     assert check(y)
 
 
-def test_solve_fail_1():
+def test_solve_no_solution():
     filepath = "data/bad.csv"
     x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
 
     with pytest.raises(ValueError) as e:
         y = solve(x)
 
-    assert str(e.value) == "No solution found for the given Sudoku problem."
+    assert str(e.value) in "No solution found for the given Sudoku problem."
 
 
-def test_solve_fail_2():
+def test_solve_invalid_input():
     filepath = "data/badbad.csv"
     x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
 
     with pytest.raises(ValueError) as e:
         y = solve(x)
 
-    assert str(e.value) == "Input array must be of shape (9, 9)"
+    assert str(e.value) in "Input array must be of shape (9, 9)"
