@@ -47,7 +47,7 @@ pub fn display_matrix_buffer(x: &MatrixBuffer) {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Matrix {
     buffer: MatrixBuffer,
 }

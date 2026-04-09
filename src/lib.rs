@@ -1,5 +1,5 @@
 use numpy::ndarray::{Array2, ArrayView2, arr2};
-use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2};
+use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2, PyUntypedArrayMethods};
 use pyo3::types::{PyModule, PyModuleMethods};
 use pyo3::{Bound, PyResult, Python, pyfunction, pymodule, wrap_pyfunction};
 
@@ -14,7 +14,7 @@ impl From<&ArrayView2<'_, Bmp>> for Matrix {
         [(); MATRIX_SIZE]
             .map(|()| {
                 [(); MATRIX_SIZE].map(|()| {
-                    let &y = it.next().unwrap_or(&0);
+                    let &y = it.next().unwrap();
                     if y == 0 { FULL_BIT } else { 1 << (y - 1) }
                 })
             })
@@ -35,14 +35,24 @@ impl Matrix {
 }
 
 #[pyfunction(name = "solve")]
-fn wrap_solve<'py>(py: Python<'py>, arr: PyReadonlyArray2<'py, Bmp>) -> Bound<'py, PyArray2<Bmp>> {
-    let problem = Matrix::from(&arr.as_array());
-    problem
-        .clone()
-        .solve(0)
-        .unwrap_or(problem)
-        .into_ndarray()
-        .into_pyarray(py)
+fn wrap_solve<'py>(
+    py: Python<'py>,
+    arr: PyReadonlyArray2<'py, Bmp>,
+) -> PyResult<Bound<'py, PyArray2<Bmp>>> {
+    if arr.shape() != [MATRIX_SIZE, MATRIX_SIZE] {
+        return Err(pyo3::exceptions::PyValueError::new_err(format!(
+            "Input array must be of shape ({}, {})",
+            MATRIX_SIZE, MATRIX_SIZE
+        )));
+    }
+
+    let result = Matrix::from(&arr.as_array()).clone().solve(0);
+    if result.is_none() {
+        return Err(pyo3::exceptions::PyValueError::new_err(
+            "No solution found for the given Sudoku problem.",
+        ));
+    }
+    Ok(result.unwrap().into_ndarray().into_pyarray(py))
 }
 
 #[pyfunction(name = "check")]
