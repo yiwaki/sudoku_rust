@@ -2,7 +2,7 @@ pub mod matrix;
 use matrix::{bmp, bmp::Bmp, bmp::FULL_BIT};
 
 impl matrix::Matrix {
-    fn _prune_by_pivot(&self, pivot: matrix::Address, target_bit: Bmp) -> Option<Self> {
+    fn _prune_by_pivot(&self, pivot: matrix::Address, target_bit: Bmp) -> Result<Self, ()> {
         //! Prune the matrix by setting off the target bit from the bitmap of cells
         //! in the same row, column and square as the pivot cell.
         let mut x = self.clone();
@@ -20,32 +20,32 @@ impl matrix::Matrix {
                     }
 
                     if x[(row, col)] == 0 {
-                        return None;
+                        return Err(());
                     }
                 }
             }
         }
-        Some(x)
+        Ok(x)
     }
 
-    pub fn solve(self, cell_no: usize) -> Option<Self> {
+    pub fn solve(self, cell_no: usize) -> Result<Self, ()> {
         //! cell_no is the index of the cell to be solved, in row-major order
         if cell_no >= matrix::NUM_OF_CELLS {
-            return Some(self);
+            return Ok(self);
         }
 
         let pivot = matrix::cell_no_to_addr(cell_no);
 
         for target_bit in bmp::EachBit::new(self[pivot]) {
-            let Some(x) = self._prune_by_pivot(pivot, target_bit) else {
+            let Ok(x) = self._prune_by_pivot(pivot, target_bit) else {
                 continue;
             };
 
-            if let Some(x) = x.solve(cell_no + 1) {
-                return Some(x);
+            if let Ok(x) = x.solve(cell_no + 1) {
+                return Ok(x);
             }
         }
-        None
+        Err(())
     }
 
     fn _check_blocks_by_pivot(&self, block_type: &matrix::Block, pivot: matrix::Address) -> bool {

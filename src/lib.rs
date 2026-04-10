@@ -46,13 +46,12 @@ fn wrap_solve<'py>(
         )));
     }
 
-    let result = Matrix::from(&arr.as_array()).solve(0);
-    if result.is_none() {
+    let Ok(solution) = Matrix::from(&arr.as_array()).solve(0) else {
         return Err(pyo3::exceptions::PyValueError::new_err(
             "No solution found for the given Sudoku problem.",
         ));
-    }
-    Ok(result.unwrap().into_ndarray().into_pyarray(py))
+    };
+    Ok(solution.into_ndarray().into_pyarray(py))
 }
 
 #[pyfunction(name = "check")]
