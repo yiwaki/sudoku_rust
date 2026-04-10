@@ -2,45 +2,9 @@ pub mod matrix;
 use matrix::{bmp, bmp::Bmp, bmp::FULL_BIT};
 
 impl matrix::Matrix {
-    pub fn has_done(self) -> Option<Self> {
-        for block_type in matrix::BLOCK_TYPES {
-            for block_no in 0..matrix::MATRIX_SIZE {
-                let (row_range, col_range) = matrix::block_range(&block_type, block_no);
-
-                let mut bmp: Bmp = 0;
-                for row in row_range {
-                    for col in col_range.clone() {
-                        bmp |= self[(row, col)];
-
-                        if block_type == matrix::Block::Row && self[(row, col)].count_ones() > 1 {
-                            return None;
-                        }
-                    }
-                }
-
-                if bmp != FULL_BIT {
-                    return None;
-                }
-            }
-        }
-        Some(self)
-    }
-
-    fn _check_blocks_by_pivot(&self, block_type: &matrix::Block, pivot: matrix::Address) -> bool {
-        let block_no = matrix::addr_to_block_no(block_type, pivot);
-
-        let (row_range, col_range) = matrix::block_range(block_type, block_no);
-
-        let mut bmp: Bmp = 0;
-        for row in row_range {
-            for col in col_range.clone() {
-                bmp |= self[(row, col)];
-            }
-        }
-        bmp == FULL_BIT
-    }
-
     fn _prune_by_pivot(&self, pivot: matrix::Address, target_bit: Bmp) -> Option<Self> {
+        //! Prune the matrix by setting off the target bit from the bitmap of cells
+        //! in the same row, column and square as the pivot cell.
         let mut x = self.clone();
 
         x[pivot] = target_bit;
@@ -60,17 +24,14 @@ impl matrix::Matrix {
                     }
                 }
             }
-
-            if !x._check_blocks_by_pivot(&block_type, pivot) {
-                return None;
-            }
         }
         Some(x)
     }
 
     pub fn solve(self, cell_no: usize) -> Option<Self> {
+        //! cell_no is the index of the cell to be solved, in row-major order
         if cell_no >= matrix::NUM_OF_CELLS {
-            return self.has_done();
+            return Some(self);
         }
 
         let pivot = matrix::cell_no_to_addr(cell_no);
@@ -81,10 +42,50 @@ impl matrix::Matrix {
             };
 
             if let Some(x) = x.solve(cell_no + 1) {
-                return x.has_done();
+                return Some(x);
             }
         }
         None
+    }
+
+    fn _check_blocks_by_pivot(&self, block_type: &matrix::Block, pivot: matrix::Address) -> bool {
+        //! Check if the block of the given type that contains the pivot cell is valid.
+        let block_no = matrix::addr_to_block_no(block_type, pivot);
+
+        let (row_range, col_range) = matrix::block_range(block_type, block_no);
+
+        let mut bmp: Bmp = 0;
+        for row in row_range {
+            for col in col_range.clone() {
+                bmp |= self[(row, col)];
+            }
+        }
+        bmp == FULL_BIT
+    }
+
+    pub fn check(&self) -> bool {
+        //! Check if the matrix is a valid solution of Sudoku.
+        for block_type in matrix::BLOCK_TYPES {
+            for block_no in 0..matrix::MATRIX_SIZE {
+                let (row_range, col_range) = matrix::block_range(&block_type, block_no);
+
+                let mut bmp: Bmp = 0;
+                for row in row_range {
+                    for col in col_range.clone() {
+                        bmp |= self[(row, col)];
+
+                        if block_type == matrix::Block::Row && self[(row, col)].count_ones() > 1 {
+                            return false;
+                        }
+                    }
+                }
+
+                if bmp != FULL_BIT {
+                    return false;
+                }
+            }
+        }
+        true
     }
 }
 
@@ -101,7 +102,7 @@ mod tests {
                 }
             }
         }
-        solution.clone().has_done().is_some()
+        solution.check()
     }
 
     #[test]
@@ -136,24 +137,24 @@ mod tests {
 
         assert!(_check_problem_solution(&x, &y));
 
-        assert!(x.clone().has_done().is_none());
+        assert!(!x.check());
 
         {
             let mut y = y.clone();
             y[(5, 2)] = y[(5, 3)];
-            assert!(y.has_done().is_none());
+            assert!(!y.check());
         }
 
         {
             let mut y = y.clone();
             y[(5, 2)] |= 1;
-            assert!(y.has_done().is_none());
+            assert!(!y.check());
         }
 
         {
             let mut y = y.clone();
             y[(5, 2)] = 0;
-            assert!(y.has_done().is_none());
+            assert!(!y.check());
         }
 
         {

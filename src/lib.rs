@@ -56,14 +56,17 @@ fn wrap_solve<'py>(
 }
 
 #[pyfunction(name = "check")]
-fn wrap_done<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bmp>) -> bool {
-    Matrix::from(&arr.as_array()).has_done().is_some()
+fn wrap_check<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bmp>) -> bool {
+    if arr.shape() != [MATRIX_SIZE, MATRIX_SIZE] {
+        return false;
+    }
+    Matrix::from(&arr.as_array()).check()
 }
 
 #[pymodule]
 fn sudoku_rust<'py>(_py: Python<'py>, m: &Bound<'py, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     m.add_function(wrap_pyfunction!(wrap_solve, m)?)?;
-    m.add_function(wrap_pyfunction!(wrap_done, m)?)?;
+    m.add_function(wrap_pyfunction!(wrap_check, m)?)?;
     Ok(())
 }

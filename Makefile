@@ -20,4 +20,4 @@ doc:
 	cargo doc --open
 
 sample:
-	python py/sample.py data/evil_3.csv
+	python py/sample.py data/evil_2.csv
