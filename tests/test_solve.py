@@ -51,7 +51,8 @@ def test_solve_invalid_input():
 
     assert str(e.value) in "Input array must be of shape (9, 9)"
 
-def test_check_result():
+
+def test_check_bad_result():
     filepath = "data/easy.csv"
     x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
     assert not check(x)
