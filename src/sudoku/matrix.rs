@@ -16,9 +16,9 @@ use std::{fmt, ops};
 //
 // Address on Matrix: (Row No., Column No.)
 
-pub mod bmp;
+pub mod bitmap;
 
-use bmp::BITMAP_DIGIT;
+use bitmap::BITMAP_DIGIT;
 
 pub const MATRIX_SIZE: usize = 9;
 pub const SQUARE_SIZE: usize = 3;
@@ -35,7 +35,7 @@ pub const BLOCK_TYPES: [Block; 3] = [Block::Row, Block::Column, Block::Square];
 
 pub type Address = (usize, usize);
 
-type MatrixBuffer = [[bmp::Bmp; MATRIX_SIZE]; MATRIX_SIZE];
+type MatrixBuffer = [[bitmap::Bitmap; MATRIX_SIZE]; MATRIX_SIZE];
 
 #[cfg(test)]
 pub fn display_matrix_buffer(x: &MatrixBuffer) {
@@ -60,7 +60,7 @@ impl From<MatrixBuffer> for Matrix {
 }
 
 impl ops::Index<Address> for Matrix {
-    type Output = bmp::Bmp;
+    type Output = bitmap::Bitmap;
     fn index(&self, addr: Address) -> &Self::Output {
         &self.buffer[addr.0][addr.1]
     }

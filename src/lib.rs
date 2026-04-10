@@ -4,12 +4,12 @@ use pyo3::types::{PyModule, PyModuleMethods};
 use pyo3::{Bound, PyResult, Python, pyfunction, pymodule, wrap_pyfunction};
 
 mod sudoku;
-use sudoku::matrix::bmp::{Bmp, FULL_BIT};
+use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
 use sudoku::matrix::{MATRIX_SIZE, Matrix};
 
 // implement Into<&ArrayView2<'_, Bitmap>> for Matrix automatically
-impl From<&ArrayView2<'_, Bmp>> for Matrix {
-    fn from(x: &ArrayView2<Bmp>) -> Self {
+impl From<&ArrayView2<'_, Bitmap>> for Matrix {
+    fn from(x: &ArrayView2<Bitmap>) -> Self {
         let mut it = x.iter();
         [(); MATRIX_SIZE]
             .map(|()| {
@@ -23,12 +23,12 @@ impl From<&ArrayView2<'_, Bmp>> for Matrix {
 }
 
 impl Matrix {
-    fn into_ndarray(self) -> Array2<Bmp> {
+    fn into_ndarray(self) -> Array2<Bitmap> {
         arr2(&*self).map(|&x| {
             if x == FULL_BIT {
                 0
             } else {
-                x.ilog2() as Bmp + 1
+                x.ilog2() as Bitmap + 1
             }
         })
     }
@@ -37,8 +37,8 @@ impl Matrix {
 #[pyfunction(name = "solve")]
 fn wrap_solve<'py>(
     py: Python<'py>,
-    arr: PyReadonlyArray2<'py, Bmp>,
-) -> PyResult<Bound<'py, PyArray2<Bmp>>> {
+    arr: PyReadonlyArray2<'py, Bitmap>,
+) -> PyResult<Bound<'py, PyArray2<Bitmap>>> {
     if arr.shape() != [MATRIX_SIZE, MATRIX_SIZE] {
         return Err(pyo3::exceptions::PyValueError::new_err(format!(
             "Input array must be of shape ({}, {})",
@@ -55,7 +55,7 @@ fn wrap_solve<'py>(
 }
 
 #[pyfunction(name = "check")]
-fn wrap_check<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bmp>) -> bool {
+fn wrap_check<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> bool {
     if arr.shape() != [MATRIX_SIZE, MATRIX_SIZE] {
         return false;
     }
