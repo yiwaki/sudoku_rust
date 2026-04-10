@@ -1,5 +1,7 @@
 # sudoku-rust
 
+Python module to solve Sudoku puzzle written in Rust.
+
 ## Installation
 
 ```
