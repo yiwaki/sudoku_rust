@@ -1,20 +1,8 @@
 pub mod matrix;
 use matrix::{bitmap, bitmap::Bitmap, bitmap::FULL_BIT};
-use std::simd::u16x32;
-
-pub fn is_simd_supported() -> bool {
-    #[cfg(target_arch = "x86_64")]
-    {
-        is_x86_feature_detected!("avx2")
-    }
-    #[cfg(not(target_arch = "x86_64"))]
-    {
-        true
-    }
-}
 
 impl matrix::Matrix {
-    fn _prune_by_pivot_scalar(&self, pivot: matrix::Address, target_bit: Bitmap) -> Option<Self> {
+    fn _prune_by_pivot(&self, pivot: matrix::Address, target_bit: Bitmap) -> Option<Self> {
         //! Prune the matrix by setting off the target bit from the bitmap of cells
         //! in the same row, column and square as the pivot cell.
         let mut x = self.clone();
@@ -40,52 +28,7 @@ impl matrix::Matrix {
         Some(x)
     }
 
-    fn _prune_by_pivot_simd(&self, pivot: matrix::Address, target_bit: Bitmap) -> Option<Self> {
-        //! SIMD version of _prune_by_pivot_scalar.
-        let mut x = self.clone();
-
-        x[pivot] = target_bit;
-
-        for block_type in matrix::BLOCK_TYPES {
-            let block_no = matrix::addr_to_block_no(&block_type, pivot);
-            let (row_range, col_range) = matrix::block_range(&block_type, block_no);
-
-            for row in row_range {
-                let mut bitmap_vec = u16x32::splat(0);
-                for col in col_range.clone() {
-                    if (row, col) != pivot {
-                        bitmap_vec[col] = self[(row, col)];
-                    }
-                }
-                bitmap_vec &= u16x32::splat(!target_bit);
-
-                for col in col_range.clone() {
-                    if (row, col) != pivot {
-                        x[(row, col)] = bitmap_vec[col];
-                        if x[(row, col)] == 0 {
-                            return None;
-                        }
-                    }
-                }
-            }
-        }
-        Some(x)
-    }
-
-    fn _prune_by_pivot(
-        &self,
-        pivot: matrix::Address,
-        target_bit: Bitmap,
-        use_simd: bool,
-    ) -> Option<Self> {
-        if use_simd {
-            self._prune_by_pivot_simd(pivot, target_bit)
-        } else {
-            self._prune_by_pivot_scalar(pivot, target_bit)
-        }
-    }
-
-    pub fn solve(self, cell_no: usize, use_simd: bool) -> Option<Self> {
+    pub fn solve(self, cell_no: usize) -> Option<Self> {
         //! cell_no is the index of the cell to be solved, in row-major order
         if cell_no >= matrix::NUM_OF_CELLS {
             return Some(self);
@@ -94,11 +37,11 @@ impl matrix::Matrix {
         let pivot = matrix::cell_no_to_addr(cell_no);
 
         for target_bit in bitmap::EachBit::new(self[pivot]) {
-            let Some(x) = self._prune_by_pivot(pivot, target_bit, use_simd) else {
+            let Some(x) = self._prune_by_pivot(pivot, target_bit) else {
                 continue;
             };
 
-            if let Some(x) = x.solve(cell_no + 1, use_simd) {
+            if let Some(x) = x.solve(cell_no + 1) {
                 return Some(x);
             }
         }
@@ -185,7 +128,7 @@ mod tests {
 
         let start = Utc::now().time();
 
-        let y = x.clone().solve(0, false).unwrap();
+        let y = x.clone().solve(0).unwrap();
 
         println!("Solution:");
         println!("{}", y);
@@ -244,7 +187,7 @@ mod tests {
 
         let start = Utc::now().time();
 
-        let y = x.clone().solve(0, true).unwrap();
+        let y = x.clone().solve(0).unwrap();
 
         println!("Solution:");
         println!("{}", y);

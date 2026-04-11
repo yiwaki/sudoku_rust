@@ -4,33 +4,31 @@ import pytest
 from sudoku_rust import solve, check
 
 
-@pytest.mark.parametrize("use_simd", [True, False])
-def test_solve_easy(use_simd):
+def test_solve_easy():
     filepath = "data/easy.csv"
     x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
-    y = solve(x, use_simd)
+    y = solve(x)
     assert check(y)
 
 
-@pytest.mark.parametrize("use_simd", [True, False])
-def test_solve_hard(use_simd):
+def test_solve_hard():
     filepath = "data/hard.csv"
     x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
-    y = solve(x, use_simd)
+    y = solve(x)
     assert check(y)
 
 
 def test_solve_evil_1():
     filepath = "data/evil_1.csv"
     x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
-    y = solve(x, True)
+    y = solve(x)
     assert check(y)
 
 
 def test_solve_evil_2():
     filepath = "data/evil_2.csv"
     x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
-    y = solve(x, True)
+    y = solve(x)
     assert check(y)
 
 
@@ -39,7 +37,7 @@ def test_solve_no_solution():
     x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
 
     with pytest.raises(ValueError) as e:
-        y = solve(x, True)
+        y = solve(x)
 
     assert str(e.value) in "No solution found for the given Sudoku problem."
 
@@ -49,7 +47,7 @@ def test_solve_invalid_input():
     x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
 
     with pytest.raises(ValueError) as e:
-        y = solve(x, True)
+        y = solve(x)
 
     assert str(e.value) in "Input array must be of shape (9, 9)"
 
