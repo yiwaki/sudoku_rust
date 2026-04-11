@@ -32,17 +32,17 @@ try:
 
     y = solve(x)
 
+    end = time.perf_counter()
+    elapsed = end - start
+
+    print("Solution:")
+    print(y)
+
+    print(f"elapsed time: {elapsed:.6f}")
+
 except Exception as e:
     print(f"Error: {e}", file=sys.stderr)
     exit(1)
-
-end = time.perf_counter()
-elapsed = end - start
-
-print("Solution:")
-print(y)
-
-print(f"elapsed time: {elapsed:.6f}")
 
 if not check(y):
     print("The solution is invalid!!!", file=sys.stderr)
