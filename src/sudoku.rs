@@ -1,5 +1,5 @@
 pub mod matrix;
-use matrix::{PivotBlockAddrIter, bitmap, bitmap::Bitmap, bitmap::FULL_BIT};
+use matrix::{bitmap, bitmap::Bitmap, bitmap::FULL_BIT};
 use std::simd::u16x32;
 
 pub fn is_simd_supported() -> bool {
@@ -45,26 +45,34 @@ impl matrix::Matrix {
     }
 
     fn _prune_by_pivot_simd(&self, pivot: matrix::Address, target_bit: Bitmap) -> Result<Self, ()> {
+        //! SIMD version of _prune_by_pivot_scalar.
         let mut x = self.clone();
 
         x[pivot] = target_bit;
-        let mut bitmap_row = u16x32::splat(0);
 
-        let iter = PivotBlockAddrIter::new(pivot);
-        for (i, addr) in iter.enumerate() {
-            bitmap_row[i] = self[addr];
-        }
+        for block_type in matrix::BLOCK_TYPES {
+            let block_no = matrix::addr_to_block_no(&block_type, pivot);
+            let (row_range, col_range) = matrix::block_range(&block_type, block_no);
 
-        bitmap_row &= u16x32::splat(!target_bit);
+            for row in row_range {
+                let mut bitmap_vec = u16x32::splat(0);
+                for col in col_range.clone() {
+                    if (row, col) != pivot {
+                        bitmap_vec[col] = self[(row, col)];
+                    }
+                }
+                bitmap_vec &= u16x32::splat(!target_bit);
 
-        let iter = PivotBlockAddrIter::new(pivot);
-        for (i, addr) in iter.enumerate() {
-            if bitmap_row[i] == 0 {
-                return Err(());
+                for col in col_range.clone() {
+                    if (row, col) != pivot {
+                        x[(row, col)] = bitmap_vec[col];
+                        if x[(row, col)] == 0 {
+                            return Err(());
+                        }
+                    }
+                }
             }
-            x[addr] = bitmap_row[i];
         }
-
         Ok(x)
     }
 
