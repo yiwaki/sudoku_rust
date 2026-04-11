@@ -1,1 +1,1 @@
-from .sudoku_rust import solve, check, __version__
+from .sudoku_rust import __version__, is_simd_supported, check, solve

@@ -24,7 +24,7 @@ pub const MATRIX_SIZE: usize = 9;
 pub const SQUARE_SIZE: usize = 3;
 pub const NUM_OF_CELLS: usize = MATRIX_SIZE.pow(2);
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 pub enum Block {
     Row,
     Column,
@@ -116,6 +116,83 @@ pub fn block_range(block_type: &Block, block_no: usize) -> (ops::Range<usize>, o
     }
 }
 
+#[allow(dead_code)]
+pub struct PivotBlockAddrIter {
+    pivot: Address,
+    block_type: Block,
+    row_range: ops::Range<usize>,
+    col_range: ops::Range<usize>,
+    next_row: usize,
+    next_col: usize,
+}
+
+#[allow(dead_code)]
+impl PivotBlockAddrIter {
+    pub fn new(pivot: Address) -> Self {
+        let block_no = addr_to_block_no(&Block::Row, pivot);
+        let (row_range, col_range) = block_range(&Block::Row, block_no);
+        PivotBlockAddrIter {
+            pivot,
+            block_type: Block::Row,
+            row_range: row_range.clone(),
+            col_range: col_range.clone(),
+            next_row: row_range.start,
+            next_col: col_range.start,
+        }
+    }
+}
+
+impl Iterator for PivotBlockAddrIter {
+    type Item = Address;
+    fn next(&mut self) -> Option<Self::Item> {
+        let mut addr = (0, 0);
+        let mut do_continue = true;
+        while do_continue {
+            if self.next_row >= self.row_range.end {
+                self.block_type = match self.block_type {
+                    Block::Row => Block::Column,
+                    Block::Column => Block::Square,
+                    Block::Square => return None,
+                };
+                let block_no = addr_to_block_no(&self.block_type, self.pivot);
+                let (row_range, col_range) = block_range(&self.block_type, block_no);
+                self.row_range = row_range;
+                self.col_range = col_range;
+                self.next_row = self.row_range.start;
+                self.next_col = self.col_range.start;
+            }
+
+            addr = (self.next_row, self.next_col);
+
+            self.next_col += 1;
+            if self.next_col >= self.col_range.end {
+                self.next_col = self.col_range.start;
+                self.next_row += 1;
+            }
+
+            match self.block_type {
+                Block::Row => {
+                    if addr.1 == self.pivot.1 {
+                        continue;
+                    }
+                }
+                Block::Column => {
+                    if addr.0 == self.pivot.0 {
+                        continue;
+                    }
+                }
+                Block::Square => {
+                    if addr.0 == self.pivot.0 || addr.1 == self.pivot.1 {
+                        continue;
+                    }
+                }
+            }
+            do_continue = false;
+        }
+        Some(addr)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -164,5 +241,42 @@ mod tests {
         println!("{}", matrix);
 
         assert_eq!(matrix_buffer, *matrix);
+    }
+
+    #[test]
+    fn pivot_block_addr_iter_test() {
+        let pivot = (4, 4);
+        let mut answer: Vec<Address> = vec![
+            (4, 0), // Row Block
+            (4, 1),
+            (4, 2),
+            (4, 3),
+            (4, 5),
+            (4, 6),
+            (4, 7),
+            (4, 8),
+            (0, 4), // Column Block
+            (1, 4),
+            (2, 4),
+            (3, 4),
+            (5, 4),
+            (6, 4),
+            (7, 4),
+            (8, 4),
+            (3, 3), // Square Block
+            (3, 5),
+            (5, 3),
+            (5, 5),
+        ];
+
+        let mut iter = PivotBlockAddrIter::new(pivot);
+
+        for addr in iter.by_ref() {
+            let expected_addr = answer.remove(0);
+            println!("addr: {:?}, expected_addr: {:?}", addr, expected_addr);
+            assert_eq!(addr, expected_addr);
+        }
+
+        assert_eq!(iter.next(), None);
     }
 }

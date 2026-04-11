@@ -1,9 +1,11 @@
+#![feature(portable_simd)]
 use numpy::ndarray::{Array2, ArrayView2, arr2};
 use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2, PyUntypedArrayMethods};
 use pyo3::types::{PyModule, PyModuleMethods};
 use pyo3::{Bound, PyResult, Python, pyfunction, pymodule, wrap_pyfunction};
 
 mod sudoku;
+use sudoku::is_simd_supported;
 use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
 use sudoku::matrix::{MATRIX_SIZE, Matrix};
 
@@ -38,7 +40,9 @@ impl Matrix {
 fn wrap_solve<'py>(
     py: Python<'py>,
     arr: PyReadonlyArray2<'py, Bitmap>,
+    simd: Option<bool>,
 ) -> PyResult<Bound<'py, PyArray2<Bitmap>>> {
+    let use_simd = simd.unwrap_or_else(is_simd_supported);
     if arr.shape() != [MATRIX_SIZE, MATRIX_SIZE] {
         return Err(pyo3::exceptions::PyValueError::new_err(format!(
             "Input array must be of shape ({}, {})",
@@ -46,7 +50,7 @@ fn wrap_solve<'py>(
         )));
     }
 
-    let Ok(solution) = Matrix::from(&arr.as_array()).solve(0) else {
+    let Ok(solution) = Matrix::from(&arr.as_array()).solve(0, use_simd) else {
         return Err(pyo3::exceptions::PyValueError::new_err(
             "No solution found for the given Sudoku problem.",
         ));
@@ -65,6 +69,7 @@ fn wrap_check<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> bool
 #[pymodule]
 fn sudoku_rust<'py>(_py: Python<'py>, m: &Bound<'py, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
+    m.add("is_simd_supported", format!("{}", is_simd_supported()))?;
     m.add_function(wrap_pyfunction!(wrap_solve, m)?)?;
     m.add_function(wrap_pyfunction!(wrap_check, m)?)?;
     Ok(())
