@@ -18,9 +18,10 @@ import numpy as np
 from sudoku_rust import __version__, check, solve
 print(f"sudoku-rust{__version__}")
 
+simd = None
 if len(sys.argv) == 1:
     print(f"usage: {sys.argv[0]} filename")
-    exit(0)
+    exit(1)
 
 try:
     filepath = sys.argv[1]
@@ -44,8 +45,8 @@ except Exception as e:
     print(f"Error: {e}", file=sys.stderr)
     exit(1)
 
-if not check(y):
-    print("The solution is invalid!!!", file=sys.stderr)
+assert np.all((x == y) == (x != 0)), "The solution is not consistent with the input problem."
+assert check(y), "The solution is invalid."
 ```
 
 ## Sample Data (easy.csv)

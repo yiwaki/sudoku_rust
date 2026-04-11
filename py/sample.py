@@ -12,7 +12,7 @@ if len(sys.argv) == 1:
     exit(1)
 
 elif len(sys.argv) == 2:
-    simd = bool(is_simd_supported)
+    simd = False
 
 else:
     simd_arg = sys.argv[2].lower()
@@ -21,7 +21,7 @@ else:
     elif simd_arg in ("false", "0", "no"):
         simd = False
     else:
-        print(f"Invalid SIMD argument: {sys.argv[2]}. Use 'true' or 'false'.")
+        print(f"Invalid SIMD argument: {sys.argv[2]}. Use 'true' or 'false'.", file=sys.stderr)
         exit(1)
 
 try:
@@ -46,5 +46,5 @@ except Exception as e:
     print(f"Error: {e}", file=sys.stderr)
     exit(1)
 
-if not check(y):
-    print("The solution is invalid!!!", file=sys.stderr)
+assert np.all((x == y) == (x != 0)), "The solution is not consistent with the input problem."
+assert check(y), "The solution is invalid."

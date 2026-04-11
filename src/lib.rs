@@ -42,7 +42,7 @@ fn wrap_solve<'py>(
     arr: PyReadonlyArray2<'py, Bitmap>,
     simd: Option<bool>,
 ) -> PyResult<Bound<'py, PyArray2<Bitmap>>> {
-    let use_simd = simd.unwrap_or_else(is_simd_supported);
+    let use_simd = simd.unwrap_or(false);
     if arr.shape() != [MATRIX_SIZE, MATRIX_SIZE] {
         return Err(pyo3::exceptions::PyValueError::new_err(format!(
             "Input array must be of shape ({}, {})",
@@ -50,7 +50,7 @@ fn wrap_solve<'py>(
         )));
     }
 
-    let Ok(solution) = Matrix::from(&arr.as_array()).solve(0, use_simd) else {
+    let Some(solution) = Matrix::from(&arr.as_array()).solve(0, use_simd) else {
         return Err(pyo3::exceptions::PyValueError::new_err(
             "No solution found for the given Sudoku problem.",
         ));

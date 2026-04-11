@@ -14,11 +14,7 @@ pub fn is_simd_supported() -> bool {
 }
 
 impl matrix::Matrix {
-    fn _prune_by_pivot_scalar(
-        &self,
-        pivot: matrix::Address,
-        target_bit: Bitmap,
-    ) -> Result<Self, ()> {
+    fn _prune_by_pivot_scalar(&self, pivot: matrix::Address, target_bit: Bitmap) -> Option<Self> {
         //! Prune the matrix by setting off the target bit from the bitmap of cells
         //! in the same row, column and square as the pivot cell.
         let mut x = self.clone();
@@ -36,15 +32,15 @@ impl matrix::Matrix {
                     }
 
                     if x[(row, col)] == 0 {
-                        return Err(());
+                        return None;
                     }
                 }
             }
         }
-        Ok(x)
+        Some(x)
     }
 
-    fn _prune_by_pivot_simd(&self, pivot: matrix::Address, target_bit: Bitmap) -> Result<Self, ()> {
+    fn _prune_by_pivot_simd(&self, pivot: matrix::Address, target_bit: Bitmap) -> Option<Self> {
         //! SIMD version of _prune_by_pivot_scalar.
         let mut x = self.clone();
 
@@ -67,13 +63,13 @@ impl matrix::Matrix {
                     if (row, col) != pivot {
                         x[(row, col)] = bitmap_vec[col];
                         if x[(row, col)] == 0 {
-                            return Err(());
+                            return None;
                         }
                     }
                 }
             }
         }
-        Ok(x)
+        Some(x)
     }
 
     fn _prune_by_pivot(
@@ -81,7 +77,7 @@ impl matrix::Matrix {
         pivot: matrix::Address,
         target_bit: Bitmap,
         use_simd: bool,
-    ) -> Result<Self, ()> {
+    ) -> Option<Self> {
         if use_simd {
             self._prune_by_pivot_simd(pivot, target_bit)
         } else {
@@ -89,24 +85,24 @@ impl matrix::Matrix {
         }
     }
 
-    pub fn solve(self, cell_no: usize, use_simd: bool) -> Result<Self, ()> {
+    pub fn solve(self, cell_no: usize, use_simd: bool) -> Option<Self> {
         //! cell_no is the index of the cell to be solved, in row-major order
         if cell_no >= matrix::NUM_OF_CELLS {
-            return Ok(self);
+            return Some(self);
         }
 
         let pivot = matrix::cell_no_to_addr(cell_no);
 
         for target_bit in bitmap::EachBit::new(self[pivot]) {
-            let Ok(x) = self._prune_by_pivot(pivot, target_bit, use_simd) else {
+            let Some(x) = self._prune_by_pivot(pivot, target_bit, use_simd) else {
                 continue;
             };
 
-            if let Ok(x) = x.solve(cell_no + 1, use_simd) {
-                return Ok(x);
+            if let Some(x) = x.solve(cell_no + 1, use_simd) {
+                return Some(x);
             }
         }
-        Err(())
+        None
     }
 
     fn _check_blocks_by_pivot(&self, block_type: &matrix::Block, pivot: matrix::Address) -> bool {
