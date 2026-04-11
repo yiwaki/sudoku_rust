@@ -108,7 +108,7 @@ mod tests {
     }
 
     #[test]
-    fn solve_scalar_test() {
+    fn solve_test() {
         let x: matrix::Matrix = [
             [0, 0, 4, 0, 5, 0, 0, 0, 1],
             [0, 0, 6, 0, 0, 0, 0, 3, 0],
@@ -164,40 +164,5 @@ mod tests {
             y[(0, 2)] = y[(0, 3)];
             assert!(!_check_problem_solution(&x, &y));
         }
-    }
-
-    #[test]
-    fn solve_simd_test() {
-        let x: matrix::Matrix = [
-            [0, 0, 4, 0, 5, 0, 0, 0, 1],
-            [0, 0, 6, 0, 0, 0, 0, 3, 0],
-            [5, 3, 0, 7, 0, 0, 0, 0, 8],
-            [1, 2, 0, 0, 6, 0, 0, 8, 0],
-            [0, 0, 3, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 9, 0, 0, 7],
-            [4, 0, 0, 0, 0, 0, 0, 0, 0],
-            [8, 5, 0, 0, 1, 0, 0, 2, 0],
-            [0, 0, 0, 6, 0, 0, 1, 0, 0],
-        ]
-        .map(|r| r.map(|c| if c == 0 { FULL_BIT } else { 1 << (c - 1) }))
-        .into();
-
-        println!("Problem:");
-        println!("{}", x);
-
-        let start = Utc::now().time();
-
-        let y = x.clone().solve(0).unwrap();
-
-        println!("Solution:");
-        println!("{}", y);
-        let end = Utc::now().time();
-
-        let dt = (end - start).num_microseconds().unwrap() as f64 * 1E-6;
-        println!("elapsed time: {:0.6}", dt);
-
-        assert!(_check_problem_solution(&x, &y));
-
-        assert!(!x.check());
     }
 }
