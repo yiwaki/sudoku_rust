@@ -39,7 +39,7 @@ def test_solve_no_solution():
     with pytest.raises(ValueError) as e:
         y = solve(x)
 
-    assert str(e.value) in "No solution found for the given Sudoku problem."
+    assert str(e.value) in "No solution found for the given problem."
 
 
 def test_solve_invalid_input():

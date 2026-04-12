@@ -1,5 +1,6 @@
 use numpy::ndarray::{Array2, ArrayView2, arr2};
 use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2, PyUntypedArrayMethods};
+use pyo3::exceptions::PyValueError;
 use pyo3::types::{PyModule, PyModuleMethods};
 use pyo3::{Bound, PyResult, Python, pyfunction, pymodule, wrap_pyfunction};
 
@@ -40,15 +41,15 @@ fn wrap_solve<'py>(
     arr: PyReadonlyArray2<Bitmap>,
 ) -> PyResult<Bound<'py, PyArray2<Bitmap>>> {
     if arr.shape() != [MATRIX_SIZE, MATRIX_SIZE] {
-        return Err(pyo3::exceptions::PyValueError::new_err(format!(
+        return Err(PyValueError::new_err(format!(
             "Input array must be of shape ({}, {})",
             MATRIX_SIZE, MATRIX_SIZE
         )));
     }
 
     let Some(solution) = Matrix::from(&arr.as_array()).solve(0) else {
-        return Err(pyo3::exceptions::PyValueError::new_err(
-            "No solution found for the given Sudoku problem.",
+        return Err(PyValueError::new_err(
+            "No solution found for the given problem.",
         ));
     };
 
@@ -58,7 +59,7 @@ fn wrap_solve<'py>(
 #[pyfunction(name = "check")]
 fn wrap_check(_py: Python, arr: PyReadonlyArray2<Bitmap>) -> PyResult<bool> {
     if arr.shape() != [MATRIX_SIZE, MATRIX_SIZE] {
-        return Err(pyo3::exceptions::PyValueError::new_err(format!(
+        return Err(PyValueError::new_err(format!(
             "Input array must be of shape ({}, {})",
             MATRIX_SIZE, MATRIX_SIZE
         )));
