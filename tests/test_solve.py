@@ -61,4 +61,8 @@ def test_check_bad_result():
 def test_check_invalid_data():
     filepath = "data/bad_2.csv"
     x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
-    assert not check(x)
+
+    with pytest.raises(ValueError) as e:
+        assert not check(x)
+
+    assert str(e.value) in "Input array must be of shape (9, 9)"

@@ -37,7 +37,7 @@ impl Matrix {
 #[pyfunction(name = "solve")]
 fn wrap_solve<'py>(
     py: Python<'py>,
-    arr: PyReadonlyArray2<'py, Bitmap>,
+    arr: PyReadonlyArray2<Bitmap>,
 ) -> PyResult<Bound<'py, PyArray2<Bitmap>>> {
     if arr.shape() != [MATRIX_SIZE, MATRIX_SIZE] {
         return Err(pyo3::exceptions::PyValueError::new_err(format!(
@@ -51,19 +51,24 @@ fn wrap_solve<'py>(
             "No solution found for the given Sudoku problem.",
         ));
     };
+
     Ok(solution.into_ndarray().into_pyarray(py))
 }
 
 #[pyfunction(name = "check")]
-fn wrap_check<'py>(_py: Python<'py>, arr: PyReadonlyArray2<'py, Bitmap>) -> bool {
+fn wrap_check(_py: Python, arr: PyReadonlyArray2<Bitmap>) -> PyResult<bool> {
     if arr.shape() != [MATRIX_SIZE, MATRIX_SIZE] {
-        return false;
+        return Err(pyo3::exceptions::PyValueError::new_err(format!(
+            "Input array must be of shape ({}, {})",
+            MATRIX_SIZE, MATRIX_SIZE
+        )));
     }
-    Matrix::from(&arr.as_array()).check()
+
+    Ok(Matrix::from(&arr.as_array()).check())
 }
 
 #[pymodule]
-fn sudoku_rust<'py>(_py: Python<'py>, m: &Bound<'py, PyModule>) -> PyResult<()> {
+fn sudoku_rust(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     m.add_function(wrap_pyfunction!(wrap_solve, m)?)?;
     m.add_function(wrap_pyfunction!(wrap_check, m)?)?;
