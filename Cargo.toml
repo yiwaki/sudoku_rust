@@ -1,6 +1,6 @@
 [package]
 name = "sudoku_rust"
-version = "1.0.6"
+version = "1.0.7"
 authors = ["Yasushi Iwaki <yasushi.iwaki@gmail.com>"]
 edition = "2024"
 description = "A Sudoku solver implemented in Rust and exposed to Python via PyO3."
