@@ -9,17 +9,21 @@ impl matrix::Matrix {
 
         x[pivot] = target_bit;
 
-        for block_type in matrix::BLOCK_TYPES {
-            let block_no = matrix::addr_to_block_no(&block_type, pivot);
-            let (row_range, col_range) = matrix::block_range(&block_type, block_no);
+        for block_type in &matrix::BLOCK_TYPES {
+            let block_no = matrix::addr_to_block_no(block_type, pivot);
+            let (row_range, col_range) = matrix::block_range(block_type, block_no);
 
             for row in row_range {
                 for col in col_range.clone() {
-                    if (row, col) != pivot {
-                        x[(row, col)] &= !target_bit; // set off the target bit to bitmap
+                    let addr = (row, col);
+                    if addr == pivot {
+                        continue;
                     }
 
-                    if x[(row, col)] == 0 {
+                    let cell = &mut x[addr];
+                    *cell &= !target_bit;
+
+                    if *cell == 0 {
                         return None;
                     }
                 }
@@ -36,16 +40,12 @@ impl matrix::Matrix {
 
         let pivot = matrix::cell_no_to_addr(cell_no);
 
-        for target_bit in bitmap::EachBit::new(self[pivot]) {
-            let Some(x) = self._prune_by_pivot(pivot, target_bit) else {
-                continue;
-            };
-
-            if let Some(x) = x.solve(cell_no + 1) {
-                return Some(x);
-            }
-        }
-        None
+        bitmap::EachBit::new(self[pivot])
+            .into_iter()
+            .find_map(|target_bit| {
+                self._prune_by_pivot(pivot, target_bit)
+                    .and_then(|pruned| pruned.solve(cell_no + 1))
+            })
     }
 
     fn _check_blocks_by_pivot(&self, block_type: &matrix::Block, pivot: matrix::Address) -> bool {

@@ -37,9 +37,9 @@ def test_solve_no_solution():
     x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
 
     with pytest.raises(ValueError) as e:
-        y = solve(x)
+        _ = solve(x)
 
-    assert str(e.value) in "No solution found for the given problem."
+    assert str(e.value) in "No solution found"
 
 
 def test_solve_invalid_input():
@@ -47,7 +47,7 @@ def test_solve_invalid_input():
     x = np.loadtxt(filepath, delimiter=",").astype(np.uint16)
 
     with pytest.raises(ValueError) as e:
-        y = solve(x)
+        _ = solve(x)
 
     assert str(e.value) in "Input array must be of shape (9, 9)"
 
