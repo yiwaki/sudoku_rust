@@ -2,13 +2,15 @@
 
 Python module to solve Sudoku puzzle written in Rust.
 
-For more information on Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki/Sudoku).
+For more information about Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki/Sudoku).
 
 ## Install make command
 
 - For Windows:
 
-Download the installation kit for your Windows from [here](http://gnuwin32.sourceforge.net/packages/make.htm) and run it.
+```
+winget install GnuWin32.Make
+```
 
 - For macOS:
 
@@ -46,7 +48,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 - For Windows:
 
-Download the installation kit for your Windows from [here](https://forge.rust-lang.org/infra/other-installation-methods.eichithi-emueru) and run it.
+```
+winget Rustlang.Rustup
+```
 
 - For macOS, linux, or another Unix-like OS:
 
@@ -57,7 +61,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ## Clone this repository
 
 ```
-cd [your project directory]
+cd [your projects directory]
 git clone https://github.com/yiwaki/sudoku_rust
 ```
 
@@ -77,7 +81,7 @@ cd sudoku_rust
 source ./make_env.sh
 ```
 
-## Build it and run sample program
+## Build it and run sample problem
 
 ```
 make develop

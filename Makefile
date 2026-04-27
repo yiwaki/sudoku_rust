@@ -11,7 +11,7 @@ develop:
 	pytest -v
 
 test:
-	cargo test --lib
+	cargo test --lib -- --nocapture
 
 cover:
 	cargo llvm-cov --html --open --ignore-filename-regex lib.rs

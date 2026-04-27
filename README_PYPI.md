@@ -1,6 +1,6 @@
 # sudoku-rust
 
-Python module to solve Sudoku puzzle written in Rust.
+Python library to solve Sudoku puzzle written in Rust.
 
 ## Installation
 

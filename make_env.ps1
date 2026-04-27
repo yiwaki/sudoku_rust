@@ -1,8 +1,4 @@
-uv python install 3.13
-uv python pin 3.13
-uv venv
+uv sync
 ./.venv/Scripts/activate
 uv tool install maturin
-uv sync
-cargo install cargo-llvm-cov
 rustup component add llvm-tools-preview
