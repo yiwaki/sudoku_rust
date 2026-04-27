@@ -41,7 +41,7 @@ fn wrap_solve<'py>(
     arr: PyReadonlyArray2<Bitmap>,
 ) -> PyResult<Bound<'py, PyArray2<Bitmap>>> {
     (arr.shape() == [MATRIX_SIZE, MATRIX_SIZE])
-        .then_some(&arr)
+        .then_some(arr)
         .ok_or_else(|| {
             PyValueError::new_err(format!(
                 "Input array must be of shape ({}, {})",
