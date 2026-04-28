@@ -1,5 +1,6 @@
 pub mod matrix;
 use matrix::{Address, BLOCK_TYPES, Block, bitmap, bitmap::Bitmap, bitmap::FULL_BIT, block_range};
+use std::cmp::Ordering::{Equal, Greater, Less};
 
 impl matrix::Matrix {
     fn _prune_by_pivot(&self, pivot: Address, target_bit: Bitmap) -> Option<Self> {
@@ -27,8 +28,12 @@ impl matrix::Matrix {
 
     pub fn solve(self, cell_no: usize) -> Option<Self> {
         //! cell_no is the index of the cell to be solved, in row-major order
-        if cell_no >= matrix::NUM_OF_CELLS {
-            return Some(self);
+        match cell_no.cmp(&matrix::NUM_OF_CELLS) {
+            Equal => return Some(self),
+            Less => (),
+            Greater => {
+                panic!("cell_no must be less than or equal to NUM_OF_CELLS")
+            }
         }
 
         let pivot = matrix::cell_no_to_addr(cell_no);
@@ -37,17 +42,6 @@ impl matrix::Matrix {
             self._prune_by_pivot(pivot, target_bit)
                 .and_then(|pruned| pruned.solve(cell_no + 1))
         })
-    }
-
-    fn _check_blocks_by_pivot(&self, block_type: &Block, pivot: Address) -> bool {
-        //! Check if the block of the given type that contains the pivot cell is valid.
-        let block_no = matrix::addr_to_block_no(block_type, pivot);
-        let (row_range, col_range) = block_range(block_type, block_no);
-
-        row_range
-            .flat_map(|row| col_range.clone().map(move |col| (row, col)))
-            .fold(0, |acc, addr| acc | self[addr])
-            == FULL_BIT
     }
 
     pub fn check(&self) -> bool {
@@ -59,13 +53,12 @@ impl matrix::Matrix {
                 let cells = row_range.flat_map(|r| col_range.clone().map(move |c| (r, c)));
 
                 if *block_type == Block::Row
-                    && cells.clone().any(|addr| self[addr].count_ones() > 1)
+                    && cells.clone().any(|addr| self[addr].count_ones() >= 2)
                 {
                     return false;
                 }
 
-                let bmp = cells.fold(0, |acc, addr| acc | self[addr]);
-                bmp == FULL_BIT
+                cells.fold(0, |acc, addr| acc | self[addr]) == FULL_BIT
             })
         })
     }
