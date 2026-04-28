@@ -1,32 +1,26 @@
 pub mod matrix;
-use matrix::{bitmap, bitmap::Bitmap, bitmap::FULL_BIT};
+use matrix::{Address, BLOCK_TYPES, Block, bitmap, bitmap::Bitmap, bitmap::FULL_BIT, block_range};
 
 impl matrix::Matrix {
-    fn _prune_by_pivot(&self, pivot: matrix::Address, target_bit: Bitmap) -> Option<Self> {
+    fn _prune_by_pivot(&self, pivot: Address, target_bit: Bitmap) -> Option<Self> {
         //! Prune the matrix by setting off the target bit from the bitmap of cells
         //! in the same row, column and square as the pivot cell.
         let mut x = self.clone();
         x[pivot] = target_bit;
 
-        for block_type in &matrix::BLOCK_TYPES {
+        for block_type in &BLOCK_TYPES {
             let block_no = matrix::addr_to_block_no(block_type, pivot);
-            let (row_range, col_range) = matrix::block_range(block_type, block_no);
+            let (row_range, col_range) = block_range(block_type, block_no);
 
-            for row in row_range {
-                for col in col_range.clone() {
-                    let addr = (row, col);
-                    if addr == pivot {
-                        continue;
-                    }
-
+            row_range
+                .flat_map(|row| col_range.clone().map(move |col| (row, col)))
+                .filter(|&addr| addr != pivot)
+                .try_for_each(|addr| {
                     let cell = &mut x[addr];
                     *cell &= !target_bit;
 
-                    if *cell == 0 {
-                        return None;
-                    }
-                }
-            }
+                    (*cell != 0).then_some(())
+                })?;
         }
         Some(x)
     }
@@ -45,10 +39,10 @@ impl matrix::Matrix {
         })
     }
 
-    fn _check_blocks_by_pivot(&self, block_type: &matrix::Block, pivot: matrix::Address) -> bool {
+    fn _check_blocks_by_pivot(&self, block_type: &Block, pivot: Address) -> bool {
         //! Check if the block of the given type that contains the pivot cell is valid.
         let block_no = matrix::addr_to_block_no(block_type, pivot);
-        let (row_range, col_range) = matrix::block_range(block_type, block_no);
+        let (row_range, col_range) = block_range(block_type, block_no);
 
         row_range
             .flat_map(|row| col_range.clone().map(move |col| (row, col)))
@@ -58,13 +52,13 @@ impl matrix::Matrix {
 
     pub fn check(&self) -> bool {
         //! Check if the matrix is a valid solution of Sudoku.
-        matrix::BLOCK_TYPES.iter().all(|block_type| {
+        BLOCK_TYPES.iter().all(|block_type| {
             (0..matrix::MATRIX_SIZE).all(|block_no| {
-                let (row_range, col_range) = matrix::block_range(block_type, block_no);
+                let (row_range, col_range) = block_range(block_type, block_no);
 
                 let cells = row_range.flat_map(|r| col_range.clone().map(move |c| (r, c)));
 
-                if *block_type == matrix::Block::Row
+                if *block_type == Block::Row
                     && cells.clone().any(|addr| self[addr].count_ones() > 1)
                 {
                     return false;
