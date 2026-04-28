@@ -6,7 +6,6 @@ impl matrix::Matrix {
         //! Prune the matrix by setting off the target bit from the bitmap of cells
         //! in the same row, column and square as the pivot cell.
         let mut x = self.clone();
-
         x[pivot] = target_bit;
 
         for block_type in &matrix::BLOCK_TYPES {
@@ -40,54 +39,41 @@ impl matrix::Matrix {
 
         let pivot = matrix::cell_no_to_addr(cell_no);
 
-        bitmap::EachBit::new(self[pivot])
-            .into_iter()
-            .find_map(|target_bit| {
-                self._prune_by_pivot(pivot, target_bit)
-                    .and_then(|pruned| pruned.solve(cell_no + 1))
-            })
+        bitmap::EachBit::new(self[pivot]).find_map(|target_bit| {
+            self._prune_by_pivot(pivot, target_bit)
+                .and_then(|pruned| pruned.solve(cell_no + 1))
+        })
     }
 
     fn _check_blocks_by_pivot(&self, block_type: &matrix::Block, pivot: matrix::Address) -> bool {
         //! Check if the block of the given type that contains the pivot cell is valid.
-        // let mut iter = matrix::PivotBlockAddrIter::new(pivot);
-
         let block_no = matrix::addr_to_block_no(block_type, pivot);
-
         let (row_range, col_range) = matrix::block_range(block_type, block_no);
 
-        let mut bmp: Bitmap = 0;
-        for row in row_range {
-            for col in col_range.clone() {
-                bmp |= self[(row, col)];
-            }
-        }
-        bmp == FULL_BIT
+        row_range
+            .flat_map(|row| col_range.clone().map(move |col| (row, col)))
+            .fold(0, |acc, addr| acc | self[addr])
+            == FULL_BIT
     }
 
     pub fn check(&self) -> bool {
         //! Check if the matrix is a valid solution of Sudoku.
-        for block_type in matrix::BLOCK_TYPES {
-            for block_no in 0..matrix::MATRIX_SIZE {
-                let (row_range, col_range) = matrix::block_range(&block_type, block_no);
+        matrix::BLOCK_TYPES.iter().all(|block_type| {
+            (0..matrix::MATRIX_SIZE).all(|block_no| {
+                let (row_range, col_range) = matrix::block_range(block_type, block_no);
 
-                let mut bmp: Bitmap = 0;
-                for row in row_range {
-                    for col in col_range.clone() {
-                        bmp |= self[(row, col)];
+                let cells = row_range.flat_map(|r| col_range.clone().map(move |c| (r, c)));
 
-                        if block_type == matrix::Block::Row && self[(row, col)].count_ones() > 1 {
-                            return false;
-                        }
-                    }
-                }
-
-                if bmp != FULL_BIT {
+                if *block_type == matrix::Block::Row
+                    && cells.clone().any(|addr| self[addr].count_ones() > 1)
+                {
                     return false;
                 }
-            }
-        }
-        true
+
+                let bmp = cells.fold(0, |acc, addr| acc | self[addr]);
+                bmp == FULL_BIT
+            })
+        })
     }
 }
 
