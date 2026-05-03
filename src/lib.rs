@@ -44,8 +44,8 @@ fn wrap_solve<'py>(
         .then_some(arr)
         .ok_or_else(|| {
             PyValueError::new_err(format!(
-                "Input array must be of shape ({}, {})",
-                MATRIX_SIZE, MATRIX_SIZE
+                "Input array must be of shape ({0}, {0})",
+                MATRIX_SIZE
             ))
         })
         .and_then(|a| {
@@ -62,8 +62,8 @@ fn wrap_check(_py: Python, arr: PyReadonlyArray2<Bitmap>) -> PyResult<bool> {
         .then_some(arr)
         .ok_or_else(|| {
             PyValueError::new_err(format!(
-                "Input array must be of shape ({}, {})",
-                MATRIX_SIZE, MATRIX_SIZE
+                "Input array must be of shape ({0}, {0})",
+                MATRIX_SIZE
             ))
         })
         .map(|a| Matrix::from(&a.as_array()).check())
