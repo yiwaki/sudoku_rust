@@ -1,9 +1,8 @@
 pub mod matrix;
-use matrix::{Address, BLOCK_TYPES, Block, bitmap, bitmap::Bitmap, bitmap::FULL_BIT, block_range};
-use std::cmp::Ordering::{Equal, Greater, Less};
+use matrix::{BLOCK_TYPES, NUM_OF_CELLS, bitmap};
 
 impl matrix::Matrix {
-    fn _prune_by_pivot(&self, pivot: Address, target_bit: Bitmap) -> Option<Self> {
+    fn _prune_by_pivot(&self, pivot: matrix::Address, target_bit: bitmap::Bitmap) -> Option<Self> {
         //! Prune the matrix by setting off the target bit from the bitmap of cells
         //! in the same row, column and square as the pivot cell.
         let mut x = self.clone();
@@ -11,7 +10,7 @@ impl matrix::Matrix {
 
         for block_type in &BLOCK_TYPES {
             let block_no = matrix::addr_to_block_no(block_type, pivot);
-            let (row_range, col_range) = block_range(block_type, block_no);
+            let (row_range, col_range) = matrix::block_range(block_type, block_no);
 
             row_range
                 .flat_map(|row| col_range.clone().map(move |col| (row, col)))
@@ -23,17 +22,14 @@ impl matrix::Matrix {
                     (*cell != 0).then_some(())
                 })?;
         }
+
         Some(x)
     }
 
     pub fn solve(self, cell_no: usize) -> Option<Self> {
         //! cell_no is the index of the cell to be solved, in row-major order
-        match cell_no.cmp(&matrix::NUM_OF_CELLS) {
-            Equal => return Some(self),
-            Less => (),
-            Greater => {
-                panic!("cell_no must be less than or equal to NUM_OF_CELLS")
-            }
+        if cell_no >= NUM_OF_CELLS {
+            return Some(self);
         }
 
         let pivot = matrix::cell_no_to_addr(cell_no);
@@ -48,17 +44,17 @@ impl matrix::Matrix {
         //! Check if the matrix is a valid solution of Sudoku.
         BLOCK_TYPES.iter().all(|block_type| {
             (0..matrix::MATRIX_SIZE).all(|block_no| {
-                let (row_range, col_range) = block_range(block_type, block_no);
+                let (row_range, col_range) = matrix::block_range(block_type, block_no);
 
-                let cells = row_range.flat_map(|r| col_range.clone().map(move |c| (r, c)));
+                let cells = row_range.flat_map(|row| col_range.clone().map(move |col| (row, col)));
 
-                if *block_type == Block::Row
-                    && cells.clone().any(|addr| self[addr].count_ones() >= 2)
+                if *block_type == matrix::Block::Row
+                    && cells.clone().any(|addr| self[addr].count_ones() > 1)
                 {
                     return false;
                 }
 
-                cells.fold(0, |acc, addr| acc | self[addr]) == FULL_BIT
+                cells.fold(0, |acc, addr| acc | self[addr]) == matrix::bitmap::FULL_BIT
             })
         })
     }
@@ -70,14 +66,10 @@ mod tests {
     use chrono::Utc;
 
     fn _check_problem_solution(problem: &matrix::Matrix, solution: &matrix::Matrix) -> bool {
-        for row in 0..matrix::MATRIX_SIZE {
-            for col in 0..matrix::MATRIX_SIZE {
-                if problem[(row, col)] != FULL_BIT && problem[(row, col)] != solution[(row, col)] {
-                    return false;
-                }
-            }
-        }
-        solution.check()
+        (0..matrix::NUM_OF_CELLS).all(|cell_no| {
+            let address = matrix::cell_no_to_addr(cell_no);
+            problem[address] == bitmap::FULL_BIT || problem[address] == solution[address]
+        }) && solution.check()
     }
 
     #[test]
@@ -93,7 +85,15 @@ mod tests {
             [8, 5, 0, 0, 1, 0, 0, 2, 0],
             [0, 0, 0, 6, 0, 0, 1, 0, 0],
         ]
-        .map(|r| r.map(|c| if c == 0 { FULL_BIT } else { 1 << (c - 1) }))
+        .map(|row| {
+            row.map(|col| {
+                if col == 0 {
+                    bitmap::FULL_BIT
+                } else {
+                    1 << (col - 1)
+                }
+            })
+        })
         .into();
 
         println!("Problem:");

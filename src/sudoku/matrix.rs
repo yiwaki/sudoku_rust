@@ -1,5 +1,3 @@
-use std::{fmt, ops};
-
 // Matrix of                     Block No. of each block type
 // Cell No.                      Row          Column       Square
 // +--------------------------+  +---------+  +---------+  +---------+
@@ -17,6 +15,7 @@ use std::{fmt, ops};
 // Address on Matrix: (Row No., Column No.)
 
 pub mod bitmap;
+use std::{fmt, ops};
 
 use bitmap::BITMAP_DIGIT;
 
