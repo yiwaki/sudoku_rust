@@ -8,7 +8,7 @@ impl matrix::Matrix {
         let mut x = self.clone();
         x[pivot] = target_bit;
 
-        for block_type in &BLOCK_TYPES {
+        BLOCK_TYPES.iter().try_for_each(|block_type| {
             let block_no = matrix::addr_to_block_no(block_type, pivot);
             let (row_range, col_range) = matrix::block_range(block_type, block_no);
 
@@ -20,8 +20,8 @@ impl matrix::Matrix {
                     *cell &= !target_bit;
 
                     (*cell != 0).then_some(())
-                })?;
-        }
+                })
+        })?;
 
         Some(x)
     }
@@ -45,9 +45,7 @@ impl matrix::Matrix {
         BLOCK_TYPES.iter().all(|block_type| {
             (0..matrix::MATRIX_SIZE).all(|block_no| {
                 let (row_range, col_range) = matrix::block_range(block_type, block_no);
-
                 let cells = row_range.flat_map(|row| col_range.clone().map(move |col| (row, col)));
-
                 if *block_type == matrix::Block::Row
                     && cells.clone().any(|addr| self[addr].count_ones() > 1)
                 {
