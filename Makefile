@@ -1,6 +1,6 @@
 clean:
 	cargo clean
-	uv cache clear
+	uv cache clean
 	pytest --cache-clear
 
 check:
