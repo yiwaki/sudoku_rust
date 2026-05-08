@@ -38,18 +38,18 @@ impl Matrix {
 #[pyfunction(name = "solve")]
 fn wrap_solve<'py>(
     py: Python<'py>,
-    arr: PyReadonlyArray2<Bitmap>,
+    problem: PyReadonlyArray2<Bitmap>,
 ) -> PyResult<Bound<'py, PyArray2<Bitmap>>> {
-    (arr.shape() == [MATRIX_SIZE, MATRIX_SIZE])
-        .then_some(arr)
+    (problem.shape() == [MATRIX_SIZE, MATRIX_SIZE])
+        .then_some(problem)
         .ok_or_else(|| {
             PyValueError::new_err(format!(
                 "Input array must be of shape ({0}, {0})",
                 MATRIX_SIZE
             ))
         })
-        .and_then(|a| {
-            Matrix::from(&a.as_array())
+        .and_then(|x| {
+            Matrix::from(&x.as_array())
                 .solve(0)
                 .ok_or_else(|| PyValueError::new_err("No solution found"))
         })
@@ -57,16 +57,16 @@ fn wrap_solve<'py>(
 }
 
 #[pyfunction(name = "check")]
-fn wrap_check(_py: Python, arr: PyReadonlyArray2<Bitmap>) -> PyResult<bool> {
-    (arr.shape() == [MATRIX_SIZE, MATRIX_SIZE])
-        .then_some(arr)
+fn wrap_check(_py: Python, solution: PyReadonlyArray2<Bitmap>) -> PyResult<bool> {
+    (solution.shape() == [MATRIX_SIZE, MATRIX_SIZE])
+        .then_some(solution)
         .ok_or_else(|| {
             PyValueError::new_err(format!(
                 "Input array must be of shape ({0}, {0})",
                 MATRIX_SIZE
             ))
         })
-        .map(|a| Matrix::from(&a.as_array()).check())
+        .map(|x| Matrix::from(&x.as_array()).check())
 }
 
 #[pymodule]
