@@ -1,4 +1,4 @@
-use std::iter::successors;
+use std::iter;
 
 pub type Bitmap = u16;
 
@@ -23,7 +23,7 @@ impl Iterator for EachBit {
     type Item = Bitmap;
 
     fn next(&mut self) -> Option<Self::Item> {
-        successors(Some(self.next_bit), |&bit| (bit > 1).then_some(bit >> 1))
+        iter::successors(Some(self.next_bit), |&bit| (bit > 1).then_some(bit >> 1))
             .skip_while(|&bit| bit == 0)
             .find(|&bit| self.bitmap & bit != 0)
             .or_else(|| {
