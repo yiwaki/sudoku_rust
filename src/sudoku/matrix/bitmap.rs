@@ -1,3 +1,5 @@
+use std::iter::successors;
+
 pub type Bitmap = u16;
 
 pub const BITMAP_DIGIT: usize = 9;
@@ -19,17 +21,18 @@ impl EachBit {
 
 impl Iterator for EachBit {
     type Item = Bitmap;
-    fn next(&mut self) -> Option<Self::Item> {
-        while self.bitmap & self.next_bit == 0 && self.next_bit != 0 {
-            self.next_bit >>= 1;
-        }
 
-        if self.next_bit == 0 {
-            None
+    fn next(&mut self) -> Option<Self::Item> {
+        let found_bit = successors(Some(self.next_bit), |&b| (b > 1).then_some(b >> 1))
+            .take_while(|&b| b > 0)
+            .find(|&bit| self.bitmap & bit != 0);
+
+        if let Some(bit) = found_bit {
+            self.next_bit = bit >> 1;
+            Some(bit)
         } else {
-            let cur = self.next_bit;
-            self.next_bit >>= 1;
-            Some(cur)
+            self.next_bit = 0;
+            None
         }
     }
 }
