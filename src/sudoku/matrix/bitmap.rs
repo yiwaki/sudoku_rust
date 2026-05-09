@@ -23,17 +23,14 @@ impl Iterator for EachBit {
     type Item = Bitmap;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let found_bit = successors(Some(self.next_bit), |&b| (b > 1).then_some(b >> 1))
-            .take_while(|&b| b > 0)
-            .find(|&bit| self.bitmap & bit != 0);
-
-        if let Some(bit) = found_bit {
-            self.next_bit = bit >> 1;
-            Some(bit)
-        } else {
-            self.next_bit = 0;
-            None
-        }
+        successors(Some(self.next_bit), |&bit| (bit > 1).then_some(bit >> 1))
+            .skip_while(|&bit| bit == 0)
+            .find(|&bit| self.bitmap & bit != 0)
+            .or_else(|| {
+                self.next_bit = 0;
+                None
+            })
+            .inspect(|&bit| self.next_bit = bit >> 1)
     }
 }
 
