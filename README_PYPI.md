@@ -4,7 +4,7 @@ Python library to solve Sudoku puzzle written in Rust.
 
 ## Installation
 
-```
+```Any Shell
 pip install sudoku-rust
 ```
 
@@ -16,7 +16,7 @@ import time
 
 import numpy as np
 from sudoku_rust import __version__, check, solve
-print(f"sudoku-rust{__version__}")
+print(f"sudoku-rust ver.{__version__}")
 
 if len(sys.argv) == 1:
     print(f"usage: {sys.argv[0]} filename")

@@ -8,59 +8,61 @@ For more information about Sudoku, see [Wikipedia](https://en.wikipedia.org/wiki
 
 - For Windows:
 
-```
-winget install GnuWin32.Make
+```PowerShell
+PS> winget install GnuWin32.Make
 ```
 
 - For macOS:
 
-```
-xcode-select --install
+```macOS Terminal
+$ xcode-select --install
 ```
 
 - For Debian/Ubuntu:
 
-```
-sudo apt install -y make
+```Debian Terminal
+$ sudo apt install -y make
 ```
 
 - For CentOS/Fedora:
 
-```
-sudo yum install -y make
+```CentOS Terminal
+$ sudo yum install -y make
 ```
 
 ## Install uv - Python package and project manager
 
 - For Windows:
 
-```
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```PowerShell
+PS> powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-- For macOS, linux, or another Unix-like OS:
+- For macOS, linux, or other Unix-like OS:
 
-```
-curl -LsSf https://astral.sh/uv/install.sh | sh
+```macOS, Linux, or other Unix-like OS Terminal
+$ curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 ## Install Rust
 
 - For Windows:
 
-```
-winget Rustlang.Rustup
+```PowerShell
+PS> winget Rustlang.Rustup
 ```
 
-- For macOS, linux, or another Unix-like OS:
+- For macOS, linux, or other Unix-like OS:
 
-```
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```macOS, linux, or other Unix-like OS terminal
+$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 ## Clone this repository
 
-```
+- For Any OS:
+ 
+```Any OS terminal
 cd [your projects directory]
 git clone https://github.com/yiwaki/sudoku_rust
 ```
@@ -69,21 +71,23 @@ git clone https://github.com/yiwaki/sudoku_rust
 
 - For Windows:
 
-```
-cd sudoku_rust
-./make_env.ps1
+```PowerShell
+PS> cd sudoku_rust
+PS> ./make_env.ps1
 ```
 
-- For macOS, linux, or another Unix-like OS:
+- For macOS, linux, or other Unix-like OS:
 
-```
-cd sudoku_rust
-source ./make_env.sh
+```macOS, linux, or other Unix-like OS terminal
+$ cd sudoku_rust
+$ source ./make_env.sh
 ```
 
 ## Build it and run sample problem
 
-```
+- For Any OS:
+
+```Any OS terminal
 make develop
 make sample
 ```
