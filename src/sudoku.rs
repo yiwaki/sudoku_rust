@@ -34,7 +34,7 @@ impl matrix::Matrix {
 
         let pivot = matrix::cell_no_to_addr(cell_no);
 
-        bitmap::EachBit::new(self[pivot]).find_map(|target_bit| {
+        bitmap::ForEachBit::new(self[pivot]).find_map(|target_bit| {
             self._prune_by_pivot(pivot, target_bit)
                 .and_then(|pruned| pruned.solve(cell_no + 1))
         })

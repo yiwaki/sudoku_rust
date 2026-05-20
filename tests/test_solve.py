@@ -39,7 +39,7 @@ def test_solve_no_solution():
     with pytest.raises(ValueError) as e:
         _ = solve(x)
 
-    assert str(e.value) in "No solution found"
+    assert "No solution found" in str(e.value)
 
 
 def test_solve_invalid_input():
@@ -49,7 +49,17 @@ def test_solve_invalid_input():
     with pytest.raises(ValueError) as e:
         _ = solve(x)
 
-    assert str(e.value) in "Input array must be of shape (9, 9)"
+    assert "Input array must be of shape (9, 9)" in str(e.value)
+
+
+def test_solve_invalid_dtype():
+    filepath = "data/bad_2.csv"
+    x = np.loadtxt(filepath, delimiter=",").astype(np.uint32)
+
+    with pytest.raises(TypeError) as e:
+        _ = solve(x)
+
+    assert "argument 'problem': 'ndarray' object is not an instance of 'ndarray'" in str(e.value)
 
 
 def test_check_bad_result():
@@ -65,4 +75,4 @@ def test_check_invalid_data():
     with pytest.raises(ValueError) as e:
         assert not check(x)
 
-    assert str(e.value) in "Input array must be of shape (9, 9)"
+    assert "Input array must be of shape (9, 9)" in str(e.value)
