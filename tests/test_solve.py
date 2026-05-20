@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from sudoku_rust import solve, check
+from sudoku_rust import check, solve
 
 
 def test_solve_easy():
@@ -59,7 +59,10 @@ def test_solve_invalid_dtype():
     with pytest.raises(TypeError) as e:
         _ = solve(x)
 
-    assert "argument 'problem': 'ndarray' object is not an instance of 'ndarray'" in str(e.value)
+    assert (
+        "argument 'problem': 'ndarray' object is not an instance of 'ndarray'"
+        in str(e.value)
+    )
 
 
 def test_check_bad_result():
