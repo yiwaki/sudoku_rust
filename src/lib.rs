@@ -5,7 +5,7 @@ use pyo3::types::{PyModule, PyModuleMethods};
 use pyo3::{Bound, PyResult, Python, pyfunction, pymodule, wrap_pyfunction};
 
 mod sudoku;
-use sudoku::matrix::bitmap::{Bitmap, FULL_BIT};
+use sudoku::matrix::bitmap::Bitmap;
 use sudoku::matrix::{MATRIX_SIZE, Matrix};
 
 // implement Into<&ArrayView2<'_, Bitmap>> for Matrix automatically
@@ -13,25 +13,14 @@ impl From<&ArrayView2<'_, Bitmap>> for Matrix {
     fn from(x: &ArrayView2<Bitmap>) -> Self {
         let mut it = x.iter();
         [(); MATRIX_SIZE]
-            .map(|()| {
-                [(); MATRIX_SIZE].map(|()| {
-                    let &y = it.next().unwrap();
-                    if y == 0 { FULL_BIT } else { 1 << (y - 1) }
-                })
-            })
+            .map(|()| [(); MATRIX_SIZE].map(|()| *it.next().unwrap()))
             .into()
     }
 }
 
 impl Matrix {
     fn into_ndarray(self) -> Array2<Bitmap> {
-        arr2(&*self).map(|&x| {
-            if x == FULL_BIT {
-                0
-            } else {
-                x.ilog2() as Bitmap + 1
-            }
-        })
+        arr2(&*self)
     }
 }
 
@@ -50,7 +39,7 @@ fn wrap_solve<'py>(
         })
         .and_then(|x| {
             Matrix::from(&x.as_array())
-                .solve(0)
+                .solve()
                 .ok_or_else(|| PyValueError::new_err("No solution found"))
         })
         .map(|solution| solution.into_ndarray().into_pyarray(py))

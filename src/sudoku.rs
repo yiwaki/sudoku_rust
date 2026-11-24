@@ -26,7 +26,7 @@ impl matrix::Matrix {
         Some(x)
     }
 
-    pub fn solve(self, cell_no: usize) -> Option<Self> {
+    pub fn _sudoku_solver(self, cell_no: usize) -> Option<Self> {
         //! cell_no is the index of the cell to be solved, in row-major order
         if cell_no >= NUM_OF_CELLS {
             return Some(self);
@@ -36,23 +36,32 @@ impl matrix::Matrix {
 
         bitmap::ForEachBit::new(self[pivot]).find_map(|target_bit| {
             self._prune_by_pivot(pivot, target_bit)
-                .and_then(|pruned| pruned.solve(cell_no + 1))
+                .and_then(|pruned| pruned._sudoku_solver(cell_no + 1))
         })
+    }
+
+    pub fn solve(&self) -> Option<Self> {
+        //! cell_no is the index of the cell to be solved, in row-major order
+        self.int_to_bitmap()
+            ._sudoku_solver(0)
+            .map(|solution| solution.bitmap_to_int())
     }
 
     pub fn check(&self) -> bool {
         //! Check if the matrix is a valid solution of Sudoku.
+        let x = self.int_to_bitmap();
+
         BLOCK_TYPES.iter().all(|block_type| {
             (0..matrix::MATRIX_SIZE).all(|block_no| {
                 let (row_range, col_range) = matrix::block_range(block_type, block_no);
                 let cells = row_range.flat_map(|row| col_range.clone().map(move |col| (row, col)));
                 if *block_type == matrix::Block::Row
-                    && cells.clone().any(|addr| self[addr].count_ones() > 1)
+                    && cells.clone().any(|addr| x[addr].count_ones() > 1)
                 {
                     return false;
                 }
 
-                cells.fold(0, |acc, addr| acc | self[addr]) == matrix::bitmap::FULL_BIT
+                cells.fold(0, |acc, addr| acc | x[addr]) == matrix::bitmap::FULL_BIT
             })
         })
     }
@@ -66,7 +75,7 @@ mod tests {
     fn _check_problem_solution(problem: &matrix::Matrix, solution: &matrix::Matrix) -> bool {
         (0..matrix::NUM_OF_CELLS).all(|cell_no| {
             let address = matrix::cell_no_to_addr(cell_no);
-            problem[address] == bitmap::FULL_BIT || problem[address] == solution[address]
+            problem[address] == 0 || problem[address] == solution[address]
         }) && solution.check()
     }
 
@@ -83,15 +92,6 @@ mod tests {
             [8, 5, 0, 0, 1, 0, 0, 2, 0],
             [0, 0, 0, 6, 0, 0, 1, 0, 0],
         ]
-        .map(|row| {
-            row.map(|col| {
-                if col == 0 {
-                    bitmap::FULL_BIT
-                } else {
-                    1 << (col - 1)
-                }
-            })
-        })
         .into();
 
         println!("Problem:");
@@ -99,7 +99,7 @@ mod tests {
 
         let start = Utc::now().time();
 
-        let y = x.clone().solve(0).unwrap();
+        let y = x.solve().unwrap();
 
         println!("Solution:");
         println!("{}", y);

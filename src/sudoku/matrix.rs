@@ -90,6 +90,34 @@ impl fmt::Display for Matrix {
     }
 }
 
+impl Matrix {
+    pub fn int_to_bitmap(&self) -> Self {
+        self.map(|row| {
+            row.map(|col| {
+                if col == 0 {
+                    bitmap::FULL_BIT
+                } else {
+                    1 << (col - 1)
+                }
+            })
+        })
+        .into()
+    }
+
+    pub fn bitmap_to_int(&self) -> Self {
+        self.map(|row| {
+            row.map(|col| {
+                if col == bitmap::FULL_BIT {
+                    0
+                } else {
+                    col.trailing_zeros() as bitmap::Bitmap + 1
+                }
+            })
+        })
+        .into()
+    }
+}
+
 pub fn cell_no_to_addr(cell_no: usize) -> Address {
     (cell_no / MATRIX_SIZE, cell_no % MATRIX_SIZE)
 }
