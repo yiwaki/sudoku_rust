@@ -26,7 +26,7 @@ impl matrix::Matrix {
         Some(x)
     }
 
-    pub fn _sudoku_solver(self, cell_no: usize) -> Option<Self> {
+    fn _sudoku_solver(self, cell_no: usize) -> Option<Self> {
         //! cell_no is the index of the cell to be solved, in row-major order
         if cell_no >= NUM_OF_CELLS {
             return Some(self);
