@@ -16,10 +16,8 @@ impl matrix::Matrix {
                 .flat_map(|row| col_range.clone().map(move |col| (row, col)))
                 .filter(|&addr| addr != pivot)
                 .try_for_each(|addr| {
-                    let cell = &mut x[addr];
-                    *cell &= !target_bit;
-
-                    (*cell != 0).then_some(())
+                    x[addr] &= !target_bit;
+                    (x[addr] != 0).then_some(())
                 })
         })?;
 
