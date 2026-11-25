@@ -17,8 +17,6 @@
 pub mod bitmap;
 use std::{fmt, ops};
 
-use bitmap::BITMAP_DIGIT;
-
 pub const MATRIX_SIZE: usize = 9;
 pub const SQUARE_SIZE: usize = 3;
 pub const NUM_OF_CELLS: usize = MATRIX_SIZE.pow(2);
@@ -82,7 +80,7 @@ impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for row in self.buffer {
             for cell in row {
-                write!(f, "{:0w$b} ", cell, w = BITMAP_DIGIT)?;
+                write!(f, "{0} ", cell)?;
             }
             writeln!(f)?;
         }
