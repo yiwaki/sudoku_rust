@@ -9,12 +9,12 @@ print(f"sudoku-rust ver.{__version__}")
 
 
 def print_sudoku(board):
-    horizontal_line = "+-----+-----+-----+"
+    HORIZONTAL_LINE = "+-----+-----+-----+"
 
     for i in range(9):
         # 3行ごとに横線を表示
         if i % 3 == 0:
-            print(horizontal_line)
+            print(HORIZONTAL_LINE)
 
         row_str = ""
         for j in range(9):
@@ -24,7 +24,7 @@ def print_sudoku(board):
             else:
                 row_str += " "
 
-            # ブロック内の位置に応じてスペースを調整（例に合わせた配置）
+            # ブロック内の位置に応じてスペースを調整
             if j == 0:
                 row_str += f"{board[i, j]}"
             elif j % 3 == 2:
@@ -35,7 +35,8 @@ def print_sudoku(board):
         row_str += "|"
         print(row_str)
 
-    print(horizontal_line)
+    # 最後の横線を表示
+    print(HORIZONTAL_LINE)
 
 
 if len(sys.argv) == 1:
