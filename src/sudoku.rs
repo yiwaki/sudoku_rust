@@ -2,7 +2,11 @@ pub mod matrix;
 use matrix::{BLOCK_TYPES, NUM_OF_CELLS, bitmap};
 
 impl matrix::Matrix {
-    fn _prune_by_pivot(&self, pivot: matrix::Address, target_bit: bitmap::Bitmap) -> Option<Self> {
+    fn _prune_in_blocks_including(
+        &self,
+        pivot: matrix::Address,
+        target_bit: bitmap::Bitmap,
+    ) -> Option<Self> {
         //! Prune the matrix by setting off the target bit from the bitmap of cells
         //! in the same row, column and square as the pivot cell.
         let mut x = self.clone();
@@ -33,7 +37,7 @@ impl matrix::Matrix {
         let pivot = matrix::cell_no_to_addr(cell_no);
 
         bitmap::ForEachBit::new(self[pivot]).find_map(|target_bit| {
-            self._prune_by_pivot(pivot, target_bit)
+            self._prune_in_blocks_including(pivot, target_bit)
                 .and_then(|pruned| pruned._sudoku_solver(cell_no + 1))
         })
     }
